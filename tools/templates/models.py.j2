@@ -1,0 +1,22 @@
+# Generated Code. Do not edit.
+from __future__ import annotations
+from typing import List, Optional, Dict, Any, Union, Literal
+from pydantic import BaseModel, Field
+from riotskillissue.core.types import Region, Platform
+
+{% for model in models %}
+class {{ model.name }}(BaseModel):
+    """
+    {{ model.description or "No description provided." }}
+    """
+    {% if model.enum_values %}
+    # Enum-like behavior handled via Literal or specific field types if complex
+    # For now, simplistic approach or just pass
+    pass
+    {% else %}
+    {% for prop in model.properties %}
+    {{ prop.name }}: {{ "Optional[" + prop.type_annotation + "]" if not prop.required else prop.type_annotation }} = Field(default=None, alias="{{ prop.alias or prop.name }}")
+    {% endfor %}
+    {% endif %}
+
+{% endfor %}

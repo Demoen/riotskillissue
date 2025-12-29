@@ -1,0 +1,50 @@
+name: Update SDK
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Weekly
+  workflow_dispatch:
+
+jobs:
+  update-sdk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install deepdiff rich # Extra dev tools for manager
+
+      - name: Fetch Spec & Generate Code
+        run: |
+          python tools/manager.py
+          python tools/generator/core.py
+
+      - name: Check for changes
+        id: git-diff
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: steps.git-diff.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat: update riot api spec"
+          title: "feat: Update Riot API Spec"
+          body: |
+            This PR updates the Riot API SDK based on the latest OpenAPI spec.
+            
+            See the diff report in `reports/` (if generated).
+          branch: update-sdk-spec
+          base: main

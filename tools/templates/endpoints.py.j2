@@ -1,0 +1,48 @@
+# Generated Code. Do not edit.
+from typing import Optional, List, Dict, Any
+from riotskillissue.core.http import HttpClient
+from riotskillissue.api.models import *
+
+class {{ class_name }}:
+    def __init__(self, http: HttpClient):
+        self.http = http
+
+    {% for op in operations %}
+    async def {{ op.method_name }}(
+        self,
+        region: str,
+        {% for param in op.parameters %}
+        {{ param.name }}: {{ param.type_annotation }}{% if not param.required %} = None{% endif %},
+        {% endfor %}
+    ) -> {{ op.response_type }}:
+        """
+        {{ op.clean_docstring }}
+        """
+        path = "{{ op.path }}"
+        # Replace path params
+        {% for param in op.parameters if param.in_ == "path" %}
+        path = path.replace("{" + "{{ param.name }}" + "}", str({{ param.name }}))
+        {% endfor %}
+
+        # Query params
+        params = {
+            {% for param in op.parameters if param.in_ == "query" %}
+            "{{ param.name }}": {{ param.name }},
+            {% endfor %}
+        }
+        # Filter None
+        params = {k: v for k, v in params.items() if v is not None}
+
+        response = await self.http.request(
+            method="{{ op.method }}",
+            url=path,
+            region_or_platform=region,
+            params=params
+        )
+        {% if op.response_type and op.response_type != "None" and op.response_type != "Any" %}
+        from pydantic import TypeAdapter
+        return TypeAdapter({{ op.response_type }}).validate_python(response.json())
+        {% else %}
+        return response.json()
+        {% endif %}
+    {% endfor %}
