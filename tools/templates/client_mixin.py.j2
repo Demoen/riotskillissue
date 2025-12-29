@@ -1,0 +1,11 @@
+# Generated Code. Do not edit.
+from riotskillissue.core.http import HttpClient
+{% for api in apis %}
+from riotskillissue.api.endpoints.{{ api.filename }} import {{ api.class_name }}
+{% endfor %}
+
+class GeneratedClientMixin:
+    def __init__(self, http: HttpClient):
+        {% for api in apis %}
+        self.{{ api.accessor_name }} = {{ api.class_name }}(http)
+        {% endfor %}
