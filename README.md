@@ -9,7 +9,7 @@
 
 **The production-ready, auto-updating, and fully typed Python wrapper for the Riot Games API.**
 
-[Features](#-features) • [Installation](#-installation) • [Quickstart](#-quickstart) • [Documentation](#-documentation) • [Contributing](docs/CONTRIBUTING.md)
+[Features](#-features) • [Installation](#-installation) • [Quickstart](#-quickstart) • [Documentation](#-documentation) • [Contributing](docs/CONTRIBUTING.md) • [Changelog](CHANGELOG.md)
 
 </div>
 
