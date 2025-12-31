@@ -18,7 +18,7 @@
 ## 🚀 Features
 
 - **🛡️ Type-Safe**: 100% Pydantic models for all requests and responses. No more dictionary guessing.
-- **🔄 Auto-Updated**: Generated weekly from the [Official OpenAPI Spec](https://github.com/MingweiSamuel/riotapi-schema). Supports LoL, TFT, LoR, and VALORANT.
+- **🔄 Auto-Updated**: Generated daily from the [Official OpenAPI Spec](https://github.com/MingweiSamuel/riotapi-schema) with other fallbacks. Supports LoL, TFT, LoR, and VALORANT.
 - **⚡ Resilient by Design**: Built-in exponential backoff, circuit breakers, and correct `Retry-After` handling.
 - **🌍 Distributed**: Pluggable **Redis** support for shared Rate Limiting and Caching across multiple processes.
 - **🛠️ Developer Friendly**: Includes a powerful CLI, smart pagination helpers, and RSO (OAuth2) support.
