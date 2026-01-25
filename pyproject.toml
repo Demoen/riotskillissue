@@ -7,7 +7,7 @@ riotskillissue-cli = "riotskillissue.cli:main"
 
 [project]
 name = "riotskillissue"
-version = "0.1.1"
+version = "0.1.2"
 description = "Production-ready, auto-updating Riot API wrapper."
 readme = "README.md"
 authors = [{ name = "Demoen" }]
