@@ -35,16 +35,24 @@ jobs:
         run: |
           git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request
+      - name: Bump Version
         if: steps.git-diff.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: update riot api spec"
-          title: "feat: Update Riot API Spec"
-          body: |
-            This PR updates the Riot API SDK based on the latest OpenAPI spec.
-            
-            See the diff report in `reports/` (if generated).
-          branch: update-sdk-spec
-          base: main
+        run: python tools/bump_version.py
+
+      - name: Commit and Push Changes
+        if: steps.git-diff.outputs.changes == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Read version from file to tag
+          VERSION=$(grep -oP 'version = "\K[^"]+' pyproject.toml)
+          
+          git add src/riotskillissue/api/models.py src/riotskillissue/api/endpoints pyproject.toml
+          git add -A # Catch incidental changes
+          git commit -m "feat: auto-update riot api spec to v$VERSION"
+          git push origin main
+          
+          echo "Tagging v$VERSION"
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
