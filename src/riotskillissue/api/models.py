@@ -458,6 +458,8 @@ class lol_challenges_v1_ChallengePointDto(BaseModel):
     
     percentile: Optional[float] = Field(default=None, alias="percentile")
     
+    position: Optional[int] = Field(default=None, alias="position")
+    
     
 
 
@@ -1810,6 +1812,8 @@ class match_v5_ParticipantDto(BaseModel):
     riotIdTagline: Optional[str] = Field(default=None, alias="riotIdTagline")
     
     role: str = Field(default=None, alias="role")
+    
+    roleBoundItem: Optional[int] = Field(default=None, alias="roleBoundItem")
     
     sightWardsBoughtInGame: int = Field(default=None, alias="sightWardsBoughtInGame")
     
@@ -4187,6 +4191,8 @@ class val_ranked_v1_PlayerDto(BaseModel):
     numberOfWins: int = Field(default=None, alias="numberOfWins")
     
     prefix: Optional[str] = Field(default=None, alias="prefix")
+    
+    premierRosterType: str = Field(default=None, alias="premierRosterType")
     
     puuid: Optional[str] = Field(default=None, alias="puuid")
     
