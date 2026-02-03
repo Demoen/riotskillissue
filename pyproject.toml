@@ -7,7 +7,7 @@ riotskillissue-cli = "riotskillissue.cli:main"
 
 [project]
 name = "riotskillissue"
-version = "0.1.2"
+version = "0.1.3"
 description = "Production-ready, auto-updating Riot API wrapper."
 readme = "README.md"
 authors = [{ name = "Demoen" }]
@@ -46,6 +46,11 @@ dev = [
     "types-redis",
     "types-requests",
     "deepdiff>=6.0.0",
+]
+
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.5.0",
 ]
 
 [tool.hatch.build.targets.wheel]

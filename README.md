@@ -7,125 +7,104 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Tests](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml/badge.svg)](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml)
 
-**The production-ready, auto-updating, and fully typed Python wrapper for the Riot Games API.**
+**Production-ready, auto-updating, and fully typed Python wrapper for the Riot Games API.**
 
-[Features](#-features) • [Installation](#-installation) • [Quickstart](#-quickstart) • [Documentation](#-documentation) • [Contributing](docs/CONTRIBUTING.md) • [Changelog](CHANGELOG.md)
+[Documentation](https://demoen.github.io/riotskillissue/) · [Examples](https://demoen.github.io/riotskillissue/examples/) · [API Reference](https://demoen.github.io/riotskillissue/api-reference/)
 
 </div>
 
 ---
 
-## 🚀 Features
+## Features
 
-- **🛡️ Type-Safe**: 100% Pydantic models for all requests and responses. No more dictionary guessing.
-- **🔄 Auto-Updated**: Generated daily from the [Official OpenAPI Spec](https://github.com/MingweiSamuel/riotapi-schema) with other fallbacks. Supports LoL, TFT, LoR, and VALORANT.
-- **⚡ Resilient by Design**: Built-in exponential backoff, circuit breakers, and correct `Retry-After` handling.
-- **🌍 Distributed**: Pluggable **Redis** support for shared Rate Limiting and Caching across multiple processes.
-- **🛠️ Developer Friendly**: Includes a powerful CLI, smart pagination helpers, and RSO (OAuth2) support.
+| Feature | Description |
+|---------|-------------|
+| **Type-Safe** | 100% Pydantic models for all requests and responses |
+| **Auto-Updated** | Generated daily from the Official OpenAPI Spec |
+| **Resilient** | Built-in exponential backoff, circuit breakers, and `Retry-After` handling |
+| **Distributed** | Pluggable Redis support for shared rate limiting and caching |
+| **Multi-Game** | Full support for LoL, TFT, LoR, and VALORANT APIs |
 
-## 📦 Installation
+## Installation
 
-Requires **Python 3.8+**.
+Requires Python 3.8+.
 
 ```bash
 pip install riotskillissue
 ```
 
-*Or install with extra dev dependencies:*
-```bash
-pip install "riotskillissue[dev]"
-```
-
-## ⚡ Quickstart
+## Quick Start
 
 ```python
 import asyncio
-from riotskillissue import RiotClient, Region
+from riotskillissue import RiotClient, Platform, Region
 
 async def main():
-    # 1. Initialize Client (Auto-loads RIOT_API_KEY from env)
     async with RiotClient() as client:
-    
-        # 2. Type-Safe API Calls
-        summoner = await client.summoner.get_by_puuid(
-             region=Region.NA1,
-             encryptedPUUID="<YOUR_PUUID>"
+        # Look up account by Riot ID
+        account = await client.account.get_by_riot_id(
+            region=Platform.EUROPE,
+            gameName="Agurin",
+            tagLine="EUW"
         )
-        print(f"Summoner Level: {summoner.summonerLevel}")
+        print(f"Found: {account.gameName}#{account.tagLine}")
         
-        # 3. Smart Pagination (Async Iterator)
-        from riotskillissue import paginate
-        async for match_id in paginate(client.match.get_ids_by_puuid, puuid=summoner.puuid, count=20):
-             print(f"Match: {match_id}")
+        # Get summoner data
+        summoner = await client.summoner.get_by_puuid(
+            region=Region.EUW1,
+            encryptedPUUID=account.puuid
+        )
+        print(f"Level: {summoner.summonerLevel}")
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-## 🛠 Configuration
-
-Define your configuration using `RiotClientConfig` or environment variables.
-
-| Parameter | Environment Variable | Default | Description |
-| :--- | :--- | :--- | :--- |
-| **API Key** | `RIOT_API_KEY` | `None` | Your Riot Games API Key. |
-| **Redis URL** | - | `None` | `redis://host:port` for distributed limits. |
-| **Max Retries** | - | `3` | Retries for 5xx/Network errors. |
-| **Timeout** | - | `5s`/`10s` | Connect/Read timeouts. |
-
-```python
-config = RiotClientConfig(
-    api_key="RGAPI-...",
-    redis_url="redis://localhost:6379/0", # Enables distributed rate limiting
-    max_retries=5
-)
-async with RiotClient(config=config) as client:
-    ...
-```
-
-## 🧠 Advanced Usage
-
-### Caching
-Reduce your API calls with built-in caching.
-
-```python
-from riotskillissue.core.cache import RedisCache
-
-cache = RedisCache("redis://localhost:6379/1")
-async with RiotClient(cache=cache) as client:
-    # Requests are now cached!
-    ...
-```
-
-### Data Dragon (Static Data)
-Fetch champions, items, and versions without hassle.
-
-```python
-# Automatically picks the latest version and caches the result
-annie = await client.static.get_champion(1)
-print(annie["name"])  # "Annie"
-```
-
-### CLI Tool
-Debug your API keys or look up players instantly from the terminal.
+Set your API key via environment variable:
 
 ```bash
-$ riotskillissue-cli summoner "Faker#SKT" --region kr
-{
-  "id": "...",
-  "accountId": "...",
-  "puuid": "...",
-  "name": "Faker",
-  "profileIconId": 6,
-  "revisionDate": 1703894832000,
-  "summonerLevel": 678
-}
+export RIOT_API_KEY="RGAPI-your-key-here"
 ```
 
-## ⚖️ Legal
+Or pass it directly:
 
-`riotskillissue` isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+```python
+async with RiotClient(api_key="RGAPI-...") as client:
+    ...
+```
 
-## 📝 License
+## Configuration
 
-This project is licensed under the **GNU General Public License v3.0**. See the [LICENSE](LICENSE) file for details.
+```python
+from riotskillissue import RiotClient, RiotClientConfig
+from riotskillissue.core.cache import RedisCache
+
+config = RiotClientConfig(
+    api_key="RGAPI-...",
+    max_retries=5,
+    redis_url="redis://localhost:6379/0"  # Distributed rate limiting
+)
+
+cache = RedisCache("redis://localhost:6379/1")
+
+async with RiotClient(config=config, cache=cache) as client:
+    ...
+```
+
+## Documentation
+
+Full documentation is available at [demoen.github.io/riotskillissue](https://demoen.github.io/riotskillissue/).
+
+- [Getting Started](https://demoen.github.io/riotskillissue/getting-started/)
+- [Configuration](https://demoen.github.io/riotskillissue/configuration/)
+- [Examples](https://demoen.github.io/riotskillissue/examples/)
+- [API Reference](https://demoen.github.io/riotskillissue/api-reference/)
+- [CLI](https://demoen.github.io/riotskillissue/cli/)
+
+## Legal
+
+RiotSkillIssue is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
