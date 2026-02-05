@@ -107,4 +107,4 @@ RiotSkillIssue is not endorsed by Riot Games and does not reflect the views or o
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
+MIT. See the [LICENSE](LICENSE) file for details.
