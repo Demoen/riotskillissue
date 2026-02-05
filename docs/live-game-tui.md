@@ -10,6 +10,20 @@ riotskillissue-cli live "Agurin#EUW" --region euw1
 
 That's it. This single command opens an interactive, auto-refreshing dashboard.
 
+## What You See
+
+### When a Game is Active
+
+The TUI displays a full-screen dashboard with:
+
+![Live Game TUI](live_game_tui.png)
+
+### When Not in a Game
+
+If the player isn't currently in a match, the TUI shows a waiting screen and keeps checking:
+
+![Waiting Screen](live_game_tui_not_found.png)
+
 ## Features
 
 - **Real-time game data** — see the current match as it happens
@@ -87,60 +101,6 @@ All standard League of Legends regions are supported:
 | ++r++ | Refresh game data immediately |
 | ++q++ | Quit the TUI |
 | ++escape++ | Quit the TUI |
-
-## What You See
-
-### When a Game is Active
-
-The TUI displays a full-screen dashboard with:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│            🎮  LIVE GAME  —  Ranked Solo/Duo                │
-│            ⏱  12:34    📍  EUW1                             │
-├─────────────────────────────────────────────────────────────┤
-│                    🔵  BLUE TEAM                            │
-│  Champion    │ Player       │ Rank           │ Spells       │
-│──────────────┼──────────────┼────────────────┼──────────────│
-│  Ahri        │ Player1#EUW  │ Diamond II     │ Flash / Ign  │
-│  Lee Sin     │ Player2#EUW  │ Emerald I      │ Flash / Smt  │
-│  Orianna     │ Player3#EUW  │ Master 234 LP  │ Flash / TP   │
-│  Jinx        │ Player4#EUW  │ Diamond IV     │ Flash / Heal │
-│  Thresh      │ Player5#EUW  │ Platinum I     │ Flash / Ign  │
-├─────────────────────────────────────────────────────────────┤
-│  🚫 Bans: Yasuo · Yone · Zed · Lux · Blitzcrank            │
-├─────────────────────────────────────────────────────────────┤
-│                    🔴  RED TEAM                             │
-│  Champion    │ Player       │ Rank           │ Spells       │
-│──────────────┼──────────────┼────────────────┼──────────────│
-│  Zed         │ Player6#EUW  │ Diamond I      │ Flash / Ign  │
-│  Graves      │ Player7#EUW  │ Emerald III    │ Flash / Smt  │
-│  Syndra      │ Player8#EUW  │ Diamond III    │ Flash / TP   │
-│  Kai'Sa      │ Player9#EUW  │ Platinum II    │ Flash / Heal │
-│  Nautilus    │ Player10#EUW │ Diamond IV     │ Flash / Ign  │
-└─────────────────────────────────────────────────────────────┘
-  Q Quit │ R Refresh │ Auto-refresh: 24s
-```
-
-### When Not in a Game
-
-If the player isn't currently in a match, the TUI shows a waiting screen and keeps checking:
-
-```
-┌───────────────────────────────────────┐
-│                                       │
-│     🎮  Agurin#EUW                    │
-│                                       │
-│     Not currently in a game.          │
-│                                       │
-│     The TUI will auto-refresh and     │
-│     show the game once it starts.     │
-│                                       │
-│     Next refresh in 24s               │
-│     Press [R] to refresh now          │
-│                                       │
-└───────────────────────────────────────┘
-```
 
 ## Rank Colors
 
