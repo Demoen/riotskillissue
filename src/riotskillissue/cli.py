@@ -6,7 +6,10 @@ from rich import print as rprint
 from .core.client import RiotClient, RiotClientConfig
 from .core.types import Region
 
-app = typer.Typer(help="RiotSkillIssue API Wrapper CLI")
+app = typer.Typer(
+    help="RiotSkillIssue API Wrapper CLI",
+    rich_markup_mode="rich",
+)
 console = Console()
 
 @app.command()
@@ -62,6 +65,59 @@ def match(match_id: str, region: str = "americas", api_key: str = typer.Option(N
                 rprint(f"[red]Error: {e}[/red]")
                 
     asyncio.run(_run())
+
+
+@app.command()
+def live(
+    name: str = typer.Argument(
+        ...,
+        help='Riot ID in format "GameName#TagLine" (e.g. "Agurin#EUW")',
+    ),
+    region: str = typer.Option(
+        "euw1",
+        help="Regional server (e.g. euw1, na1, kr)",
+    ),
+    api_key: str = typer.Option(
+        None,
+        envvar="RIOT_API_KEY",
+        help="Riot API key (or set RIOT_API_KEY env var)",
+    ),
+    refresh: int = typer.Option(
+        30,
+        help="Auto-refresh interval in seconds",
+    ),
+):
+    """🎮 Launch the Live Game TUI for a League of Legends match.
+
+    Shows a real-time terminal dashboard with both teams, champion picks,
+    summoner spells, ranks, and win rates. Auto-refreshes periodically.
+
+    \b
+    Examples:
+        riotskillissue-cli live "Agurin#EUW" --region euw1
+        riotskillissue-cli live "Faker#KR1" --region kr
+        riotskillissue-cli live "Player#NA1" --region na1 --refresh 15
+    """
+    if not api_key:
+        rprint("[red]Error: API key required. Set RIOT_API_KEY env var or use --api-key.[/red]")
+        raise typer.Exit(code=1)
+
+    if "#" not in name:
+        rprint('[red]Error: Name must be in format "GameName#TagLine" (e.g. "Agurin#EUW").[/red]')
+        raise typer.Exit(code=1)
+
+    game_name, tag_line = name.split("#", 1)
+
+    from .tui import run_tui
+
+    run_tui(
+        api_key=api_key,
+        game_name=game_name,
+        tag_line=tag_line,
+        region=region,
+        auto_refresh=refresh,
+    )
+
 
 def main():
     app()

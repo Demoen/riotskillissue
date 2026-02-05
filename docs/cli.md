@@ -88,6 +88,49 @@ Game Mode: CLASSIC
 Duration: 1847s
 ```
 
+### live
+
+🎮 Launch an interactive Live Game TUI (Terminal User Interface) that shows real-time information about an ongoing League of Legends match.
+
+```bash
+riotskillissue-cli live "GameName#TagLine" --region euw1
+```
+
+This is the fastest way to spectate a match from your terminal — **one command, instant dashboard**.
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `name` | Riot ID in format `GameName#TagLine` |
+| `--region` | Regional server (default: `euw1`) |
+| `--api-key` | API key (or use `RIOT_API_KEY` env var) |
+| `--refresh` | Auto-refresh interval in seconds (default: `30`) |
+
+**Example:**
+
+```bash
+$ riotskillissue-cli live "Agurin#EUW" --region euw1
+```
+
+This opens a full-screen terminal dashboard showing:
+
+- **Game info** — queue type, game duration, platform
+- **Blue Team** — champions, player names, ranks, win rates, summoner spells
+- **Red Team** — champions, player names, ranks, win rates, summoner spells  
+- **Bans** — all banned champions
+
+The TUI auto-refreshes every 30 seconds (configurable with `--refresh`). If the player isn't in a game yet, it will keep checking until one starts.
+
+**Keyboard shortcuts:**
+
+| Key | Action |
+|-----|--------|
+| `R` | Manual refresh |
+| `Q` / `Esc` | Quit |
+
+See the [Live Game TUI](live-game-tui.md) page for more details and screenshots.
+
 ## Error Handling
 
 The CLI displays user-friendly error messages:
@@ -103,3 +146,4 @@ $ riotskillissue-cli summoner "NonExistent#USER" --region euw1
 
 Error: 404 - Data not found
 ```
+
