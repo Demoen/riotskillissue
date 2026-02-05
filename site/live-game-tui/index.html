@@ -12,13 +12,13 @@
         <meta name="author" content="Demoen">
       
       
-        <link rel="canonical" href="https://demoen.github.io/riotskillissue/api-reference/">
+        <link rel="canonical" href="https://demoen.github.io/riotskillissue/live-game-tui/">
       
       
-        <link rel="prev" href="../examples/valorant/">
+        <link rel="prev" href="../cli/">
       
       
-        <link rel="next" href="../cli/">
+        <link rel="next" href="../CONTRIBUTING/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>API Reference - RiotSkillIssue</title>
+        <title>Live Game TUI - RiotSkillIssue</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference" class="md-skip">
+        <a href="#live-game-tui" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              Live Game TUI
             
           </span>
         </div>
@@ -302,11 +302,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../api-reference/" class="md-tabs__link">
         
   
   
@@ -342,9 +340,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../live-game-tui/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -679,37 +679,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
         
   
   
@@ -725,364 +698,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#client-initialization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client Initialization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#region-and-platform-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Region and Platform Types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Region and Platform Types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#platform-routing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Platform (Routing)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#region-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Region (Server)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#league-of-legends-apis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        League of Legends APIs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="League of Legends APIs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#account-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Account API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#summoner-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summoner API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#match-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Match API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#champion-mastery-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Champion Mastery API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#league-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        League API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spectator-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Spectator API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#champion-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Champion API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tft-apis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TFT APIs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TFT APIs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tft-summoner-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TFT Summoner API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tft-match-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TFT Match API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tft-league-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TFT League API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tft-status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TFT Status API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#valorant-apis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT APIs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="VALORANT APIs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#valorant-content-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT Content API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#valorant-ranked-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT Ranked API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#valorant-status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT Status API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#legends-of-runeterra-apis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Legends of Runeterra APIs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Legends of Runeterra APIs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#lor-match-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LoR Match API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lor-ranked-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LoR Ranked API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lor-status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LoR Status API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#static-data-data-dragon" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Static Data (Data Dragon)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pagination-helper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pagination Helper
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1118,10 +733,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../live-game-tui/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Game TUI
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1137,6 +779,253 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#all-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You See
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What You See">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-a-game-is-active" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When a Game is Active
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-in-a-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Not in a Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rank-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rank Colors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#programmatic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-currently-in-a-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Not currently in a game"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#404-data-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "404 - Data not found"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1195,10 +1084,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#client-initialization" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Client Initialization
+        Quick Start
       
     </span>
   </a>
@@ -1206,22 +1095,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#region-and-platform-types" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Region and Platform Types
+        Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Region and Platform Types">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#platform-routing" class="md-nav__link">
+  <a href="#basic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Platform (Routing)
+        Basic
       
     </span>
   </a>
@@ -1229,10 +1140,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#region-server" class="md-nav__link">
+  <a href="#with-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Region (Server)
+        With Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#all-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regions
       
     </span>
   </a>
@@ -1245,22 +1178,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#league-of-legends-apis" class="md-nav__link">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        League of Legends APIs
+        Keyboard Shortcuts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="League of Legends APIs">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You See
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What You See">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#account-api" class="md-nav__link">
+  <a href="#when-a-game-is-active" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Account API
+        When a Game is Active
       
     </span>
   </a>
@@ -1268,76 +1212,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#summoner-api" class="md-nav__link">
+  <a href="#when-not-in-a-game" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Summoner API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#match-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Match API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#champion-mastery-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Champion Mastery API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#league-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        League API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spectator-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Spectator API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#champion-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Champion API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status API
+        When Not in a Game
       
     </span>
   </a>
@@ -1350,22 +1228,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tft-apis" class="md-nav__link">
+  <a href="#rank-colors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TFT APIs
+        Rank Colors
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TFT APIs">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#programmatic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Key
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tft-summoner-api" class="md-nav__link">
+  <a href="#not-currently-in-a-game" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TFT Summoner API
+        "Not currently in a game"
       
     </span>
   </a>
@@ -1373,10 +1284,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tft-match-api" class="md-nav__link">
+  <a href="#404-data-not-found" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TFT Match API
+        "404 - Data not found"
       
     </span>
   </a>
@@ -1384,21 +1295,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tft-league-api" class="md-nav__link">
+  <a href="#rate-limiting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TFT League API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tft-status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TFT Status API
+        Rate Limiting
       
     </span>
   </a>
@@ -1407,128 +1307,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#valorant-apis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT APIs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="VALORANT APIs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#valorant-content-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT Content API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#valorant-ranked-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT Ranked API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#valorant-status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VALORANT Status API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#legends-of-runeterra-apis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Legends of Runeterra APIs
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Legends of Runeterra APIs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#lor-match-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LoR Match API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lor-ranked-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LoR Ranked API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lor-status-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LoR Status API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#static-data-data-dragon" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Static Data (Data Dragon)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pagination-helper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pagination Helper
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1552,584 +1330,330 @@
   
 
 
-<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
-<p>Complete reference for all available API endpoints.</p>
-<h2 id="client-initialization">Client Initialization<a class="headerlink" href="#client-initialization" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">riotskillissue</span><span class="w"> </span><span class="kn">import</span> <span class="n">RiotClient</span><span class="p">,</span> <span class="n">RiotClientConfig</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Simple initialization (uses RIOT_API_KEY env var)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">async</span> <span class="k">with</span> <span class="n">RiotClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">pass</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># With explicit API key</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">async</span> <span class="k">with</span> <span class="n">RiotClient</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;RGAPI-...&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="k">pass</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># With full configuration</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RiotClientConfig</span><span class="p">(</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;RGAPI-...&quot;</span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">redis_url</span><span class="o">=</span><span class="s2">&quot;redis://localhost:6379/0&quot;</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">)</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">async</span> <span class="k">with</span> <span class="n">RiotClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="k">pass</span>
+<h1 id="live-game-tui">Live Game TUI<a class="headerlink" href="#live-game-tui" title="Permanent link">&para;</a></h1>
+<p>RiotSkillIssue includes a built-in <strong>Terminal User Interface</strong> (TUI) for spectating live League of Legends matches directly from your terminal. One command gives you a full dashboard with teams, champions, ranks, and more.</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>riotskillissue-cli<span class="w"> </span>live<span class="w"> </span><span class="s2">&quot;Agurin#EUW&quot;</span><span class="w"> </span>--region<span class="w"> </span>euw1
 </span></code></pre></div>
-<hr />
-<h2 id="region-and-platform-types">Region and Platform Types<a class="headerlink" href="#region-and-platform-types" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">riotskillissue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Region</span><span class="p">,</span> <span class="n">Platform</span>
-</span></code></pre></div>
-<h3 id="platform-routing">Platform (Routing)<a class="headerlink" href="#platform-routing" title="Permanent link">&para;</a></h3>
-<p>Used for account lookups and match history APIs.</p>
-<table>
-<thead>
-<tr>
-<th>Value</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Platform.AMERICAS</code></td>
-<td>North/South America</td>
-</tr>
-<tr>
-<td><code>Platform.EUROPE</code></td>
-<td>Europe</td>
-</tr>
-<tr>
-<td><code>Platform.ASIA</code></td>
-<td>Korea, Japan</td>
-</tr>
-<tr>
-<td><code>Platform.SEA</code></td>
-<td>Southeast Asia, Oceania</td>
-</tr>
-</tbody>
-</table>
-<h3 id="region-server">Region (Server)<a class="headerlink" href="#region-server" title="Permanent link">&para;</a></h3>
-<p>Used for summoner, ranked, and spectator APIs.</p>
-<table>
-<thead>
-<tr>
-<th>Value</th>
-<th>Server</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Region.NA1</code></td>
-<td>North America</td>
-</tr>
-<tr>
-<td><code>Region.EUW1</code></td>
-<td>Europe West</td>
-</tr>
-<tr>
-<td><code>Region.EUN1</code></td>
-<td>Europe Nordic &amp; East</td>
-</tr>
-<tr>
-<td><code>Region.KR</code></td>
-<td>Korea</td>
-</tr>
-<tr>
-<td><code>Region.BR1</code></td>
-<td>Brazil</td>
-</tr>
-<tr>
-<td><code>Region.LA1</code></td>
-<td>Latin America North</td>
-</tr>
-<tr>
-<td><code>Region.LA2</code></td>
-<td>Latin America South</td>
-</tr>
-<tr>
-<td><code>Region.OC1</code></td>
-<td>Oceania</td>
-</tr>
-<tr>
-<td><code>Region.JP1</code></td>
-<td>Japan</td>
-</tr>
-<tr>
-<td><code>Region.TR1</code></td>
-<td>Turkey</td>
-</tr>
-<tr>
-<td><code>Region.RU</code></td>
-<td>Russia</td>
-</tr>
-<tr>
-<td><code>Region.PH2</code></td>
-<td>Philippines</td>
-</tr>
-<tr>
-<td><code>Region.SG2</code></td>
-<td>Singapore</td>
-</tr>
-<tr>
-<td><code>Region.TH2</code></td>
-<td>Thailand</td>
-</tr>
-<tr>
-<td><code>Region.TW2</code></td>
-<td>Taiwan</td>
-</tr>
-<tr>
-<td><code>Region.VN2</code></td>
-<td>Vietnam</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="league-of-legends-apis">League of Legends APIs<a class="headerlink" href="#league-of-legends-apis" title="Permanent link">&para;</a></h2>
-<h3 id="account-api">Account API<a class="headerlink" href="#account-api" title="Permanent link">&para;</a></h3>
-<p><code>client.account</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_by_puuid(region, puuid)</code></td>
-<td>Get account by PUUID</td>
-</tr>
-<tr>
-<td><code>get_by_riot_id(region, gameName, tagLine)</code></td>
-<td>Get account by Riot ID</td>
-</tr>
-<tr>
-<td><code>get_by_access_token(region)</code></td>
-<td>Get account using RSO token</td>
-</tr>
-<tr>
-<td><code>get_active_shard(region, game, puuid)</code></td>
-<td>Get active shard for player</td>
-</tr>
-</tbody>
-</table>
-<h3 id="summoner-api">Summoner API<a class="headerlink" href="#summoner-api" title="Permanent link">&para;</a></h3>
-<p><code>client.summoner</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_by_puuid(region, encryptedPUUID)</code></td>
-<td>Get summoner by PUUID</td>
-</tr>
-<tr>
-<td><code>get_by_access_token(region)</code></td>
-<td>Get summoner using RSO token</td>
-</tr>
-</tbody>
-</table>
-<h3 id="match-api">Match API<a class="headerlink" href="#match-api" title="Permanent link">&para;</a></h3>
-<p><code>client.match</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_match_ids_by_puuid(region, puuid, ...)</code></td>
-<td>Get list of match IDs</td>
-</tr>
-<tr>
-<td><code>get_match(region, matchId)</code></td>
-<td>Get match details</td>
-</tr>
-<tr>
-<td><code>get_timeline(region, matchId)</code></td>
-<td>Get match timeline</td>
-</tr>
-<tr>
-<td><code>get_replay(region, puuid)</code></td>
-<td>Get player replays</td>
-</tr>
-</tbody>
-</table>
-<p>Optional parameters for <code>get_match_ids_by_puuid</code>:</p>
+<p>That's it. This single command opens an interactive, auto-refreshing dashboard.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>count</code> - Number of matches (default: 20, max: 100)</li>
-<li><code>start</code> - Offset for pagination</li>
-<li><code>startTime</code> / <code>endTime</code> - Time filters (epoch seconds)</li>
-<li><code>queue</code> - Queue ID filter</li>
-<li><code>type</code> - Game type filter</li>
+<li><strong>Real-time game data</strong> — see the current match as it happens</li>
+<li><strong>Both teams at a glance</strong> — champions, summoner spells, ranks, win rates</li>
+<li><strong>Auto-refresh</strong> — data updates every 30 seconds (configurable)</li>
+<li><strong>Rank colors</strong> — each player's rank is color-coded (Iron → Challenger)</li>
+<li><strong>Win rate highlighting</strong> — green for &gt;55%, red for &lt;45%</li>
+<li><strong>Ban display</strong> — all banned champions listed</li>
+<li><strong>Waiting mode</strong> — if the player isn't in a game, the TUI waits and checks periodically</li>
+<li><strong>Keyboard controls</strong> — refresh manually or quit with a single keypress</li>
 </ul>
-<h3 id="champion-mastery-api">Champion Mastery API<a class="headerlink" href="#champion-mastery-api" title="Permanent link">&para;</a></h3>
-<p><code>client.champion_mastery</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_all_masteries(region, encryptedPUUID)</code></td>
-<td>Get all champion masteries</td>
-</tr>
-<tr>
-<td><code>get_by_champion(region, encryptedPUUID, championId)</code></td>
-<td>Get mastery for champion</td>
-</tr>
-<tr>
-<td><code>get_top_masteries(region, encryptedPUUID, count)</code></td>
-<td>Get top N masteries</td>
-</tr>
-<tr>
-<td><code>get_mastery_score(region, encryptedPUUID)</code></td>
-<td>Get total mastery score</td>
-</tr>
-</tbody>
-</table>
-<h3 id="league-api">League API<a class="headerlink" href="#league-api" title="Permanent link">&para;</a></h3>
-<p><code>client.league</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_entries_by_summoner(region, encryptedSummonerId)</code></td>
-<td>Get ranked entries</td>
-</tr>
-<tr>
-<td><code>get_challenger_league(region, queue)</code></td>
-<td>Get challenger league</td>
-</tr>
-<tr>
-<td><code>get_grandmaster_league(region, queue)</code></td>
-<td>Get grandmaster league</td>
-</tr>
-<tr>
-<td><code>get_master_league(region, queue)</code></td>
-<td>Get master league</td>
-</tr>
-</tbody>
-</table>
-<h3 id="spectator-api">Spectator API<a class="headerlink" href="#spectator-api" title="Permanent link">&para;</a></h3>
-<p><code>client.spectator</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_current_game_info(region, encryptedPUUID)</code></td>
-<td>Get live game data</td>
-</tr>
-<tr>
-<td><code>get_featured_games(region)</code></td>
-<td>Get featured games</td>
-</tr>
-</tbody>
-</table>
-<h3 id="champion-api">Champion API<a class="headerlink" href="#champion-api" title="Permanent link">&para;</a></h3>
-<p><code>client.champion</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_champion_rotations(region)</code></td>
-<td>Get free champion rotation</td>
-</tr>
-</tbody>
-</table>
-<h3 id="status-api">Status API<a class="headerlink" href="#status-api" title="Permanent link">&para;</a></h3>
-<p><code>client.lol_status</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_platform_data(region)</code></td>
-<td>Get platform status</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="tft-apis">TFT APIs<a class="headerlink" href="#tft-apis" title="Permanent link">&para;</a></h2>
-<h3 id="tft-summoner-api">TFT Summoner API<a class="headerlink" href="#tft-summoner-api" title="Permanent link">&para;</a></h3>
-<p><code>client.tft_summoner</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_by_puuid(region, encryptedPUUID)</code></td>
-<td>Get TFT summoner by PUUID</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tft-match-api">TFT Match API<a class="headerlink" href="#tft-match-api" title="Permanent link">&para;</a></h3>
-<p><code>client.tft_match</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_match_ids_by_puuid(region, puuid, count)</code></td>
-<td>Get TFT match IDs</td>
-</tr>
-<tr>
-<td><code>get_match(region, matchId)</code></td>
-<td>Get TFT match details</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tft-league-api">TFT League API<a class="headerlink" href="#tft-league-api" title="Permanent link">&para;</a></h3>
-<p><code>client.tft_league</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_challenger_league(region)</code></td>
-<td>Get TFT challenger league</td>
-</tr>
-<tr>
-<td><code>get_grandmaster_league(region)</code></td>
-<td>Get TFT grandmaster league</td>
-</tr>
-<tr>
-<td><code>get_master_league(region)</code></td>
-<td>Get TFT master league</td>
-</tr>
-<tr>
-<td><code>get_entries_by_summoner(region, summonerId)</code></td>
-<td>Get ranked entries</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tft-status-api">TFT Status API<a class="headerlink" href="#tft-status-api" title="Permanent link">&para;</a></h3>
-<p><code>client.tft_status</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_platform_data(region)</code></td>
-<td>Get TFT platform status</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="valorant-apis">VALORANT APIs<a class="headerlink" href="#valorant-apis" title="Permanent link">&para;</a></h2>
-<h3 id="valorant-content-api">VALORANT Content API<a class="headerlink" href="#valorant-content-api" title="Permanent link">&para;</a></h3>
-<p><code>client.val_content</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_content(region, locale)</code></td>
-<td>Get game content (agents, maps, etc.)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="valorant-ranked-api">VALORANT Ranked API<a class="headerlink" href="#valorant-ranked-api" title="Permanent link">&para;</a></h3>
-<p><code>client.val_ranked</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_leaderboard(region, actId, ...)</code></td>
-<td>Get ranked leaderboard</td>
-</tr>
-</tbody>
-</table>
-<h3 id="valorant-status-api">VALORANT Status API<a class="headerlink" href="#valorant-status-api" title="Permanent link">&para;</a></h3>
-<p><code>client.val_status</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_platform_data(region)</code></td>
-<td>Get VALORANT platform status</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="legends-of-runeterra-apis">Legends of Runeterra APIs<a class="headerlink" href="#legends-of-runeterra-apis" title="Permanent link">&para;</a></h2>
-<h3 id="lor-match-api">LoR Match API<a class="headerlink" href="#lor-match-api" title="Permanent link">&para;</a></h3>
-<p><code>client.lor_match</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_match_ids_by_puuid(region, puuid)</code></td>
-<td>Get LoR match IDs</td>
-</tr>
-<tr>
-<td><code>get_match(region, matchId)</code></td>
-<td>Get LoR match details</td>
-</tr>
-</tbody>
-</table>
-<h3 id="lor-ranked-api">LoR Ranked API<a class="headerlink" href="#lor-ranked-api" title="Permanent link">&para;</a></h3>
-<p><code>client.lor_ranked</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_leaderboards(region)</code></td>
-<td>Get LoR leaderboards</td>
-</tr>
-</tbody>
-</table>
-<h3 id="lor-status-api">LoR Status API<a class="headerlink" href="#lor-status-api" title="Permanent link">&para;</a></h3>
-<p><code>client.lor_status</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_platform_data(region)</code></td>
-<td>Get LoR platform status</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="static-data-data-dragon">Static Data (Data Dragon)<a class="headerlink" href="#static-data-data-dragon" title="Permanent link">&para;</a></h2>
-<p><code>client.static</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>get_latest_version()</code></td>
-<td>Get latest Data Dragon version</td>
-</tr>
-<tr>
-<td><code>get_champion(champion_key)</code></td>
-<td>Get champion data by ID</td>
-</tr>
-<tr>
-<td><code>get_item(item_id)</code></td>
-<td>Get item data by ID</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="pagination-helper">Pagination Helper<a class="headerlink" href="#pagination-helper" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">riotskillissue</span><span class="w"> </span><span class="kn">import</span> <span class="n">paginate</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">async</span> <span class="k">for</span> <span class="n">match_id</span> <span class="ow">in</span> <span class="n">paginate</span><span class="p">(</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">client</span><span class="o">.</span><span class="n">match</span><span class="o">.</span><span class="n">get_match_ids_by_puuid</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">region</span><span class="o">=</span><span class="n">Platform</span><span class="o">.</span><span class="n">EUROPE</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">puuid</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>       <span class="c1"># Items per page</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">max_results</span><span class="o">=</span><span class="mi">500</span>  <span class="c1"># Total items to fetch</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">):</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">match_id</span><span class="p">)</span>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>The TUI is included with the standard package installation:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>riotskillissue
 </span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Dependencies</p>
+<p>The TUI uses <a href="https://textual.textualize.io/">Textual</a> and <a href="https://rich.readthedocs.io/">Rich</a>, 
+which are installed automatically as dependencies.</p>
+</div>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="basic">Basic<a class="headerlink" href="#basic" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RIOT_API_KEY</span><span class="o">=</span><span class="s2">&quot;RGAPI-your-key-here&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>riotskillissue-cli<span class="w"> </span>live<span class="w"> </span><span class="s2">&quot;GameName#TagLine&quot;</span>
+</span></code></pre></div>
+<h3 id="with-options">With Options<a class="headerlink" href="#with-options" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>riotskillissue-cli<span class="w"> </span>live<span class="w"> </span><span class="s2">&quot;Faker#KR1&quot;</span><span class="w"> </span>--region<span class="w"> </span>kr<span class="w"> </span>--refresh<span class="w"> </span><span class="m">15</span>
+</span></code></pre></div>
+<h3 id="all-options">All Options<a class="headerlink" href="#all-options" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
+<th>Option</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>method</code></td>
-<td>The API method to paginate</td>
+<td><code>name</code></td>
+<td><em>(required)</em></td>
+<td>Riot ID in <code>GameName#TagLine</code> format</td>
 </tr>
 <tr>
-<td><code>start</code></td>
-<td>Initial offset (default: 0)</td>
+<td><code>--region</code></td>
+<td><code>euw1</code></td>
+<td>Regional server (<code>euw1</code>, <code>na1</code>, <code>kr</code>, <code>eun1</code>, etc.)</td>
 </tr>
 <tr>
-<td><code>count</code></td>
-<td>Items per page (default: 100)</td>
+<td><code>--api-key</code></td>
+<td><code>$RIOT_API_KEY</code></td>
+<td>Riot API key</td>
 </tr>
 <tr>
-<td><code>max_results</code></td>
-<td>Maximum items to yield (default: infinity)</td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td>Arguments passed to the method</td>
+<td><code>--refresh</code></td>
+<td><code>30</code></td>
+<td>Auto-refresh interval in seconds</td>
 </tr>
 </tbody>
 </table>
+<h3 id="regions">Regions<a class="headerlink" href="#regions" title="Permanent link">&para;</a></h3>
+<p>All standard League of Legends regions are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>North America</td>
+<td><code>na1</code></td>
+</tr>
+<tr>
+<td>Europe West</td>
+<td><code>euw1</code></td>
+</tr>
+<tr>
+<td>Europe Nordic &amp; East</td>
+<td><code>eun1</code></td>
+</tr>
+<tr>
+<td>Korea</td>
+<td><code>kr</code></td>
+</tr>
+<tr>
+<td>Japan</td>
+<td><code>jp1</code></td>
+</tr>
+<tr>
+<td>Brazil</td>
+<td><code>br1</code></td>
+</tr>
+<tr>
+<td>Latin America North</td>
+<td><code>la1</code></td>
+</tr>
+<tr>
+<td>Latin America South</td>
+<td><code>la2</code></td>
+</tr>
+<tr>
+<td>Oceania</td>
+<td><code>oc1</code></td>
+</tr>
+<tr>
+<td>Turkey</td>
+<td><code>tr1</code></td>
+</tr>
+<tr>
+<td>Russia</td>
+<td><code>ru</code></td>
+</tr>
+<tr>
+<td>Philippines</td>
+<td><code>ph2</code></td>
+</tr>
+<tr>
+<td>Singapore</td>
+<td><code>sg2</code></td>
+</tr>
+<tr>
+<td>Thailand</td>
+<td><code>th2</code></td>
+</tr>
+<tr>
+<td>Taiwan</td>
+<td><code>tw2</code></td>
+</tr>
+<tr>
+<td>Vietnam</td>
+<td><code>vn2</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="keyboard-shortcuts">Keyboard Shortcuts<a class="headerlink" href="#keyboard-shortcuts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>++r++</td>
+<td>Refresh game data immediately</td>
+</tr>
+<tr>
+<td>++q++</td>
+<td>Quit the TUI</td>
+</tr>
+<tr>
+<td>++escape++</td>
+<td>Quit the TUI</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-you-see">What You See<a class="headerlink" href="#what-you-see" title="Permanent link">&para;</a></h2>
+<h3 id="when-a-game-is-active">When a Game is Active<a class="headerlink" href="#when-a-game-is-active" title="Permanent link">&para;</a></h3>
+<p>The TUI displays a full-screen dashboard with:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌─────────────────────────────────────────────────────────────┐
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│            🎮  LIVE GAME  —  Ranked Solo/Duo                │
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│            ⏱  12:34    📍  EUW1                             │
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│                    🔵  BLUE TEAM                            │
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│  Champion    │ Player       │ Rank           │ Spells       │
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│──────────────┼──────────────┼────────────────┼──────────────│
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│  Ahri        │ Player1#EUW  │ Diamond II     │ Flash / Ign  │
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│  Lee Sin     │ Player2#EUW  │ Emerald I      │ Flash / Smt  │
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│  Orianna     │ Player3#EUW  │ Master 234 LP  │ Flash / TP   │
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│  Jinx        │ Player4#EUW  │ Diamond IV     │ Flash / Heal │
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│  Thresh      │ Player5#EUW  │ Platinum I     │ Flash / Ign  │
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│  🚫 Bans: Yasuo · Yone · Zed · Lux · Blitzcrank            │
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│                    🔴  RED TEAM                             │
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│  Champion    │ Player       │ Rank           │ Spells       │
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│──────────────┼──────────────┼────────────────┼──────────────│
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│  Zed         │ Player6#EUW  │ Diamond I      │ Flash / Ign  │
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│  Graves      │ Player7#EUW  │ Emerald III    │ Flash / Smt  │
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│  Syndra      │ Player8#EUW  │ Diamond III    │ Flash / TP   │
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│  Kai&#39;Sa      │ Player9#EUW  │ Platinum II    │ Flash / Heal │
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│  Nautilus    │ Player10#EUW │ Diamond IV     │ Flash / Ign  │
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>└─────────────────────────────────────────────────────────────┘
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>  Q Quit │ R Refresh │ Auto-refresh: 24s
+</span></code></pre></div>
+<h3 id="when-not-in-a-game">When Not in a Game<a class="headerlink" href="#when-not-in-a-game" title="Permanent link">&para;</a></h3>
+<p>If the player isn't currently in a match, the TUI shows a waiting screen and keeps checking:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌───────────────────────────────────────┐
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                                       │
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│     🎮  Agurin#EUW                    │
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│                                       │
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│     Not currently in a game.          │
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│                                       │
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│     The TUI will auto-refresh and     │
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│     show the game once it starts.     │
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│                                       │
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│     Next refresh in 24s               │
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│     Press [R] to refresh now          │
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│                                       │
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>└───────────────────────────────────────┘
+</span></code></pre></div>
+<h2 id="rank-colors">Rank Colors<a class="headerlink" href="#rank-colors" title="Permanent link">&para;</a></h2>
+<p>Each player's rank is displayed with a color matching their tier:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Iron</td>
+<td>Gray</td>
+</tr>
+<tr>
+<td>Bronze</td>
+<td>Bronze</td>
+</tr>
+<tr>
+<td>Silver</td>
+<td>Silver</td>
+</tr>
+<tr>
+<td>Gold</td>
+<td>Gold</td>
+</tr>
+<tr>
+<td>Platinum</td>
+<td>Teal</td>
+</tr>
+<tr>
+<td>Emerald</td>
+<td>Green</td>
+</tr>
+<tr>
+<td>Diamond</td>
+<td>Light Blue</td>
+</tr>
+<tr>
+<td>Master</td>
+<td>Purple</td>
+</tr>
+<tr>
+<td>Grandmaster</td>
+<td>Red</td>
+</tr>
+<tr>
+<td>Challenger</td>
+<td>Orange</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programmatic-usage">Programmatic Usage<a class="headerlink" href="#programmatic-usage" title="Permanent link">&para;</a></h2>
+<p>You can also launch the TUI from Python code:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">riotskillissue.tui</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_tui</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">run_tui</span><span class="p">(</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;RGAPI-your-key&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">game_name</span><span class="o">=</span><span class="s2">&quot;Agurin&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">tag_line</span><span class="o">=</span><span class="s2">&quot;EUW&quot;</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">region</span><span class="o">=</span><span class="s2">&quot;euw1&quot;</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">auto_refresh</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Or use the lower-level app class for more control:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">riotskillissue.tui</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiveGameApp</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">LiveGameApp</span><span class="p">(</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;RGAPI-your-key&quot;</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">game_name</span><span class="o">=</span><span class="s2">&quot;Agurin&quot;</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">tag_line</span><span class="o">=</span><span class="s2">&quot;EUW&quot;</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">region</span><span class="o">=</span><span class="s2">&quot;euw1&quot;</span><span class="p">,</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">auto_refresh</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></code></pre></div>
+<h2 id="api-key">API Key<a class="headerlink" href="#api-key" title="Permanent link">&para;</a></h2>
+<p>The TUI requires a valid Riot API key. You can get one from the <a href="https://developer.riotgames.com/">Riot Developer Portal</a>.</p>
+<p>Set it as an environment variable for convenience:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux / macOS</label><label for="__tabbed_1_2">Windows (PowerShell)</label><label for="__tabbed_1_3">Windows (CMD)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RIOT_API_KEY</span><span class="o">=</span><span class="s2">&quot;RGAPI-your-key-here&quot;</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">$env:RIOT_API_KEY</span> <span class="p">=</span> <span class="s2">&quot;RGAPI-your-key-here&quot;</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>set RIOT_API_KEY=RGAPI-your-key-here
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Development Keys</p>
+<p>Riot development API keys expire every 24 hours. For persistent usage, 
+apply for a personal or production key through the Developer Portal.</p>
+</div>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="not-currently-in-a-game">"Not currently in a game"<a class="headerlink" href="#not-currently-in-a-game" title="Permanent link">&para;</a></h3>
+<p>The player must be in an <strong>active</strong> League of Legends match (loading screen or in-game). 
+Champion select does not count — the Spectator API only reports data once the game has started.</p>
+<h3 id="404-data-not-found">"404 - Data not found"<a class="headerlink" href="#404-data-not-found" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Double-check the Riot ID spelling and tag line</li>
+<li>Make sure you're using the correct <code>--region</code> for the player's server</li>
+<li>Verify your API key is valid and not expired</li>
+</ul>
+<h3 id="rate-limiting">Rate Limiting<a class="headerlink" href="#rate-limiting" title="Permanent link">&para;</a></h3>
+<p>The TUI makes multiple API calls per refresh (spectator + ranks for all 10 players). 
+With a development key (20 requests/second, 100 requests/2 minutes), the default 
+30-second refresh interval stays well within limits. Lower the interval with caution.</p>
 
 
 
