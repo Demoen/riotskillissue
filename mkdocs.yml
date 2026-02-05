@@ -71,6 +71,7 @@ nav:
       - VALORANT: examples/valorant.md
   - API Reference: api-reference.md
   - CLI: cli.md
+  - Live Game TUI: live-game-tui.md
   - Contributing: CONTRIBUTING.md
 
 extra:
