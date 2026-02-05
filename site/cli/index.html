@@ -18,7 +18,7 @@
         <link rel="prev" href="../api-reference/">
       
       
-        <link rel="next" href="../CONTRIBUTING/">
+        <link rel="next" href="../live-game-tui/">
       
       
         
@@ -332,6 +332,25 @@
     
   
   CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../live-game-tui/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Live Game TUI
 
       </a>
     </li>
@@ -805,6 +824,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        live
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -825,6 +855,33 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-game-tui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Game TUI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -932,6 +989,17 @@
     <span class="md-ellipsis">
       
         match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        live
       
     </span>
   </a>
@@ -1063,15 +1131,78 @@
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Game<span class="w"> </span>Mode:<span class="w"> </span>CLASSIC
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Duration:<span class="w"> </span>1847s
 </span></code></pre></div>
+<h3 id="live">live<a class="headerlink" href="#live" title="Permanent link">&para;</a></h3>
+<p>🎮 Launch an interactive Live Game TUI (Terminal User Interface) that shows real-time information about an ongoing League of Legends match.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>riotskillissue-cli<span class="w"> </span>live<span class="w"> </span><span class="s2">&quot;GameName#TagLine&quot;</span><span class="w"> </span>--region<span class="w"> </span>euw1
+</span></code></pre></div>
+<p>This is the fastest way to spectate a match from your terminal — <strong>one command, instant dashboard</strong>.</p>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Riot ID in format <code>GameName#TagLine</code></td>
+</tr>
+<tr>
+<td><code>--region</code></td>
+<td>Regional server (default: <code>euw1</code>)</td>
+</tr>
+<tr>
+<td><code>--api-key</code></td>
+<td>API key (or use <code>RIOT_API_KEY</code> env var)</td>
+</tr>
+<tr>
+<td><code>--refresh</code></td>
+<td>Auto-refresh interval in seconds (default: <code>30</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>riotskillissue-cli<span class="w"> </span>live<span class="w"> </span><span class="s2">&quot;Agurin#EUW&quot;</span><span class="w"> </span>--region<span class="w"> </span>euw1
+</span></code></pre></div>
+<p>This opens a full-screen terminal dashboard showing:</p>
+<ul>
+<li><strong>Game info</strong> — queue type, game duration, platform</li>
+<li><strong>Blue Team</strong> — champions, player names, ranks, win rates, summoner spells</li>
+<li><strong>Red Team</strong> — champions, player names, ranks, win rates, summoner spells  </li>
+<li><strong>Bans</strong> — all banned champions</li>
+</ul>
+<p>The TUI auto-refreshes every 30 seconds (configurable with <code>--refresh</code>). If the player isn't in a game yet, it will keep checking until one starts.</p>
+<p><strong>Keyboard shortcuts:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>R</code></td>
+<td>Manual refresh</td>
+</tr>
+<tr>
+<td><code>Q</code> / <code>Esc</code></td>
+<td>Quit</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../live-game-tui/">Live Game TUI</a> page for more details and screenshots.</p>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <p>The CLI displays user-friendly error messages:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>$<span class="w"> </span>riotskillissue-cli<span class="w"> </span>summoner<span class="w"> </span><span class="s2">&quot;InvalidName&quot;</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Error:<span class="w"> </span>Name<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>format<span class="w"> </span>GameName#TagLine<span class="w"> </span><span class="k">for</span><span class="w"> </span>Account<span class="w"> </span>V1<span class="w"> </span>lookup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>riotskillissue-cli<span class="w"> </span>summoner<span class="w"> </span><span class="s2">&quot;InvalidName&quot;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Error:<span class="w"> </span>Name<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>format<span class="w"> </span>GameName#TagLine<span class="w"> </span><span class="k">for</span><span class="w"> </span>Account<span class="w"> </span>V1<span class="w"> </span>lookup
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>riotskillissue-cli<span class="w"> </span>summoner<span class="w"> </span><span class="s2">&quot;NonExistent#USER&quot;</span><span class="w"> </span>--region<span class="w"> </span>euw1
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Error:<span class="w"> </span><span class="m">404</span><span class="w"> </span>-<span class="w"> </span>Data<span class="w"> </span>not<span class="w"> </span>found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>riotskillissue-cli<span class="w"> </span>summoner<span class="w"> </span><span class="s2">&quot;NonExistent#USER&quot;</span><span class="w"> </span>--region<span class="w"> </span>euw1
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Error:<span class="w"> </span><span class="m">404</span><span class="w"> </span>-<span class="w"> </span>Data<span class="w"> </span>not<span class="w"> </span>found
 </span></code></pre></div>
 
 
