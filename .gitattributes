@@ -1,0 +1,5 @@
+# Exclude generated documentation from language statistics
+site/** linguist-generated=true
+
+# Mark documentation source as documentation
+docs/** linguist-documentation=true
