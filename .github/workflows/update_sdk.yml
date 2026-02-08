@@ -46,7 +46,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
           # Read version from file to tag
-          VERSION=$(grep -oP 'version = "\K[^"]+' pyproject.toml)
+          VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           
           git add src/riotskillissue/api/models.py src/riotskillissue/api/endpoints pyproject.toml
           git add -A # Catch incidental changes
