@@ -1346,6 +1346,10 @@ class match_v5_EventsTimeLineDto(BaseModel):
     
     victimId: Optional[int] = Field(default=None, alias="victimId")
     
+    victimTeamfightDamageDealt: Optional[List[match_v5_MatchTimelineVictimDamage]] = Field(default=None, alias="victimTeamfightDamageDealt")
+    
+    victimTeamfightDamageReceived: Optional[List[match_v5_MatchTimelineVictimDamage]] = Field(default=None, alias="victimTeamfightDamageReceived")
+    
     wardType: Optional[str] = Field(default=None, alias="wardType")
     
     winningTeam: Optional[int] = Field(default=None, alias="winningTeam")
