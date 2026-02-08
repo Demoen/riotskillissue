@@ -2,6 +2,7 @@
 import re
 from pathlib import Path
 import sys
+import os
 
 def bump_version():
     target_file = Path("pyproject.toml")
@@ -25,12 +26,13 @@ def bump_version():
     print(f"Bumped version from {major}.{minor}.{patch} to {new_version}")
     
     # Store verifyable output for GitHub Actions
-    if "GITHUB_OUTPUT" in sys.modules: 
-        # But we are running as a script, so check env var
-        pass
-        
-    # Print for GITHUB_OUTPUT in shell
-    print(f"::set-output name=new_version::{new_version}")
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        with open(github_output, "a") as f:
+            f.write(f"new_version={new_version}\n")
+    else:
+        # Print for local debugging or older runners
+        print(f"::set-output name=new_version::{new_version}")
 
 if __name__ == "__main__":
     bump_version()
