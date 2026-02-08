@@ -16,13 +16,13 @@ That's it. This single command opens an interactive, auto-refreshing dashboard.
 
 The TUI displays a full-screen dashboard with:
 
-![Live Game TUI](live_game_tui.png)
+![Live Game TUI](live_game_tui.gif)
 
 ### When Not in a Game
 
 If the player isn't currently in a match, the TUI shows a waiting screen and keeps checking:
 
-![Waiting Screen](live_game_tui_not_found.png)
+![Waiting Screen](live_game_tui_not_found.gif)
 
 ## Features
 
