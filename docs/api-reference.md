@@ -4,6 +4,8 @@ Complete reference for all available API endpoints.
 
 ## Client Initialization
 
+### Async Client
+
 ```python
 from riotskillissue import RiotClient, RiotClientConfig
 
@@ -19,11 +21,49 @@ async with RiotClient(api_key="RGAPI-...") as client:
 config = RiotClientConfig(
     api_key="RGAPI-...",
     max_retries=5,
-    redis_url="redis://localhost:6379/0"
+    redis_url="redis://localhost:6379/0",
+    cache_ttl=120,
+    log_level="DEBUG",
 )
 async with RiotClient(config=config) as client:
     pass
 ```
+
+### Sync Client
+
+```python
+from riotskillissue import SyncRiotClient
+
+# Same API, no async/await needed
+with SyncRiotClient(api_key="RGAPI-...") as client:
+    account = client.account.get_by_riot_id(
+        region="americas", gameName="Faker", tagLine="KR1"
+    )
+```
+
+`SyncRiotClient` mirrors the entire `RiotClient` API surface. Every async method becomes a synchronous call.
+
+---
+
+## Error Hierarchy
+
+All API errors inherit from `RiotAPIError` and carry `status`, `message`, and `response` attributes:
+
+```python
+from riotskillissue import (
+    RiotAPIError,       # Base — any API error
+    BadRequestError,    # 400
+    UnauthorizedError,  # 401
+    ForbiddenError,     # 403
+    NotFoundError,      # 404
+    RateLimitError,     # 429
+    ServerError,        # 5xx
+)
+```
+
+!!! note "429 Handling"
+    HTTP 429 responses are automatically retried after sleeping for the `Retry-After` value.
+    `RateLimitError` is only raised if the server returns 429 without a valid `Retry-After` header after exhausting retries.
 
 ---
 
@@ -264,7 +304,24 @@ Optional parameters for `get_match_ids_by_puuid`:
 |--------|-------------|
 | `get_latest_version()` | Get latest Data Dragon version |
 | `get_champion(champion_key)` | Get champion data by ID |
+| `get_all_champions()` | Get all champions as a dict |
 | `get_item(item_id)` | Get item data by ID |
+| `get_all_items()` | Get all items as a dict |
+| `get_summoner_spells()` | Get all summoner spells |
+| `get_summoner_spell(spell_key)` | Get a summoner spell by numeric key |
+| `get_runes()` | Get all rune trees and runes |
+| `get_queues()` | Get all queue type definitions |
+| `get_maps()` | Get all map definitions |
+| `get_game_modes()` | Get all game mode definitions |
+
+```python
+# Example: get summoner spells and runes
+async with RiotClient() as client:
+    spells = await client.static.get_summoner_spells()
+    flash = await client.static.get_summoner_spell(4)
+    runes = await client.static.get_runes()
+    queues = await client.static.get_queues()
+```
 
 ---
 

@@ -56,7 +56,7 @@ async with RiotClient(api_key="RGAPI-your-key-here") as client:
     # ...
 ```
 
-## Your First API Call
+## Your First API Call (Async)
 
 Here's a complete example that looks up a player by their Riot ID:
 
@@ -65,12 +65,11 @@ import asyncio
 from riotskillissue import RiotClient, Platform, Region
 
 async def main():
-    # Client auto-loads RIOT_API_KEY from environment
     async with RiotClient() as client:
         
         # Step 1: Look up account by Riot ID
         account = await client.account.get_by_riot_id(
-            region=Platform.EUROPE,  # Use AMERICAS, EUROPE, ASIA, or SEA
+            region=Platform.EUROPE,
             gameName="Player",
             tagLine="EUW"
         )
@@ -79,13 +78,61 @@ async def main():
         
         # Step 2: Get summoner data using the PUUID
         summoner = await client.summoner.get_by_puuid(
-            region=Region.EUW1,  # Regional server
+            region=Region.EUW1,
             encryptedPUUID=account.puuid
         )
         print(f"Summoner Level: {summoner.summonerLevel}")
 
 if __name__ == "__main__":
     asyncio.run(main())
+```
+
+## Your First API Call (Sync)
+
+Don't need async? Use `SyncRiotClient` — it has the same API but works in plain synchronous code:
+
+```python
+from riotskillissue import SyncRiotClient, Platform, Region
+
+with SyncRiotClient() as client:
+    account = client.account.get_by_riot_id(
+        region=Platform.EUROPE,
+        gameName="Player",
+        tagLine="EUW"
+    )
+    print(f"Account: {account.gameName}#{account.tagLine}")
+
+    summoner = client.summoner.get_by_puuid(
+        region=Region.EUW1,
+        encryptedPUUID=account.puuid
+    )
+    print(f"Summoner Level: {summoner.summonerLevel}")
+```
+
+!!! tip "When to use which?"
+    Use `RiotClient` (async) in web servers, bots, and high-throughput applications.
+    Use `SyncRiotClient` for scripts, notebooks, CLI tools, and quick prototyping.
+
+## Error Handling
+
+v0.2.0 introduces typed exceptions so you can handle specific error conditions:
+
+```python
+from riotskillissue import RiotClient, NotFoundError, RateLimitError, RiotAPIError
+
+async with RiotClient() as client:
+    try:
+        account = await client.account.get_by_riot_id(
+            region=Platform.EUROPE,
+            gameName="Nonexistent",
+            tagLine="0000"
+        )
+    except NotFoundError:
+        print("Player not found!")
+    except RateLimitError as e:
+        print(f"Rate limited — retry after {e.response.headers.get('Retry-After')}s")
+    except RiotAPIError as e:
+        print(f"API error [{e.status}]: {e.message}")
 ```
 
 ## Understanding Regions vs Platforms

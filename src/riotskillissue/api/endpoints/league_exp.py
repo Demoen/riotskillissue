@@ -1,16 +1,19 @@
 # Generated Code. Do not edit.
-from typing import Optional, List, Dict, Any
+from __future__ import annotations
+from typing import Optional, Union, List, Dict, Any
+from pydantic import TypeAdapter
 from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import Region, Platform
 from riotskillissue.api.models import *
 
-class League_expApi:
+class LeagueExpApi:
     def __init__(self, http: HttpClient):
         self.http = http
 
     
     async def get_league_entries(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         division: str,
         
@@ -20,10 +23,9 @@ class League_expApi:
         
         page: int = None,
         
+        
     ) -> List[league_exp_v4_LeagueEntryDTO]:
-        """
-        Get all the league entries.
-        """
+        """Get all the league entries."""
         path = "/lol/league-exp/v4/entries/{queue}/{tier}/{division}"
         # Replace path params
         
@@ -43,14 +45,15 @@ class League_expApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[league_exp_v4_LeagueEntryDTO]).validate_python(response.json())
         
     

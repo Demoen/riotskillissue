@@ -1,23 +1,25 @@
 # Generated Code. Do not edit.
-from typing import Optional, List, Dict, Any
+from __future__ import annotations
+from typing import Optional, Union, List, Dict, Any
+from pydantic import TypeAdapter
 from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import Region, Platform
 from riotskillissue.api.models import *
 
-class Tft_leagueApi:
+class TftLeagueApi:
     def __init__(self, http: HttpClient):
         self.http = http
 
     
     async def get_league_entries_by_puuid(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         puuid: str,
         
+        
     ) -> List[tft_league_v1_LeagueEntryDTO]:
-        """
-        Get league entries in all queues for a given puuid
-        """
+        """Get league entries in all queues for a given puuid"""
         path = "/tft/league/v1/by-puuid/{puuid}"
         # Replace path params
         
@@ -31,27 +33,27 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[tft_league_v1_LeagueEntryDTO]).validate_python(response.json())
         
     
     async def get_challenger_league(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         queue: str = None,
         
+        
     ) -> tft_league_v1_LeagueListDTO:
-        """
-        Get the challenger league.
-        """
+        """Get the challenger league."""
         path = "/tft/league/v1/challenger"
         # Replace path params
         
@@ -65,20 +67,21 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(tft_league_v1_LeagueListDTO).validate_python(response.json())
         
     
     async def get_league_entries(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         division: str,
         
@@ -88,10 +91,9 @@ class Tft_leagueApi:
         
         queue: str = None,
         
+        
     ) -> List[tft_league_v1_LeagueEntryDTO]:
-        """
-        Get all the league entries.
-        """
+        """Get all the league entries."""
         path = "/tft/league/v1/entries/{tier}/{division}"
         # Replace path params
         
@@ -111,27 +113,27 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[tft_league_v1_LeagueEntryDTO]).validate_python(response.json())
         
     
     async def get_grandmaster_league(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         queue: str = None,
         
+        
     ) -> tft_league_v1_LeagueListDTO:
-        """
-        Get the grandmaster league.
-        """
+        """Get the grandmaster league."""
         path = "/tft/league/v1/grandmaster"
         # Replace path params
         
@@ -145,27 +147,27 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(tft_league_v1_LeagueListDTO).validate_python(response.json())
         
     
     async def get_league_by_id(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         leagueId: str,
         
+        
     ) -> tft_league_v1_LeagueListDTO:
-        """
-        Get league with given ID, including inactive entries.
-        """
+        """Get league with given ID, including inactive entries."""
         path = "/tft/league/v1/leagues/{leagueId}"
         # Replace path params
         
@@ -179,27 +181,27 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(tft_league_v1_LeagueListDTO).validate_python(response.json())
         
     
     async def get_master_league(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         queue: str = None,
         
+        
     ) -> tft_league_v1_LeagueListDTO:
-        """
-        Get the master league.
-        """
+        """Get the master league."""
         path = "/tft/league/v1/master"
         # Replace path params
         
@@ -213,27 +215,27 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(tft_league_v1_LeagueListDTO).validate_python(response.json())
         
     
     async def get_top_rated_ladder(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         queue: str,
         
+        
     ) -> List[tft_league_v1_TopRatedLadderEntryDto]:
-        """
-        Get the top rated ladder for given queue
-        """
+        """Get the top rated ladder for given queue"""
         path = "/tft/league/v1/rated-ladders/{queue}/top"
         # Replace path params
         
@@ -247,14 +249,15 @@ class Tft_leagueApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[tft_league_v1_TopRatedLadderEntryDto]).validate_python(response.json())
         
     

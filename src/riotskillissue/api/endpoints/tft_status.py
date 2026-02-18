@@ -1,21 +1,23 @@
 # Generated Code. Do not edit.
-from typing import Optional, List, Dict, Any
+from __future__ import annotations
+from typing import Optional, Union, List, Dict, Any
+from pydantic import TypeAdapter
 from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import Region, Platform
 from riotskillissue.api.models import *
 
-class Tft_statusApi:
+class TftStatusApi:
     def __init__(self, http: HttpClient):
         self.http = http
 
     
     async def get_platform_data(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
+        
         
     ) -> tft_status_v1_PlatformDataDto:
-        """
-        Get Teamfight Tactics status for the given platform.
-        """
+        """Get Teamfight Tactics status for the given platform."""
         path = "/tft/status/v1/platform-data"
         # Replace path params
         
@@ -27,14 +29,15 @@ class Tft_statusApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(tft_status_v1_PlatformDataDto).validate_python(response.json())
         
     

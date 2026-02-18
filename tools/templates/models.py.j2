@@ -5,18 +5,35 @@ from pydantic import BaseModel, Field
 from riotskillissue.core.types import Region, Platform
 
 {% for model in models %}
+{% if model.enum_values %}
+{{ model.name }} = Literal[{{ model.enum_values | map('tojson') | join(', ') }}]
+"""{{ model.description or model.name }}"""
+{% else %}
 class {{ model.name }}(BaseModel):
     """
     {{ model.description or "No description provided." }}
     """
-    {% if model.enum_values %}
-    # Enum-like behavior handled via Literal or specific field types if complex
-    # For now, simplistic approach or just pass
-    pass
-    {% else %}
     {% for prop in model.properties %}
-    {{ prop.name }}: {{ "Optional[" + prop.type_annotation + "]" if not prop.required else prop.type_annotation }} = Field(default=None, alias="{{ prop.alias or prop.name }}")
+    {% if prop.required %}
+    {{ prop.name }}: {{ prop.type_annotation }} = Field(alias="{{ prop.alias or prop.name }}")
+    {% else %}
+    {{ prop.name }}: Optional[{{ prop.type_annotation }}] = Field(default=None, alias="{{ prop.alias or prop.name }}")
+    {% endif %}
     {% endfor %}
+    {% if not model.properties %}
+    pass
     {% endif %}
 
+    model_config = {"populate_by_name": True}
+
+{% endif %}
 {% endfor %}
+
+# Rebuild all models to resolve forward references
+for _name, _obj in list(locals().items()):
+    if isinstance(_obj, type) and issubclass(_obj, BaseModel) and _obj is not BaseModel:
+        try:
+            _obj.model_rebuild()
+        except Exception:
+            pass  # some models may not need rebuilding
+del _name, _obj

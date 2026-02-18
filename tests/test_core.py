@@ -28,24 +28,21 @@ async def test_http_retry_on_500(config):
 
 @pytest.mark.asyncio
 async def test_http_429_handling(config):
-    """Verify that 429s raise RateLimitError (or are handled)."""
+    """Verify that 429s are retried automatically with Retry-After."""
     
-    # By default implementation raises RateLimitError
     async with respx.mock(base_url="https://na1.api.riotgames.com") as respx_mock:
-        respx_mock.get("/test").mock(return_value=Response(429, headers={"Retry-After": "1"}))
+        # 429 once, then succeed on retry
+        route = respx_mock.get("/test").mock(side_effect=[
+            Response(429, headers={"Retry-After": "0"}),
+            Response(200, json={"ok": True})
+        ])
         
         http_client = HttpClient(config)
+        resp = await http_client.request("GET", "/test", Region.NA1)
         
-        # We expect a RateLimitError to be raised eventually or immediately
-        # Our implementation raises it immediately inside _execute_with_retry if not retried by tenacity
-        # Tenacity config in http.py: retry_if_exception_type((NetworkError, Timeout...))
-        # It does NOT verify 429 status code for retry automatically unless we added it.
-        # In http.py logic: "raise RateLimitError"
-        
-        with pytest.raises(RateLimitError) as exc:
-            await http_client.request("GET", "/test", Region.NA1)
-        
-        assert exc.value.retry_after == 1.0
+        assert resp.status_code == 200
+        assert resp.json() == {"ok": True}
+        assert route.call_count == 2  # first 429, then success
 
 @pytest.mark.asyncio
 async def test_redis_limiter_init():

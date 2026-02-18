@@ -1,6 +1,9 @@
 # Generated Code. Do not edit.
-from typing import Optional, List, Dict, Any
+from __future__ import annotations
+from typing import Optional, Union, List, Dict, Any
+from pydantic import TypeAdapter
 from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import Region, Platform
 from riotskillissue.api.models import *
 
 class ClashApi:
@@ -10,14 +13,13 @@ class ClashApi:
     
     async def get_players_by_puuid(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         puuid: str,
         
+        
     ) -> List[clash_v1_PlayerDto]:
-        """
-        Get players by puuid
-        """
+        """Get players by puuid"""
         path = "/lol/clash/v1/players/by-puuid/{puuid}"
         # Replace path params
         
@@ -31,27 +33,27 @@ class ClashApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[clash_v1_PlayerDto]).validate_python(response.json())
         
     
     async def get_team_by_id(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         teamId: str,
         
+        
     ) -> clash_v1_TeamDto:
-        """
-        Get team by ID.
-        """
+        """Get team by ID."""
         path = "/lol/clash/v1/teams/{teamId}"
         # Replace path params
         
@@ -65,25 +67,25 @@ class ClashApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(clash_v1_TeamDto).validate_python(response.json())
         
     
     async def get_tournaments(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
+        
         
     ) -> List[clash_v1_TournamentDto]:
-        """
-        Get all active or upcoming tournaments.
-        """
+        """Get all active or upcoming tournaments."""
         path = "/lol/clash/v1/tournaments"
         # Replace path params
         
@@ -95,27 +97,27 @@ class ClashApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[clash_v1_TournamentDto]).validate_python(response.json())
         
     
     async def get_tournament_by_team(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         teamId: str,
         
+        
     ) -> clash_v1_TournamentDto:
-        """
-        Get tournament by team ID.
-        """
+        """Get tournament by team ID."""
         path = "/lol/clash/v1/tournaments/by-team/{teamId}"
         # Replace path params
         
@@ -129,27 +131,27 @@ class ClashApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(clash_v1_TournamentDto).validate_python(response.json())
         
     
     async def get_tournament_by_id(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         tournamentId: int,
         
+        
     ) -> clash_v1_TournamentDto:
-        """
-        Get tournament by ID.
-        """
+        """Get tournament by ID."""
         path = "/lol/clash/v1/tournaments/{tournamentId}"
         # Replace path params
         
@@ -163,14 +165,15 @@ class ClashApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(clash_v1_TournamentDto).validate_python(response.json())
         
     

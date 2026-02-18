@@ -2,6 +2,18 @@
 
 Working code examples demonstrating common usage patterns for the Riot Games API.
 
+All examples are shown using the async `RiotClient`. You can use `SyncRiotClient` as a drop-in replacement — just remove `async`/`await` and use `with` instead of `async with`:
+
+```python
+# Async
+async with RiotClient() as client:
+    account = await client.account.get_by_riot_id(...)
+
+# Sync — same API, no async needed
+with SyncRiotClient() as client:
+    account = client.account.get_by_riot_id(...)
+```
+
 ## Available Examples
 
 <div class="grid cards" markdown>
@@ -10,7 +22,7 @@ Working code examples demonstrating common usage patterns for the Riot Games API
 
     ---
 
-    Summoner lookups, match history, champion mastery, live game spectator
+    Summoner lookups, match history, champion mastery, live game spectator, error handling
 
 -   **[Teamfight Tactics](teamfight-tactics.md)**
 
