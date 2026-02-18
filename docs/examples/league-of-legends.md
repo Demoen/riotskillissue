@@ -251,7 +251,7 @@ if __name__ == "__main__":
 
 ## Static Data (Data Dragon)
 
-Get champion and item static data:
+Get champion, item, summoner spell, and rune static data:
 
 ```python
 import asyncio
@@ -269,6 +269,80 @@ async def main():
         print(f"\nItem: {dorans_blade['name']}")
         print(f"Cost: {dorans_blade['gold']['total']} gold")
 
+        # Get summoner spell by key
+        flash = await client.static.get_summoner_spell(4)
+        print(f"\nSpell: {flash['name']}")
+
+        # Get all rune trees
+        runes = await client.static.get_runes()
+        for tree in runes:
+            print(f"\nRune Tree: {tree['name']}")
+
+        # Get queue definitions
+        queues = await client.static.get_queues()
+        for q in queues[:5]:
+            print(f"Queue {q['queueId']}: {q.get('description', 'N/A')}")
+
 if __name__ == "__main__":
     asyncio.run(main())
+```
+
+## Error Handling
+
+Handle specific API errors with the typed exception hierarchy:
+
+```python
+import asyncio
+from riotskillissue import (
+    RiotClient, Platform, Region,
+    NotFoundError, ForbiddenError, RateLimitError, RiotAPIError,
+)
+
+async def main():
+    async with RiotClient() as client:
+        try:
+            account = await client.account.get_by_riot_id(
+                region=Platform.EUROPE,
+                gameName="Nonexistent",
+                tagLine="9999"
+            )
+        except NotFoundError:
+            print("Player not found!")
+        except ForbiddenError:
+            print("API key doesn't have access to this endpoint")
+        except RiotAPIError as e:
+            print(f"API error [{e.status}]: {e.message}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Synchronous Usage
+
+All examples above work with `SyncRiotClient` — just drop the async/await:
+
+```python
+from riotskillissue import SyncRiotClient, Platform, Region
+
+with SyncRiotClient() as client:
+    account = client.account.get_by_riot_id(
+        region=Platform.EUROPE,
+        gameName="Agurin",
+        tagLine="EUW"
+    )
+    print(f"Account: {account.gameName}#{account.tagLine}")
+
+    summoner = client.summoner.get_by_puuid(
+        region=Region.EUW1,
+        encryptedPUUID=account.puuid
+    )
+    print(f"Summoner Level: {summoner.summonerLevel}")
+
+    # Get top 5 champion masteries
+    masteries = client.champion_mastery.get_all_masteries(
+        region=Region.EUW1,
+        encryptedPUUID=account.puuid
+    )
+    for m in masteries[:5]:
+        print(f"  Champion {m.championId}: {m.championPoints:,} pts")
 ```

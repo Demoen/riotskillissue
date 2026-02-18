@@ -6,7 +6,6 @@
 2. Install dependencies:
    ```bash
    pip install -e ".[dev]"
-   pip install httpx pydantic redis tenacity jinja2 frozendict msgspec deepdiff rich typer
    ```
 3. Run tests:
    ```bash
@@ -17,18 +16,41 @@
 
 ## Code Generation
 
-The SDK is generated from the OpenAPI spec. To regenerate:
+The SDK is generated from the Riot Games OpenAPI spec. The generator cleans the output directory before writing, so stale files are automatically removed.
+
+To regenerate:
 
 ```bash
 # Fetch latest spec
 python tools/manager.py
 
-# Generate code
+# Generate code (endpoints, models, client mixin)
 python tools/generator/core.py
 ```
 
+Generated files:
+
+| File | Description |
+|------|-------------|
+| `src/riotskillissue/api/models.py` | Pydantic models for all API schemas |
+| `src/riotskillissue/api/endpoints/*.py` | Endpoint classes for each API tag |
+| `src/riotskillissue/api/client_mixin.py` | Mixin that wires endpoints into `RiotClient` |
+
+!!! warning "Do not edit generated files"
+    Files in `src/riotskillissue/api/` are auto-generated. Edit the Jinja2 templates in `tools/templates/` instead.
+
+## Templates
+
+| Template | Generates |
+|----------|-----------|
+| `tools/templates/models.py.j2` | `api/models.py` |
+| `tools/templates/endpoints.py.j2` | `api/endpoints/*.py` |
+| `tools/templates/client_mixin.py.j2` | `api/client_mixin.py` |
+
 ## Release Process
 
-1. **Tag**: Create a new GitHub release with a tag (e.g., `v0.1.0`).
-2. **Publish**: The GitHub Action `.github/workflows/publish.yml` will automatically build and push to PyPI using Trusted Publishing.
-3. **Verify**: Check [PyPI project page](https://pypi.org/p/riot-wrapper).
+1. Update `CHANGELOG.md` with the new version.
+2. Bump version in `pyproject.toml`.
+3. **Tag**: Create a new GitHub release with a tag (e.g., `v1.0.0`).
+4. **Publish**: The GitHub Action `.github/workflows/publish.yml` will automatically build and push to PyPI using Trusted Publishing.
+5. **Verify**: Check [PyPI project page](https://pypi.org/p/riotskillissue).

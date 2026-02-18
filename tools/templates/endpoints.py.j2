@@ -1,6 +1,9 @@
 # Generated Code. Do not edit.
-from typing import Optional, List, Dict, Any
+from __future__ import annotations
+from typing import Optional, Union, List, Dict, Any
+from pydantic import TypeAdapter
 from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import Region, Platform
 from riotskillissue.api.models import *
 
 class {{ class_name }}:
@@ -10,14 +13,15 @@ class {{ class_name }}:
     {% for op in operations %}
     async def {{ op.method_name }}(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         {% for param in op.parameters %}
         {{ param.name }}: {{ param.type_annotation }}{% if not param.required %} = None{% endif %},
         {% endfor %}
+        {% if op.request_body %}
+        body: {{ op.request_body_type }} = None,
+        {% endif %}
     ) -> {{ op.response_type }}:
-        """
-        {{ op.clean_docstring }}
-        """
+        """{{ op.clean_docstring }}"""
         path = "{{ op.path }}"
         # Replace path params
         {% for param in op.parameters if param.in_ == "path" %}
@@ -33,14 +37,28 @@ class {{ class_name }}:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        {% if op.request_body %}
+        kwargs: Dict[str, Any] = {"params": params}
+        if body is not None:
+            if hasattr(body, "model_dump"):
+                kwargs["json"] = body.model_dump(by_alias=True, exclude_none=True)
+            else:
+                kwargs["json"] = body
         response = await self.http.request(
             method="{{ op.method }}",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
+            **kwargs
+        )
+        {% else %}
+        response = await self.http.request(
+            method="{{ op.method }}",
+            url=path,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
+        {% endif %}
         {% if op.response_type and op.response_type != "None" and op.response_type != "Any" %}
-        from pydantic import TypeAdapter
         return TypeAdapter({{ op.response_type }}).validate_python(response.json())
         {% else %}
         return response.json()

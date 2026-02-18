@@ -65,10 +65,17 @@ async def test_rso_flow():
     )
     client = RsoClient(config)
     
-    # 1. Auth URL
-    url = client.get_auth_url()
-    assert "client_id=id" in url
-    assert "response_type=code" in url
+    # 1. Auth URL (now returns a dict with url, state, code_verifier)
+    auth_data = client.get_auth_url()
+    assert isinstance(auth_data, dict)
+    assert "url" in auth_data
+    assert "state" in auth_data
+    assert "code_verifier" in auth_data
+    assert "client_id=id" in auth_data["url"]
+    assert "response_type=code" in auth_data["url"]
+    assert "state=" in auth_data["url"]
+    assert "code_challenge=" in auth_data["url"]
+    assert "code_challenge_method=S256" in auth_data["url"]
     
     # 2. Token Exchange
     async with respx.mock(base_url="https://auth.riotgames.com") as mock:
@@ -80,9 +87,11 @@ async def test_rso_flow():
             "scope": "openid"
         })
         
-        tokens = await client.exchange_code("auth_code")
+        tokens = await client.exchange_code("auth_code", code_verifier=auth_data["code_verifier"])
         assert tokens.access_token == "at"
         assert tokens.expires_in == 3600
+    
+    await client.close()
 
 @pytest.mark.asyncio
 async def test_pagination_edge_cases():

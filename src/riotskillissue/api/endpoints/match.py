@@ -1,6 +1,9 @@
 # Generated Code. Do not edit.
-from typing import Optional, List, Dict, Any
+from __future__ import annotations
+from typing import Optional, Union, List, Dict, Any
+from pydantic import TypeAdapter
 from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import Region, Platform
 from riotskillissue.api.models import *
 
 class MatchApi:
@@ -10,7 +13,7 @@ class MatchApi:
     
     async def get_match_ids_by_puuid(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         puuid: str,
         
@@ -26,10 +29,9 @@ class MatchApi:
         
         type: str = None,
         
+        
     ) -> List[str]:
-        """
-        Get a list of match ids by puuid
-        """
+        """Get a list of match ids by puuid"""
         path = "/lol/match/v5/matches/by-puuid/{puuid}/ids"
         # Replace path params
         
@@ -55,27 +57,27 @@ class MatchApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(List[str]).validate_python(response.json())
         
     
     async def get_replay(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         puuid: str,
         
+        
     ) -> match_v5_ReplayDTO:
-        """
-        Get player replays
-        """
+        """Get player replays"""
         path = "/lol/match/v5/matches/by-puuid/{puuid}/replays"
         # Replace path params
         
@@ -89,27 +91,27 @@ class MatchApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(match_v5_ReplayDTO).validate_python(response.json())
         
     
     async def get_match(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         matchId: str,
         
+        
     ) -> match_v5_MatchDto:
-        """
-        Get a match by match id
-        """
+        """Get a match by match id"""
         path = "/lol/match/v5/matches/{matchId}"
         # Replace path params
         
@@ -123,27 +125,27 @@ class MatchApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(match_v5_MatchDto).validate_python(response.json())
         
     
     async def get_timeline(
         self,
-        region: str,
+        region: Union[Region, Platform, str],
         
         matchId: str,
         
+        
     ) -> match_v5_TimelineDto:
-        """
-        Get a match timeline by match id
-        """
+        """Get a match timeline by match id"""
         path = "/lol/match/v5/matches/{matchId}/timeline"
         # Replace path params
         
@@ -157,14 +159,15 @@ class MatchApi:
         # Filter None
         params = {k: v for k, v in params.items() if v is not None}
 
+        
         response = await self.http.request(
             method="GET",
             url=path,
-            region_or_platform=region,
+            region_or_platform=region.value if hasattr(region, "value") else str(region),
             params=params
         )
         
-        from pydantic import TypeAdapter
+        
         return TypeAdapter(match_v5_TimelineDto).validate_python(response.json())
         
     
