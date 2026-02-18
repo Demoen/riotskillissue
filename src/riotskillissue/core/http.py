@@ -103,7 +103,15 @@ class HttpClient:
         self.cache = cache or NoOpCache()
         self.hooks = hooks or {}
         self._client = httpx.AsyncClient(
-            headers={"X-Riot-Token": config.api_key},
+            headers={
+                "X-Riot-Token": config.api_key,
+                # Explicitly disable compressed responses. Python 3.13+ ships
+                # with zlib-ng whose deflate/gzip decoder can choke on some Riot
+                # API responses ("Error -3 while decompressing data: incorrect
+                # header check"). Requesting identity avoids the problem at a
+                # negligible bandwidth cost for JSON payloads.
+                "Accept-Encoding": "identity",
+            },
             timeout=httpx.Timeout(
                 config.read_timeout,
                 connect=config.connect_timeout,
