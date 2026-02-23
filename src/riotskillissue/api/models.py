@@ -2796,6 +2796,10 @@ class match_v5_ParticipantDto(BaseModel):
     """
     
     
+    PlayerBehavior: Optional[match_v5_ParticipantPlayerBehaviorDto] = Field(default=None, alias="PlayerBehavior")
+    
+    
+    
     allInPings: Optional[int] = Field(default=None, alias="allInPings")
     
     
@@ -3469,6 +3473,22 @@ class match_v5_ParticipantFramesDto(BaseModel):
     
     
     param_1_9: match_v5_ParticipantFrameDto = Field(alias="1-9")
+    
+    
+    
+
+    model_config = {"populate_by_name": True}
+
+
+
+
+class match_v5_ParticipantPlayerBehaviorDto(BaseModel):
+    """
+    No description provided.
+    """
+    
+    
+    PlayerBehavior_IsHeroInCombat: Optional[int] = Field(default=None, alias="PlayerBehavior_IsHeroInCombat")
     
     
     
