@@ -37,94 +37,24 @@ Requires Python 3.8+.
 pip install riotskillissue
 ```
 
-![TUI Demo](docs/assets/tui.gif)
-
-## Quick Start (Async)
-
-```python
-import asyncio
-from riotskillissue import RiotClient, Platform, Region
-
-async def main():
-    async with RiotClient() as client:
-        account = await client.account.get_by_riot_id(
-            region=Platform.EUROPE,
-            gameName="Agurin",
-            tagLine="EUW"
-        )
-        print(f"Found: {account.gameName}#{account.tagLine}")
-
-        summoner = await client.summoner.get_by_puuid(
-            region=Region.EUW1,
-            encryptedPUUID=account.puuid
-        )
-        print(f"Level: {summoner.summonerLevel}")
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-## Quick Start (Sync)
-
-```python
-from riotskillissue import SyncRiotClient, Platform
-
-with SyncRiotClient() as client:
-    account = client.account.get_by_riot_id(
-        region=Platform.EUROPE,
-        gameName="Agurin",
-        tagLine="EUW"
-    )
-    print(f"Found: {account.gameName}#{account.tagLine}")
-```
-
 Set your API key via environment variable:
 
+Linux/MacOS
 ```bash
 export RIOT_API_KEY="RGAPI-your-key-here"
 ```
-
-Or pass it directly:
-
-```python
-async with RiotClient(api_key="RGAPI-...") as client:
-    ...
+Windows (Powershell)
+```bash
+$env:RIOT_API_KEY = "RGAPI-your-key-here"
 ```
 
-## Configuration
-
-```python
-from riotskillissue import RiotClient, RiotClientConfig
-from riotskillissue.core.cache import RedisCache, MemoryCache
-
-config = RiotClientConfig(
-    api_key="RGAPI-...",
-    max_retries=5,
-    cache_ttl=120,
-    redis_url="redis://localhost:6379/0",  # Distributed rate limiting
-    proxy="http://127.0.0.1:8080",        # Optional HTTP proxy
-    log_level="DEBUG",                     # DEBUG, INFO, WARNING
-)
-
-cache = MemoryCache(max_size=2048)  # LRU in-memory cache
-# or: cache = RedisCache("redis://localhost:6379/1")
-
-async with RiotClient(config=config, cache=cache) as client:
-    ...
+Windows (CMD)
+```bash
+set RIOT_API_KEY=RGAPI-your-key-here
 ```
 
-## Error Handling
+![TUI Demo](docs/assets/tui.gif)
 
-```python
-from riotskillissue import NotFoundError, RateLimitError, RiotAPIError
-
-try:
-    account = await client.account.get_by_riot_id(...)
-except NotFoundError:
-    print("Player not found")
-except RiotAPIError as e:
-    print(f"[{e.status}] {e.message}")
-```
 
 ## Documentation
 
