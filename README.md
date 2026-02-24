@@ -37,6 +37,8 @@ Requires Python 3.8+.
 pip install riotskillissue
 ```
 
+![TUI Demo](docs/assets/tui.gif)
+
 ## Quick Start (Async)
 
 ```python
