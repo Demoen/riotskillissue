@@ -80,7 +80,8 @@ class NoOpCache(AbstractCache):
 
 try:
     from redis.asyncio import Redis
-    import pickle
+    import json as _json
+    import base64 as _base64
 
     class RedisCache(AbstractCache):
         def __init__(self, redis_url: str):
@@ -89,11 +90,11 @@ try:
         async def get(self, key: str) -> Optional[Any]:
             val = await self.redis.get(key)
             if val:
-                return pickle.loads(val)  # noqa: S301
+                return _deserialize(_json.loads(val))
             return None
 
         async def set(self, key: str, value: Any, ttl: int) -> None:
-            val = pickle.dumps(value)
+            val = _json.dumps(_serialize(value))
             await self.redis.set(key, val, ex=ttl)
 
         async def delete(self, key: str) -> None:
@@ -101,6 +102,30 @@ try:
 
         async def clear(self) -> None:
             await self.redis.flushdb()
+
+    def _serialize(obj: Any) -> Any:
+        """Convert an object to a JSON-safe representation."""
+        if isinstance(obj, bytes):
+            return {"__bytes__": _base64.b64encode(obj).decode("ascii")}
+        if isinstance(obj, tuple):
+            return {"__tuple__": [_serialize(item) for item in obj]}
+        if isinstance(obj, list):
+            return [_serialize(item) for item in obj]
+        if isinstance(obj, dict):
+            return {k: _serialize(v) for k, v in obj.items()}
+        return obj
+
+    def _deserialize(obj: Any) -> Any:
+        """Restore an object from its JSON-safe representation."""
+        if isinstance(obj, dict):
+            if "__bytes__" in obj:
+                return _base64.b64decode(obj["__bytes__"])
+            if "__tuple__" in obj:
+                return tuple(_deserialize(item) for item in obj["__tuple__"])
+            return {k: _deserialize(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_deserialize(item) for item in obj]
+        return obj
 
 except ImportError:
     pass
