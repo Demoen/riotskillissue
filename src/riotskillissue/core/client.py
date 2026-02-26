@@ -44,7 +44,7 @@ class RiotClient(GeneratedClientMixin):
         )
 
         # Lazy-initialised static data client (created on first access)
-        self._static: Optional["DataDragonClient"] = None  # type: ignore[name-defined]
+        self._static: Optional["DataDragonClient"] = None
 
         # Initialize generated APIs
         super().__init__(self.http)
@@ -52,7 +52,7 @@ class RiotClient(GeneratedClientMixin):
     # -- Lazy Data Dragon access ---------------------------------------------
 
     @property
-    def static(self) -> "DataDragonClient":  # type: ignore[name-defined]
+    def static(self) -> "DataDragonClient":
         """Data Dragon client (created lazily on first access)."""
         if self._static is None:
             from riotskillissue.static import DataDragonClient

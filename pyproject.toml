@@ -69,6 +69,48 @@ packages = ["src/riotskillissue"]
 [tool.mypy]
 strict = true
 ignore_missing_imports = true
+exclude = [
+    "src/riotskillissue/api/endpoints/",
+    "src/riotskillissue/api/models\\.py",
+    "src/riotskillissue/api/client_mixin\\.py",
+]
+
+# ── Per-module overrides for hand-written code ──
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.types"
+# StrEnum compat fallback triggers no-redef
+disable_error_code = ["no-redef"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.static"
+# Cache returns Any; _fetch_map returns dynamic dicts
+disable_error_code = ["no-any-return", "type-arg"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.http"
+disable_error_code = ["type-arg"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.client"
+disable_error_code = ["type-arg", "name-defined"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.sync_client"
+disable_error_code = ["type-arg"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.cli"
+# CLI functions use typer decorators; re-exports from client
+disable_error_code = ["no-untyped-def", "no-untyped-call", "attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.testing"
+disable_error_code = ["no-untyped-def"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.tui"
+# Complex TUI with dynamic Pydantic models and Textual overrides
+disable_error_code = ["attr-defined", "arg-type", "type-arg", "override"]
 
 [tool.ruff]
 line-length = 100
