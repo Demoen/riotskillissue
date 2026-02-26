@@ -15,10 +15,10 @@ class {{ class_name }}:
         self,
         region: Union[Region, Platform, str],
         {% for param in op.parameters %}
-        {{ param.name }}: {{ param.type_annotation }}{% if not param.required %} = None{% endif %},
+        {{ param.name }}: {% if not param.required %}Optional[{{ param.type_annotation }}]{% else %}{{ param.type_annotation }}{% endif %}{% if not param.required %} = None{% endif %},
         {% endfor %}
         {% if op.request_body %}
-        body: {{ op.request_body_type }} = None,
+        body: Optional[{{ op.request_body_type }}] = None,
         {% endif %}
     ) -> {{ op.response_type }}:
         """{{ op.clean_docstring }}"""
