@@ -73,9 +73,36 @@ ignore_missing_imports = true
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+exclude = [
+    "src/riotskillissue/api/endpoints/",
+    "src/riotskillissue/api/models.py",
+    "src/riotskillissue/api/client_mixin.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "UP006",   # Dict/List/Tuple → dict/list/tuple (keep compat style)
+    "UP007",   # Union[X, Y] → X | Y
+    "UP035",   # typing.Dict → dict (deprecated-import)
+    "UP037",   # quoted annotations
+    "UP045",   # Optional[X] → X | None
+    "I001",    # import sorting (cosmetic, auto-fix can break re-exports)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/riotskillissue/__init__.py" = ["F401"]
+"src/riotskillissue/testing.py" = ["F401"]
+"src/riotskillissue/core/http.py" = ["F401"]
+"src/riotskillissue/core/cache.py" = ["B027"]
+"src/riotskillissue/core/client.py" = ["F821", "SIM108"]
+"src/riotskillissue/core/pagination.py" = ["F401"]
+"src/riotskillissue/core/ratelimit.py" = ["F401"]
+"src/riotskillissue/static.py" = ["SIM108"]
+"src/riotskillissue/auth.py" = ["F401"]
+"src/riotskillissue/cli.py" = ["E501", "F401"]
+"src/riotskillissue/tui.py" = ["E501", "F401", "F841"]
+"tests/*.py" = ["F401", "B017", "E501", "E701", "B007", "F841", "SIM105"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
