@@ -1,4 +1,5 @@
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Type
+from types import TracebackType
 import logging
 import httpx
 from .core.cache import AbstractCache, NoOpCache
@@ -24,6 +25,17 @@ class DataDragonClient:
     async def close(self) -> None:
         """Close the underlying HTTP client."""
         await self.http.aclose()
+
+    async def __aenter__(self) -> "DataDragonClient":
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
+        await self.close()
 
     # -- Version -------------------------------------------------------------
 

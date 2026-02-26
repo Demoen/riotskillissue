@@ -1,4 +1,5 @@
-from typing import Optional, Dict, Any, Tuple
+from typing import Optional, Dict, Any, Tuple, Type
+from types import TracebackType
 from dataclasses import dataclass
 import hashlib
 import os
@@ -45,6 +46,17 @@ class RsoClient:
     async def close(self) -> None:
         """Close the underlying HTTP client."""
         await self.http.aclose()
+
+    async def __aenter__(self) -> "RsoClient":
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
+        await self.close()
 
     def get_auth_url(
         self,
