@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import asyncio
 import functools
+import inspect
 import threading
 from types import TracebackType
 from typing import Any, Callable, Coroutine, Optional, Type, TypeVar
@@ -46,7 +47,8 @@ class _LoopThread:
         return self._loop
 
     def run(self, coro: Coroutine[Any, Any, T]) -> T:
-        assert self._loop is not None, "Loop not started"
+        if self._loop is None:
+            raise RuntimeError("Event loop not started")
         future = asyncio.run_coroutine_threadsafe(coro, self._loop)
         return future.result()
 
@@ -69,7 +71,7 @@ class _SyncProxy:
 
     def __getattr__(self, name: str) -> Any:
         attr = getattr(self._api, name)
-        if asyncio.iscoroutinefunction(attr):
+        if inspect.iscoroutinefunction(attr):
 
             @functools.wraps(attr)
             def wrapper(*args: Any, **kwargs: Any) -> Any:

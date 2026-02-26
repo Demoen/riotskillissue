@@ -98,3 +98,59 @@ async def test_auth_header(config):
         await client.request("GET", "/auth-check", "na1")
         
         assert route.calls.last.request.headers["X-Riot-Token"] == config.api_key
+
+
+@pytest.mark.asyncio
+async def test_hooks_request_and_response(config):
+    """Verify that request and response hooks are called."""
+    request_calls = []
+    response_calls = []
+
+    async def on_request(method, url, kwargs):
+        request_calls.append((method, url))
+
+    async def on_response(resp):
+        response_calls.append(resp.status_code)
+
+    hooks = {"request": on_request, "response": on_response}
+
+    async with respx.mock(base_url="https://na1.api.riotgames.com") as mock:
+        mock.get("/hook-test").respond(200, json={"ok": True})
+
+        client = HttpClient(config, hooks=hooks)
+        await client.request("GET", "/hook-test", "na1")
+
+        assert len(request_calls) == 1
+        assert request_calls[0] == ("GET", "/hook-test")
+        assert len(response_calls) == 1
+        assert response_calls[0] == 200
+
+
+@pytest.mark.asyncio
+async def test_base_url_override(config):
+    """Verify that base_url config overrides the default host."""
+    from riotskillissue import RiotClientConfig
+
+    custom_config = RiotClientConfig(
+        api_key="RGAPI-TEST", base_url="https://custom.api.test"
+    )
+
+    async with respx.mock(base_url="https://custom.api.test") as mock:
+        route = mock.get("/lol/test").respond(200, json={"ok": True})
+
+        client = HttpClient(custom_config)
+        resp = await client.request("GET", "/lol/test", "na1")
+
+        assert resp.status_code == 200
+        assert route.called
+
+
+@pytest.mark.asyncio
+async def test_client_repr(config):
+    """Verify RiotClient repr masks the API key."""
+    from riotskillissue import RiotClient
+
+    async with RiotClient(config=config) as client:
+        r = repr(client)
+        assert "RGAPI-TE..." in r
+        assert "RGAPI-TEST" not in r
