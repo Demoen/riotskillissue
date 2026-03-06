@@ -345,5 +345,5 @@ async for match_id in paginate(
 | `method` | The API method to paginate |
 | `start` | Initial offset (default: 0) |
 | `count` | Items per page (default: 100) |
-| `max_results` | Maximum items to yield (default: infinity) |
+| `max_results` | Maximum items to yield (default: `None`) |
 | `**kwargs` | Arguments passed to the method |

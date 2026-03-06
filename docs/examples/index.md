@@ -45,13 +45,35 @@ All examples require:
 1. A valid Riot API key set as `RIOT_API_KEY` environment variable
 2. The `riotskillissue` package installed
 
-```bash
-# Set your API key
-export RIOT_API_KEY="RGAPI-your-key-here"
+=== "Linux / macOS"
 
-# Run an example
-python examples/basic_usage.py
-```
+    ```bash
+    # Set your API key
+    export RIOT_API_KEY="RGAPI-your-key-here"
+
+    # Run an example
+    python examples/basic_usage.py
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    # Set your API key
+    $env:RIOT_API_KEY = "RGAPI-your-key-here"
+
+    # Run an example
+    python examples/basic_usage.py
+    ```
+
+=== "Windows (CMD)"
+
+    ```cmd
+    # Set your API key
+    set RIOT_API_KEY=RGAPI-your-key-here
+
+    # Run an example
+    python examples/basic_usage.py
+    ```
 
 ## Included Example Scripts
 
