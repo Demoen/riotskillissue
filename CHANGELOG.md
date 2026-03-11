@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-03-11
+
+### Fixed
+- **Documentation**: Updated installation instructions to reflect `redis` and `textual` as optional extras (`[redis]`, `[tui]`).
+- **Documentation**: Updated "What's New" section from v0.2.0 to v0.3.0 with breaking changes warning.
+- **Documentation**: Added Redis cache migration note for pickle → JSON+base64 serialization change.
+- **Documentation**: Fixed CLI docs referencing `[dev]` extras instead of `[tui]` for live game TUI.
+
 ## [0.3.0] - 2026-03-11
 
 ### ⚠️ Breaking Changes

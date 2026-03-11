@@ -21,7 +21,7 @@ async with RiotClient(api_key="RGAPI-...") as client:
 config = RiotClientConfig(
     api_key="RGAPI-...",
     max_retries=5,
-    redis_url="redis://localhost:6379/0",
+    redis_url="redis://localhost:6379/0",  # requires: pip install riotskillissue[redis]
     cache_ttl=120,
     log_level="DEBUG",
 )

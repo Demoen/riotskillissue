@@ -37,15 +37,15 @@ If the player isn't currently in a match, the TUI shows a waiting screen and kee
 
 ## Installation
 
-The TUI is included with the standard package installation:
+The TUI requires the `tui` optional extra:
 
 ```bash
-pip install riotskillissue
+pip install "riotskillissue[tui]"
 ```
 
 !!! note "Dependencies"
     The TUI uses [Textual](https://textual.textualize.io/) and [Rich](https://rich.readthedocs.io/), 
-    which are installed automatically as dependencies.
+    which are installed when you include the `[tui]` extra.
 
 ## Usage
 

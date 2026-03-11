@@ -88,15 +88,18 @@ with SyncRiotClient() as client:
     Set the `RIOT_API_KEY` environment variable, or pass it directly to `RiotClient(api_key="...")`.
     Get your key at [developer.riotgames.com](https://developer.riotgames.com/).
 
-## What's New in v0.2.0
+## What's New in v0.3.0
 
-- **`SyncRiotClient`** — Use the full API without async/await
-- **Rich error hierarchy** — Catch `NotFoundError`, `RateLimitError`, etc. instead of generic exceptions
-- **Automatic 429 retry** — Rate-limited requests are retried transparently with `Retry-After`
-- **PKCE + CSRF** — RSO OAuth2 now includes PKCE code challenge and state parameter
-- **Expanded Data Dragon** — Summoner spells, runes, queues, maps, and game modes
-- **LRU cache** — In-memory cache with configurable max size and automatic eviction
-- **Proxy & base URL** — Route traffic through a proxy or point at a custom API endpoint
+!!! warning "Breaking Changes"
+    - Python **3.10+** is now required (3.8 and 3.9 dropped)
+    - `redis` and `textual` are now **optional extras** — install with `pip install riotskillissue[redis]` or `[tui]`
+    - `RedisCache` serialization switched from pickle to JSON+base64 — flush your Redis cache after upgrading
+
+- **`py.typed`** — PEP 561 marker for downstream type-checking support
+- **Context managers** — `RsoClient` and `DataDragonClient` now support `async with`
+- **Safer caching** — `RedisCache` no longer uses `pickle`, eliminating code execution risk from tampered entries
+- **Better rate limiting** — `MemoryRateLimiter` releases its lock while sleeping, unblocking other keys
+- **More exports** — `AbstractRateLimiter`, `MemoryRateLimiter`, `gather_limited`, `DataDragonClient`, `RsoClient`, `RsoConfig`, `TokenResponse`
 
 See the full [Changelog](https://github.com/Demoen/riotskillissue/blob/main/CHANGELOG.md) for details.
 

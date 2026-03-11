@@ -60,7 +60,11 @@ config = RiotClientConfig.from_env()
 
 ## Redis Integration
 
-Enable distributed rate limiting and caching with Redis:
+Enable distributed rate limiting and caching with Redis. First install the `redis` extra:
+
+```bash
+pip install "riotskillissue[redis]"
+```
 
 ### Rate Limiting
 
@@ -80,6 +84,10 @@ async with RiotClient(config=config) as client:
 ### Caching
 
 Reduce API calls with built-in response caching:
+
+!!! warning "Upgrading from v0.2.x"
+    `RedisCache` serialization switched from `pickle` to JSON + base64 in v0.3.0.
+    Existing cached entries are **incompatible** — flush your Redis cache after upgrading.
 
 ```python
 from riotskillissue import RiotClient

@@ -10,10 +10,10 @@ The CLI is included with the package:
 pip install riotskillissue
 ```
 
-For enhanced output formatting, install with dev dependencies:
+For the live game TUI, install the optional `tui` extra:
 
 ```bash
-pip install "riotskillissue[dev]"
+pip install "riotskillissue[tui]"
 ```
 
 ## Configuration

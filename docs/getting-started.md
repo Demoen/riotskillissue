@@ -15,10 +15,12 @@ Install the package from PyPI:
 pip install riotskillissue
 ```
 
-For development with testing tools:
+Optional extras:
 
 ```bash
-pip install "riotskillissue[dev]"
+pip install "riotskillissue[redis]"  # Redis caching & rate limiting
+pip install "riotskillissue[tui]"    # Live game TUI
+pip install "riotskillissue[dev]"    # Development & testing tools
 ```
 
 ## Configuration
