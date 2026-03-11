@@ -9,7 +9,7 @@ description = "Production-ready, auto-updating Riot API wrapper."
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Demoen" }]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 keywords = ["riot", "api", "league-of-legends", "valorant", "tft", "wrapper"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -18,8 +18,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -30,14 +28,9 @@ classifiers = [
 dependencies = [
     "httpx>=0.27.0",
     "pydantic>=2.7.0",
-    "redis>=5.0.0",
     "tenacity>=8.2.0",
-    "jinja2>=3.1.0",
-    "frozendict>=2.4.0",
-    "msgspec>=0.18.0",
     "typer>=0.12.0",
     "rich>=13.7.0",
-    "textual>=0.85.0",
 ]
 
 [project.scripts]
@@ -50,6 +43,8 @@ Issues = "https://github.com/Demoen/riotskillissue/issues"
 Changelog = "https://github.com/Demoen/riotskillissue/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
+redis = ["redis>=5.0.0"]
+tui = ["textual>=0.85.0"]
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
@@ -57,6 +52,7 @@ dev = [
     "respx>=0.21.0",
     "ruff>=0.4.0",
     "mypy>=1.10.0",
+    "jinja2>=3.1.0",
     "types-redis",
     "types-requests",
     "deepdiff>=6.0.0",
@@ -73,13 +69,82 @@ packages = ["src/riotskillissue"]
 [tool.mypy]
 strict = true
 ignore_missing_imports = true
+exclude = [
+    "src/riotskillissue/api/endpoints/",
+    "src/riotskillissue/api/models\\.py",
+    "src/riotskillissue/api/client_mixin\\.py",
+]
+
+# ── Per-module overrides for hand-written code ──
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.types"
+# StrEnum compat fallback triggers no-redef
+disable_error_code = ["no-redef"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.static"
+# Cache returns Any; _fetch_map returns dynamic dicts
+disable_error_code = ["no-any-return", "type-arg"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.http"
+disable_error_code = ["type-arg"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.client"
+disable_error_code = ["type-arg", "name-defined"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.core.sync_client"
+disable_error_code = ["type-arg"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.cli"
+# CLI functions use typer decorators; re-exports from client
+disable_error_code = ["no-untyped-def", "no-untyped-call", "attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.testing"
+disable_error_code = ["no-untyped-def"]
+
+[[tool.mypy.overrides]]
+module = "riotskillissue.tui"
+# Complex TUI with dynamic Pydantic models and Textual overrides
+disable_error_code = ["attr-defined", "arg-type", "type-arg", "override"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py310"
+exclude = [
+    "src/riotskillissue/api/endpoints/",
+    "src/riotskillissue/api/models.py",
+    "src/riotskillissue/api/client_mixin.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "UP006",   # Dict/List/Tuple → dict/list/tuple (keep compat style)
+    "UP007",   # Union[X, Y] → X | Y
+    "UP035",   # typing.Dict → dict (deprecated-import)
+    "UP037",   # quoted annotations
+    "UP045",   # Optional[X] → X | None
+    "I001",    # import sorting (cosmetic, auto-fix can break re-exports)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/riotskillissue/__init__.py" = ["F401"]
+"src/riotskillissue/testing.py" = ["F401"]
+"src/riotskillissue/core/http.py" = ["F401"]
+"src/riotskillissue/core/cache.py" = ["B027"]
+"src/riotskillissue/core/client.py" = ["F821", "SIM108"]
+"src/riotskillissue/core/pagination.py" = ["F401"]
+"src/riotskillissue/core/ratelimit.py" = ["F401"]
+"src/riotskillissue/static.py" = ["SIM108"]
+"src/riotskillissue/auth.py" = ["F401"]
+"src/riotskillissue/cli.py" = ["E501", "F401"]
+"src/riotskillissue/tui.py" = ["E501", "F401", "F841"]
+"tests/*.py" = ["F401", "B017", "E501", "E701", "B007", "F841", "SIM105"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

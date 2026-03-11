@@ -20,9 +20,23 @@ pip install "riotskillissue[dev]"
 
 Set your API key via environment variable:
 
-```bash
-export RIOT_API_KEY="RGAPI-your-key-here"
-```
+=== "Linux / macOS"
+
+    ```bash
+    export RIOT_API_KEY="RGAPI-your-key-here"
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    $env:RIOT_API_KEY = "RGAPI-your-key-here"
+    ```
+
+=== "Windows (CMD)"
+
+    ```cmd
+    set RIOT_API_KEY=RGAPI-your-key-here
+    ```
 
 Or pass it directly with `--api-key`:
 

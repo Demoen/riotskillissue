@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-03-11
+
+### ⚠️ Breaking Changes
+- **Python**: Minimum Python version raised from 3.8 to **3.10**. Python 3.8 and 3.9 are no longer supported.
+- **Dependencies**: `redis` and `textual` moved from core dependencies to optional extras. Install with `pip install riotskillissue[redis]` or `pip install riotskillissue[tui]`.
+- **Dependencies**: `frozendict` and `msgspec` removed from dependencies entirely.
+- **Cache**: `RedisCache` serialization switched from `pickle` to JSON + base64. Existing cached entries in Redis are **incompatible** and should be flushed after upgrading.
+- **Errors**: `ServerError` constructor simplified to `ServerError(response)` (previously took `status_code, message, response`).
+
+### Added
+- **Typing**: Added `py.typed` marker file (PEP 561) for downstream type-checking support.
+- **Exports**: Top-level package now exports `AbstractRateLimiter`, `MemoryRateLimiter`, `gather_limited`, `DataDragonClient`, `RsoClient`, `RsoConfig`, `TokenResponse`. `RedisCache` and `RedisRateLimiter` are exported when the `redis` extra is installed.
+- **Context Managers**: `RsoClient` and `DataDragonClient` now support `async with` for automatic resource cleanup.
+- **Dependencies**: New `[redis]` and `[tui]` optional dependency groups.
+
+### Changed
+- **Rate Limiting**: `MemoryRateLimiter` now releases its lock while sleeping, allowing requests on other keys to proceed concurrently.
+- **Pagination**: `paginate()` `max_results` parameter changed from `float('inf')` default to `None` (no functional change for callers).
+- **Sync Client**: Uses `inspect.iscoroutinefunction` instead of `asyncio.iscoroutinefunction` for more reliable coroutine detection. Replaced bare `assert` with `RuntimeError` for missing event loop.
+- **Code Generation**: Endpoint template now wraps optional parameters in `Optional[...]` for correct type annotations.
+- **CI**: Added dedicated lint job (ruff + mypy). Added pip caching. Removed Python 3.8/3.9 from test matrix, kept 3.14.
+- **Tooling**: Added mypy overrides to exclude auto-generated code and suppress known false positives. Configured ruff exclusions and per-file ignores for generated files.
+
+### Fixed
+- **Rate Limiting**: `MemoryRateLimiter.acquire()` now re-checks limits after sleeping, preventing burst requests from slipping through when multiple callers wait simultaneously.
+- **Cache Security**: `RedisCache` no longer uses `pickle` for serialization, eliminating the risk of arbitrary code execution from tampered cache entries.
+
 ## [0.2.2] - 2026-02-23
 
 ### Added

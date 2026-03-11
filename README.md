@@ -7,7 +7,7 @@
 
 [![PyPI version](https://badge.fury.io/py/riotskillissue.svg)](https://badge.fury.io/py/riotskillissue)
 [![Python Versions](https://img.shields.io/pypi/pyversions/riotskillissue.svg)](https://pypi.org/project/riotskillissue/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml/badge.svg)](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml)
 
 **Production-ready, auto-updating, and fully typed Python wrapper for the Riot Games API.**
@@ -31,7 +31,7 @@
 
 ## Installation
 
-Requires Python 3.8+.
+Requires Python 3.10+.
 
 ```bash
 pip install riotskillissue

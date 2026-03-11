@@ -52,41 +52,45 @@ class MemoryRateLimiter(AbstractRateLimiter):
         self._buckets: dict[str, dict[int, list[float]]] = {}
         self._lock = asyncio.Lock()
 
+    def _compute_wait(self, key: str, limits: List[RateLimitBucket]) -> float:
+        """Compute wait time needed before a request can proceed. Must hold _lock."""
+        now = time.time()
+        max_wait = 0.0
+
+        key_buckets = self._buckets.setdefault(key, {})
+
+        for bucket in limits:
+            window_requests = key_buckets.setdefault(bucket.window, [])
+
+            # Prune old requests
+            cutoff = now - bucket.window
+            while window_requests and window_requests[0] <= cutoff:
+                window_requests.pop(0)
+
+            if len(window_requests) >= bucket.limit:
+                oldest = window_requests[0]
+                wait_time = (oldest + bucket.window) - now
+                if wait_time > max_wait:
+                    max_wait = wait_time
+
+        return max_wait
+
+    def _record_request(self, key: str, limits: List[RateLimitBucket]) -> None:
+        """Record a request timestamp in all buckets. Must hold _lock."""
+        now = time.time()
+        for bucket in limits:
+            self._buckets[key][bucket.window].append(now)
+
     async def acquire(self, key: str, limits: List[RateLimitBucket]) -> None:
-        async with self._lock:
-            now = time.time()
-            max_wait = 0.0
-            
-            # Check all buckets for this key
-            key_buckets = self._buckets.setdefault(key, {})
-            
-            for bucket in limits:
-                window_requests = key_buckets.setdefault(bucket.window, [])
-                
-                # Prune old requests
-                cutoff = now - bucket.window
-                while window_requests and window_requests[0] <= cutoff:
-                    window_requests.pop(0)
-                
-                # Update list after prune
-                key_buckets[bucket.window] = window_requests
-                
-                if len(window_requests) >= bucket.limit:
-                    # Determine wait time: time until the oldest request expires
-                    oldest = window_requests[0]
-                    # We need to wait until (oldest + window) - now
-                    wait_time = (oldest + bucket.window) - now
-                    if wait_time > max_wait:
-                        max_wait = wait_time
-
-            if max_wait > 0:
-                logger.debug(f"Rate limit hit for {key}, waiting {max_wait:.2f}s")
-                await asyncio.sleep(max_wait)
-
-            # Reserve spot
-            now = time.time()  # Refresh timestamp after sleep
-            for bucket in limits:
-                self._buckets[key][bucket.window].append(now)
+        while True:
+            async with self._lock:
+                wait = self._compute_wait(key, limits)
+                if wait <= 0:
+                    self._record_request(key, limits)
+                    return
+            # Release the lock before sleeping so other keys are not blocked
+            logger.debug("Rate limit hit for %s, waiting %.2fs", key, wait)
+            await asyncio.sleep(wait)
 
     async def update(self, key: str, counts: str, limits: Optional[str] = None) -> None:
         # MemoryRateLimiter tracks state locally; header-based updates are not needed.

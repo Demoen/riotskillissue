@@ -75,7 +75,9 @@ class RateLimitError(RiotAPIError):
 
 class ServerError(RiotAPIError):
     """5xx – Riot server-side error."""
-    pass
+
+    def __init__(self, response: httpx.Response):
+        super().__init__(response.status_code, "Server Error", response)
 
 
 # Map status codes to specialised error classes
@@ -249,7 +251,7 @@ class HttpClient:
             if response.status_code >= 500:
                 logger.warning("Server error %d on %s", response.status_code, key)
                 if attempt >= max_attempts:
-                    raise ServerError(response.status_code, "Server Error", response)
+                    raise ServerError(response)
                 wait = min(2 ** attempt, 10)
                 await asyncio.sleep(wait)
                 continue

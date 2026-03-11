@@ -4,7 +4,7 @@ This guide will walk you through installing riotskillissue and making your first
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- Python 3.10 or higher
 - A Riot Games API key from [developer.riotgames.com](https://developer.riotgames.com/)
 
 ## Installation
