@@ -5,7 +5,7 @@
 ![riotskillissue](docs/assets/logo.png)
 
 
-[![PyPI version](https://badge.fury.io/py/riotskillissue.svg)](https://badge.fury.io/py/riotskillissue)
+[![PyPI version](https://badge.fury.io/py/riotskillissue.svg?icon=si%3Apython)](https://badge.fury.io/py/riotskillissue)
 [![Python Versions](https://img.shields.io/pypi/pyversions/riotskillissue.svg)](https://pypi.org/project/riotskillissue/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml/badge.svg)](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml)
