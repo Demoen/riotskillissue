@@ -17,13 +17,13 @@ class TftMatchApi:
         
         puuid: str,
         
-        count: int = None,
+        count: Optional[int] = None,
         
-        endTime: int = None,
+        endTime: Optional[int] = None,
         
-        start: int = None,
+        start: Optional[int] = None,
         
-        startTime: int = None,
+        startTime: Optional[int] = None,
         
         
     ) -> List[str]:

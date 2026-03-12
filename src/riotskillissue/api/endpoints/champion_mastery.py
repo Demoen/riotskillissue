@@ -89,7 +89,7 @@ class ChampionMasteryApi:
         
         encryptedPUUID: str,
         
-        count: int = None,
+        count: Optional[int] = None,
         
         
     ) -> List[champion_mastery_v4_ChampionMasteryDto]:

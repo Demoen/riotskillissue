@@ -15,7 +15,7 @@ class ValContentApi:
         self,
         region: Union[Region, Platform, str],
         
-        locale: str = None,
+        locale: Optional[str] = None,
         
         
     ) -> val_content_v1_ContentDto:

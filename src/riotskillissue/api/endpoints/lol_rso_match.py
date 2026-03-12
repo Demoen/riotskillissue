@@ -15,17 +15,17 @@ class LolRsoMatchApi:
         self,
         region: Union[Region, Platform, str],
         
-        count: int = None,
+        count: Optional[int] = None,
         
-        endTime: int = None,
+        endTime: Optional[int] = None,
         
-        queue: int = None,
+        queue: Optional[int] = None,
         
-        start: int = None,
+        start: Optional[int] = None,
         
-        startTime: int = None,
+        startTime: Optional[int] = None,
         
-        type: str = None,
+        type: Optional[str] = None,
         
         
     ) -> List[str]:

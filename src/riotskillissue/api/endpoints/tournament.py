@@ -17,10 +17,10 @@ class TournamentApi:
         
         tournamentId: int,
         
-        count: int = None,
+        count: Optional[int] = None,
         
         
-        body: tournament_v5_TournamentCodeParametersV5 = None,
+        body: Optional[tournament_v5_TournamentCodeParametersV5] = None,
         
     ) -> List[str]:
         """Create a tournament code for the given tournament."""
@@ -98,7 +98,7 @@ class TournamentApi:
         tournamentCode: str,
         
         
-        body: tournament_v5_TournamentCodeUpdateParametersV5 = None,
+        body: Optional[tournament_v5_TournamentCodeUpdateParametersV5] = None,
         
     ) -> None:
         """Update the pick type, map, spectator type, or allowed puuids for a code."""
@@ -206,7 +206,7 @@ class TournamentApi:
         region: Union[Region, Platform, str],
         
         
-        body: tournament_v5_ProviderRegistrationParametersV5 = None,
+        body: Optional[tournament_v5_ProviderRegistrationParametersV5] = None,
         
     ) -> int:
         """Creates a tournament provider and returns its ID."""
@@ -244,7 +244,7 @@ class TournamentApi:
         region: Union[Region, Platform, str],
         
         
-        body: tournament_v5_TournamentRegistrationParametersV5 = None,
+        body: Optional[tournament_v5_TournamentRegistrationParametersV5] = None,
         
     ) -> int:
         """Creates a tournament and returns its ID."""

@@ -17,9 +17,9 @@ class ValRankedApi:
         
         actId: str,
         
-        size: int = None,
+        size: Optional[int] = None,
         
-        startIndex: int = None,
+        startIndex: Optional[int] = None,
         
         
     ) -> val_ranked_v1_LeaderboardDto:

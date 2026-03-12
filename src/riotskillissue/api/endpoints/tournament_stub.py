@@ -17,10 +17,10 @@ class TournamentStubApi:
         
         tournamentId: int,
         
-        count: int = None,
+        count: Optional[int] = None,
         
         
-        body: tournament_stub_v5_TournamentCodeParametersV5 = None,
+        body: Optional[tournament_stub_v5_TournamentCodeParametersV5] = None,
         
     ) -> List[str]:
         """Create a tournament code for the given tournament - Stub method"""
@@ -130,7 +130,7 @@ class TournamentStubApi:
         region: Union[Region, Platform, str],
         
         
-        body: tournament_stub_v5_ProviderRegistrationParametersV5 = None,
+        body: Optional[tournament_stub_v5_ProviderRegistrationParametersV5] = None,
         
     ) -> int:
         """Creates a tournament provider and returns its ID - Stub method"""
@@ -168,7 +168,7 @@ class TournamentStubApi:
         region: Union[Region, Platform, str],
         
         
-        body: tournament_stub_v5_TournamentRegistrationParametersV5 = None,
+        body: Optional[tournament_stub_v5_TournamentRegistrationParametersV5] = None,
         
     ) -> int:
         """Creates a tournament and returns its ID - Stub method"""

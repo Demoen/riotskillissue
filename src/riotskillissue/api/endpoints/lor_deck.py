@@ -46,7 +46,7 @@ class LorDeckApi:
         region: Union[Region, Platform, str],
         
         
-        body: lor_deck_v1_NewDeckDto = None,
+        body: Optional[lor_deck_v1_NewDeckDto] = None,
         
     ) -> str:
         """Create a new deck for the calling user."""

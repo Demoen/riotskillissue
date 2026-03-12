@@ -113,7 +113,7 @@ class LolChallengesApi:
         
         level: str,
         
-        limit: int = None,
+        limit: Optional[int] = None,
         
         
     ) -> List[lol_challenges_v1_ApexPlayerInfoDto]:

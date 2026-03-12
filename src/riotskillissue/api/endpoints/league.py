@@ -89,7 +89,7 @@ class LeagueApi:
         
         tier: str,
         
-        page: int = None,
+        page: Optional[int] = None,
         
         
     ) -> List[league_v4_LeagueEntryDTO]:

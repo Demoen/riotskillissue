@@ -15,7 +15,7 @@ class RiftboundContentApi:
         self,
         region: Union[Region, Platform, str],
         
-        locale: str = None,
+        locale: Optional[str] = None,
         
         
     ) -> riftbound_content_v1_RiftboundContentDTO:

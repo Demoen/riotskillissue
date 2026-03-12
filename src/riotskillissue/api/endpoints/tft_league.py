@@ -49,7 +49,7 @@ class TftLeagueApi:
         self,
         region: Union[Region, Platform, str],
         
-        queue: str = None,
+        queue: Optional[str] = None,
         
         
     ) -> tft_league_v1_LeagueListDTO:
@@ -87,9 +87,9 @@ class TftLeagueApi:
         
         tier: str,
         
-        page: int = None,
+        page: Optional[int] = None,
         
-        queue: str = None,
+        queue: Optional[str] = None,
         
         
     ) -> List[tft_league_v1_LeagueEntryDTO]:
@@ -129,7 +129,7 @@ class TftLeagueApi:
         self,
         region: Union[Region, Platform, str],
         
-        queue: str = None,
+        queue: Optional[str] = None,
         
         
     ) -> tft_league_v1_LeagueListDTO:
@@ -197,7 +197,7 @@ class TftLeagueApi:
         self,
         region: Union[Region, Platform, str],
         
-        queue: str = None,
+        queue: Optional[str] = None,
         
         
     ) -> tft_league_v1_LeagueListDTO:

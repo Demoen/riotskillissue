@@ -21,7 +21,7 @@ class LeagueExpApi:
         
         tier: str,
         
-        page: int = None,
+        page: Optional[int] = None,
         
         
     ) -> List[league_exp_v4_LeagueEntryDTO]:
