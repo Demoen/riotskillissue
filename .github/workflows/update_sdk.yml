@@ -24,7 +24,8 @@ jobs:
         run: |
           pip install -e .
           pip install deepdiff rich # Extra dev tools for manager
-
+          pip install jinja2
+      
       - name: Fetch Spec & Generate Code
         id: generate
         run: |
