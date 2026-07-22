@@ -159,40 +159,6 @@ class LeagueApi:
         return TypeAdapter(league_v4_LeagueListDTO).validate_python(response.json())
         
     
-    async def get_league_by_id(
-        self,
-        region: Union[Region, Platform, str],
-        
-        leagueId: str,
-        
-        
-    ) -> league_v4_LeagueListDTO:
-        """Get league with given ID, including inactive entries."""
-        path = "/lol/league/v4/leagues/{leagueId}"
-        # Replace path params
-        
-        path = path.replace("{" + "leagueId" + "}", str(leagueId))
-        
-
-        # Query params
-        params = {
-            
-        }
-        # Filter None
-        params = {k: v for k, v in params.items() if v is not None}
-
-        
-        response = await self.http.request(
-            method="GET",
-            url=path,
-            region_or_platform=region.value if hasattr(region, "value") else str(region),
-            params=params
-        )
-        
-        
-        return TypeAdapter(league_v4_LeagueListDTO).validate_python(response.json())
-        
-    
     async def get_master_league(
         self,
         region: Union[Region, Platform, str],

@@ -220,17 +220,27 @@ class champion_v3_ChampionInfo(BaseModel):
     """
     
     
-    freeChampionIds: List[int] = Field(alias="freeChampionIds")
+    newplayer: List[int] = Field(alias="newplayer")
     
     
     
-    freeChampionIdsForNewPlayers: List[int] = Field(alias="freeChampionIdsForNewPlayers")
+    sr: List[int] = Field(alias="sr")
     
     
     
-    maxNewPlayerLevel: int = Field(alias="maxNewPlayerLevel")
+
+    model_config = {"populate_by_name": True}
+
+
+
+
+class champion_v3_array(BaseModel):
+    """
+    UNKNOWN TYPE.
+    """
     
     
+    pass
     
 
     model_config = {"populate_by_name": True}
@@ -388,7 +398,7 @@ class league_exp_v4_LeagueEntryDTO(BaseModel):
     
     
     
-    leagueId: str = Field(alias="leagueId")
+    leagueId: Optional[str] = Field(default=None, alias="leagueId")
     
     
     
@@ -2828,6 +2838,10 @@ class match_v5_ParticipantDto(BaseModel):
     
     
     
+    causedGameEndFromIGNBSurrender: Optional[bool] = Field(default=None, alias="causedGameEndFromIGNBSurrender")
+    
+    
+    
     challenges: Optional[match_v5_ChallengesDto] = Field(default=None, alias="challenges")
     
     
@@ -2933,6 +2947,10 @@ class match_v5_ParticipantDto(BaseModel):
     
     
     gameEndedInEarlySurrender: bool = Field(alias="gameEndedInEarlySurrender")
+    
+    
+    
+    gameEndedInIGNBSurrender: Optional[bool] = Field(default=None, alias="gameEndedInIGNBSurrender")
     
     
     
@@ -3184,6 +3202,10 @@ class match_v5_ParticipantDto(BaseModel):
     
     
     
+    positionAssignedByMatchmaking: Optional[str] = Field(default=None, alias="positionAssignedByMatchmaking")
+    
+    
+    
     profileIcon: int = Field(alias="profileIcon")
     
     
@@ -3221,6 +3243,10 @@ class match_v5_ParticipantDto(BaseModel):
     
     
     roleBoundItem: Optional[int] = Field(default=None, alias="roleBoundItem")
+    
+    
+    
+    selectedRolePreferences: Optional[str] = Field(default=None, alias="selectedRolePreferences")
     
     
     
@@ -3277,6 +3303,10 @@ class match_v5_ParticipantDto(BaseModel):
     
     
     teamEarlySurrendered: bool = Field(alias="teamEarlySurrendered")
+    
+    
+    
+    teamIGNBSurrendered: Optional[bool] = Field(default=None, alias="teamIGNBSurrendered")
     
     
     
@@ -3393,6 +3423,18 @@ class match_v5_ParticipantDto(BaseModel):
     
     
     wardsPlaced: int = Field(alias="wardsPlaced")
+    
+    
+    
+    wasPremadeWithIGNBGameEndCauser: Optional[bool] = Field(default=None, alias="wasPremadeWithIGNBGameEndCauser")
+    
+    
+    
+    wasPremadeWithSevereTransgressor: Optional[bool] = Field(default=None, alias="wasPremadeWithSevereTransgressor")
+    
+    
+    
+    wasSevereTransgressor: Optional[bool] = Field(default=None, alias="wasSevereTransgressor")
     
     
     
