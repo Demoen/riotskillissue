@@ -1,8 +1,8 @@
 import pytest
 import respx
 from httpx import Response
-from riotskillissue.core.http import HttpClient, RateLimitError
-from riotskillissue.core.types import Region
+from riotskillissue.core.http import HttpClient
+from riotskillissue.core.types import PlatformRoute
 
 @pytest.mark.asyncio
 async def test_http_retry_on_500(config):
@@ -20,7 +20,7 @@ async def test_http_retry_on_500(config):
         ])
         
         http_client = HttpClient(config)
-        resp = await http_client.request("GET", "/test", Region.NA1)
+        resp = await http_client.request("GET", "/test", PlatformRoute.NA1)
         
         assert resp.status_code == 200
         assert resp.json() == {"ok": True}
@@ -38,7 +38,7 @@ async def test_http_429_handling(config):
         ])
         
         http_client = HttpClient(config)
-        resp = await http_client.request("GET", "/test", Region.NA1)
+        resp = await http_client.request("GET", "/test", PlatformRoute.NA1)
         
         assert resp.status_code == 200
         assert resp.json() == {"ok": True}
@@ -152,5 +152,5 @@ async def test_client_repr(config):
 
     async with RiotClient(config=config) as client:
         r = repr(client)
-        assert "RGAPI-TE..." in r
+        assert "default_route=" in r
         assert "RGAPI-TEST" not in r

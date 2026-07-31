@@ -23,8 +23,9 @@ from rich.panel import Panel
 from rich.align import Align
 from rich.console import Group
 
-from .core.client import RiotClient, RiotClientConfig
-from .core.types import Region, Platform, REGION_TO_PLATFORM
+from .core.client import RiotClient
+from .core.http import NotFoundError
+from .core.types import PlatformRoute
 
 
 # ── Static Mappings ──────────────────────────────────────────────────────────
@@ -113,7 +114,7 @@ def _rank_string(entry: Optional[Dict[str, Any]]) -> str:
         return "Unranked"
     tier = entry.get("tier", "?")
     rank = entry.get("rank", "")
-    lp = entry.get("leaguePoints", 0)
+    lp = entry.get("league_points", 0)
     return f"{tier.capitalize()} {rank} {lp} LP"
 
 
@@ -144,101 +145,69 @@ async def fetch_live_game_data(
     tag_line: str,
     region: str,
 ) -> Dict[str, Any]:
-    """
-    Fetch all data needed for the live game TUI.
-    Returns a dict with game info, player data, champion names, and ranks.
-    """
-    region_lower = region.lower()
-
-    # Map region to platform cluster for account API
-    try:
-        region_enum = Region(region_lower)
-        platform = REGION_TO_PLATFORM[region_enum]
-        cluster = platform.value
-    except (ValueError, KeyError):
-        cluster = "americas"
-
-    config = RiotClientConfig(api_key=api_key)
-    async with RiotClient(config=config) as client:
-        # 1) Resolve Riot ID → PUUID
-        account = await client.account.get_by_riot_id(
-            region=cluster, gameName=game_name, tagLine=tag_line
-        )
-        puuid = account.puuid
-
-        # 2) Get live game
+    riot_id = f"{game_name}#{tag_line}"
+    platform_route = PlatformRoute(region.lower())
+    async with RiotClient(
+        api_key=api_key,
+        default_route=platform_route,
+    ) as client:
         try:
-            game = await client.spectator.get_current_game_info_by_puuid(
-                region=region_lower, encryptedPUUID=puuid
-            )
-        except Exception as e:
-            error_msg = str(e)
-            if "404" in error_msg or "not found" in error_msg.lower() or "Data not found" in error_msg:
-                return {"error": "not_in_game", "player": f"{game_name}#{tag_line}"}
-            raise
+            game = await client.lol.live_game(riot_id)
+        except NotFoundError:
+            return {"error": "not_in_game", "player": riot_id}
 
-        # 3) Resolve champion data & ranks for all participants concurrently
-        participants = game.participants or []
+        participants = getattr(game, "participants", None) or []
 
         async def resolve_participant(p: Any) -> Dict[str, Any]:
-            """Resolve champion name and rank for a single participant."""
-            champ_data = await client.static.get_champion(p.championId)
-            champ_name = champ_data["name"] if champ_data else f"Champion {p.championId}"
+            champion_id = getattr(p, "champion_id", 0)
+            puuid = getattr(p, "puuid", "")
+            champ_data = await client.lol.static.get_champion(champion_id)
+            champ_name = champ_data["name"] if champ_data else f"Champion {champion_id}"
             champ_image = champ_data.get("image", {}).get("full", "") if champ_data else ""
-
-            # Get rank
             rank_entry = None
             try:
-                entries = await client.league.get_league_entries_by_puuid(
-                    region=region_lower, encryptedPUUID=p.puuid
+                entries = await client.raw.lol.league.get_league_entries_by_puuid(
+                    encrypted_puuid=puuid
                 )
-                # Find Solo/Duo rank first, then Flex
                 for e in entries:
-                    qt = getattr(e, "queueType", None) or e.get("queueType", "")
+                    qt = getattr(e, "queue_type", None)
                     if qt == "RANKED_SOLO_5x5":
                         rank_entry = e
                         break
                 if not rank_entry:
                     for e in entries:
-                        qt = getattr(e, "queueType", None) or e.get("queueType", "")
+                        qt = getattr(e, "queue_type", None)
                         if qt == "RANKED_FLEX_SR":
                             rank_entry = e
                             break
             except Exception:
                 pass
 
-            # Convert model to dict if needed
             rank_dict = None
             if rank_entry:
                 if hasattr(rank_entry, "model_dump"):
                     rank_dict = rank_entry.model_dump()
-                elif hasattr(rank_entry, "__dict__"):
-                    rank_dict = vars(rank_entry)
                 elif isinstance(rank_entry, dict):
                     rank_dict = rank_entry
-
-            riot_id = getattr(p, "riotId", None) or "Unknown"
 
             return {
                 "champion": champ_name,
                 "champion_image": champ_image,
-                "champion_id": p.championId,
-                "riot_id": riot_id,
-                "puuid": p.puuid,
-                "team_id": p.teamId,
-                "spell1": _spell_name(p.spell1Id),
-                "spell2": _spell_name(p.spell2Id),
+                "champion_id": champion_id,
+                "riot_id": getattr(p, "riot_id", None) or "Unknown",
+                "puuid": puuid,
+                "team_id": getattr(p, "team_id", 0),
+                "spell1": _spell_name(getattr(p, "spell1_id", 0)),
+                "spell2": _spell_name(getattr(p, "spell2_id", 0)),
                 "is_bot": getattr(p, "bot", False),
                 "rank": rank_dict,
             }
 
-        # Fetch all participant data concurrently
         player_data = await asyncio.gather(
             *[resolve_participant(p) for p in participants],
             return_exceptions=True,
         )
 
-        # Filter out any exceptions
         resolved_players: List[Dict[str, Any]] = []
         for pd in player_data:
             if isinstance(pd, Exception):
@@ -257,26 +226,24 @@ async def fetch_live_game_data(
             else:
                 resolved_players.append(pd)
 
-        # Split teams
         blue_team = [p for p in resolved_players if p["team_id"] == 100]
         red_team = [p for p in resolved_players if p["team_id"] == 200]
 
-        # Banned champions
-        bans_raw = getattr(game, "bannedChampions", []) or []
+        bans_raw = getattr(game, "banned_champions", []) or []
         bans = []
         for b in bans_raw:
-            cid = getattr(b, "championId", -1)
+            cid = getattr(b, "champion_id", -1)
             if cid > 0:
-                cd = await client.static.get_champion(cid)
+                cd = await client.lol.static.get_champion(cid)
                 bans.append(cd["name"] if cd else f"#{cid}")
 
-        game_length = getattr(game, "gameLength", 0) or 0
-        queue_id = getattr(game, "gameQueueConfigId", 0) or 0
-        game_mode = getattr(game, "gameMode", "CLASSIC")
+        game_length = getattr(game, "game_length", 0) or 0
+        queue_id = getattr(game, "game_queue_config_id", 0) or 0
+        game_mode = getattr(game, "game_mode", "CLASSIC")
 
         return {
             "error": None,
-            "player": f"{game_name}#{tag_line}",
+            "player": riot_id,
             "game_mode": game_mode,
             "queue": _queue_name(queue_id),
             "queue_id": queue_id,
@@ -284,8 +251,8 @@ async def fetch_live_game_data(
             "blue_team": blue_team,
             "red_team": red_team,
             "bans": bans,
-            "game_id": getattr(game, "gameId", "?"),
-            "platform_id": getattr(game, "platformId", region_lower.upper()),
+            "game_id": getattr(game, "game_id", "?"),
+            "platform_id": getattr(game, "platform_id", region.upper()),
         }
 
 

@@ -1,3 +1,4 @@
+from collections.abc import Awaitable, Callable
 from typing import Optional, Dict, Any, List, Type
 from types import TracebackType
 import logging
@@ -203,3 +204,46 @@ class DataDragonClient:
 
         await self.cache.set(cache_key, modes, ttl=86400)
         return modes
+
+
+class SyncDataDragonClient:
+    def __init__(
+        self,
+        client: DataDragonClient,
+        run: Callable[[Awaitable[Any]], Any],
+    ) -> None:
+        self._client = client
+        self._run = run
+
+    def get_latest_version(self) -> str:
+        return self._run(self._client.get_latest_version())
+
+    def get_champion(self, champion_key: int) -> Optional[Dict[str, Any]]:
+        return self._run(self._client.get_champion(champion_key))
+
+    def get_all_champions(self) -> Dict[int, Dict[str, Any]]:
+        return self._run(self._client.get_all_champions())
+
+    def get_item(self, item_id: int) -> Optional[Dict[str, Any]]:
+        return self._run(self._client.get_item(item_id))
+
+    def get_all_items(self) -> Dict[int, Dict[str, Any]]:
+        return self._run(self._client.get_all_items())
+
+    def get_summoner_spells(self) -> Dict[int, Dict[str, Any]]:
+        return self._run(self._client.get_summoner_spells())
+
+    def get_summoner_spell(self, spell_key: int) -> Optional[Dict[str, Any]]:
+        return self._run(self._client.get_summoner_spell(spell_key))
+
+    def get_runes(self) -> List[Dict[str, Any]]:
+        return self._run(self._client.get_runes())
+
+    def get_queues(self) -> List[Dict[str, Any]]:
+        return self._run(self._client.get_queues())
+
+    def get_maps(self) -> List[Dict[str, Any]]:
+        return self._run(self._client.get_maps())
+
+    def get_game_modes(self) -> List[Dict[str, Any]]:
+        return self._run(self._client.get_game_modes())

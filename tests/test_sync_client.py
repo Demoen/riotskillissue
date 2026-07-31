@@ -2,7 +2,7 @@ import pytest
 import respx
 from httpx import Response
 from riotskillissue import SyncRiotClient, RiotClientConfig
-from riotskillissue.core.types import Region
+from riotskillissue.core.types import PlatformRoute
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def test_sync_client_repr(sync_config):
     with SyncRiotClient(config=sync_config) as client:
         r = repr(client)
         assert "SyncRiotClient" in r
-        assert "RiotClient" in r
+        assert "default_route=" in r
 
 
 def test_sync_client_api_call(sync_config):
@@ -40,10 +40,11 @@ def test_sync_client_api_call(sync_config):
         )
 
         with SyncRiotClient(config=sync_config) as client:
-            summoner = client.summoner.get_by_puuid(
-                region=Region.NA1, encryptedPUUID="test-puuid"
+            summoner = client.raw.lol.summoner.get_by_puuid(
+                route=PlatformRoute.NA1,
+                encrypted_puuid="test-puuid",
             )
-            assert summoner.summonerLevel == 42
+            assert summoner.summoner_level == 42
             assert summoner.puuid == "test-puuid"
 
 

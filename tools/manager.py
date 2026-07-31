@@ -9,7 +9,7 @@ import httpx
 # Handle both ways of running: as module or script
 sys.path.append(str(Path(__file__).parent.parent))
 
-from tools.diff_engine import DiffEngine, SchemaDiff
+from tools.diff_engine import DiffEngine
 
 SPEC_URL = "https://mingweisamuel.com/riotapi-schema/openapi-3.0.0.json"
 SPEC_DIR = Path("spec")
@@ -42,7 +42,7 @@ def main():
         save_spec(new_spec, SPEC_FILE)
         return
 
-    with open(SPEC_FILE, "r", encoding="utf-8") as f:
+    with open(SPEC_FILE, encoding="utf-8") as f:
         old_spec = json.load(f)
 
     # Simple equality check first

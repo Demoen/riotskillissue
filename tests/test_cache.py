@@ -1,11 +1,10 @@
 import pytest
 import respx
-import time
 import asyncio
 from httpx import Response
-from riotskillissue.core.cache import MemoryCache, AbstractCache
-from riotskillissue.core.types import Region
-from riotskillissue import RiotClient, RiotClientConfig
+from riotskillissue.core.cache import MemoryCache
+from riotskillissue.core.types import PlatformRoute
+from riotskillissue import RiotClient
 
 @pytest.mark.asyncio
 async def test_memory_cache(config):
@@ -22,21 +21,15 @@ async def test_memory_cache(config):
         
         async with RiotClient(config=config, cache=cache) as client:
             # First call: hits network
-            resp1 = await client.http.request("GET", "/test", Region.NA1)
+            resp1 = await client.http.request("GET", "/test", PlatformRoute.NA1)
             assert resp1.json()["count"] == 1
             assert route.call_count == 1
             
             # Second call: hits cache
-            resp2 = await client.http.request("GET", "/test", Region.NA1)
+            resp2 = await client.http.request("GET", "/test", PlatformRoute.NA1)
             assert resp2.json()["count"] == 1  # Still 1 because cached!
             assert route.call_count == 1       # Still 1 call!
             
-            # Force verify cache stored it
-            # params is empty dict, so key uses ""
-            stored = await cache.get(f"GET:/test:{Region.NA1}:")
-            assert stored is not None
-
-
 @pytest.mark.asyncio
 async def test_memory_cache_ttl_expiry():
     """Verify that cache entries expire after TTL."""

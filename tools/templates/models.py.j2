@@ -1,39 +1,59 @@
-# Generated Code. Do not edit.
 from __future__ import annotations
-from typing import List, Optional, Dict, Any, Union, Literal
-from pydantic import BaseModel, Field
-from riotskillissue.core.types import Region, Platform
 
-{% for model in models %}
-{% if model.enum_values %}
-{{ model.name }} = Literal[{{ model.enum_values | map('tojson') | join(', ') }}]
-"""{{ model.description or model.name }}"""
-{% else %}
-class {{ model.name }}(BaseModel):
-    """
-    {{ model.description or "No description provided." }}
-    """
-    {% for prop in model.properties %}
-    {% if prop.required %}
-    {{ prop.name }}: {{ prop.type_annotation }} = Field(alias="{{ prop.alias or prop.name }}")
-    {% else %}
-    {{ prop.name }}: Optional[{{ prop.type_annotation }}] = Field(default=None, alias="{{ prop.alias or prop.name }}")
-    {% endif %}
-    {% endfor %}
-    {% if not model.properties %}
-    pass
-    {% endif %}
-
-    model_config = {"populate_by_name": True}
-
+{% if typing_imports %}
+from typing import {{ typing_imports | join(", ") }}
 {% endif %}
+
+{% if has_model_classes %}
+from pydantic import BaseModel, ConfigDict{% if has_model_properties %}, Field{% endif %}
+{% endif %}
+{% for model_import in model_imports %}
+from {{ model_import.path }} import {{ model_import.names | join(", ") }}
 {% endfor %}
 
-# Rebuild all models to resolve forward references
-for _name, _obj in list(locals().items()):
-    if isinstance(_obj, type) and issubclass(_obj, BaseModel) and _obj is not BaseModel:
-        try:
-            _obj.model_rebuild()
-        except Exception:
-            pass  # some models may not need rebuilding
-del _name, _obj
+{% for model in models %}
+{% if model.enum_values is not none %}
+{{ model.name }}: TypeAlias = Literal[{{ model.enum_values | map("pyrepr") | join(", ") }}]
+{% else %}
+class {{ model.name }}(BaseModel):
+{% if model.description %}
+    {{ model.description | pydocstring }}
+{% endif %}
+{% for prop in model.properties %}
+    {{ prop.name }}: {{ prop.annotation }} = Field(
+{% if not prop.required %}
+        default={{ prop.default | pyrepr if prop.has_default else "None" }},
+{% elif prop.has_default %}
+        default={{ prop.default | pyrepr }},
+{% endif %}
+        alias={{ prop.wire_name | pystring }},
+{% if prop.description %}
+        description={{ prop.description | pystring }},
+{% endif %}
+{% if prop.examples %}
+        examples={{ prop.examples | pyrepr }},
+{% endif %}
+{% for constraint_name, constraint_value in prop.field_constraints.items() %}
+        {{ constraint_name }}={{ constraint_value | pyrepr }},
+{% endfor %}
+    )
+{% endfor %}
+{% if not model.properties and not model.description %}
+    pass
+{% endif %}
+
+    model_config = ConfigDict(populate_by_name=True)
+{% endif %}
+
+{% endfor %}
+{% set classes = models | rejectattr("enum_values") | map(attribute="name") | list %}
+{% if classes %}
+_MODEL_TYPES = (
+{% for class_name in classes %}
+    {{ class_name }},
+{% endfor %}
+)
+for _model_type in _MODEL_TYPES:
+    _model_type.model_rebuild(_types_namespace=globals())
+del _model_type
+{% endif %}

@@ -1,66 +1,160 @@
-# Generated Code. Do not edit.
 from __future__ import annotations
-from typing import Optional, Union, List, Dict, Any
-from pydantic import TypeAdapter
+
+from typing import {{ typing_imports | join(", ") }}
+{% if has_path_parameters %}
+from urllib.parse import quote
+{% endif %}
+
+{% if has_request_bodies or has_response_adapters %}
+from pydantic import {% if has_request_bodies %}BaseModel{% if has_response_adapters %}, {% endif %}{% endif %}{% if has_response_adapters %}TypeAdapter{% endif %}
+{% endif %}
+
 from riotskillissue.core.http import HttpClient
-from riotskillissue.core.types import Region, Platform
-from riotskillissue.api.models import *
+from riotskillissue.core.types import {{ route_imports | join(", ") }}
+{% for model_import in model_imports %}
+from {{ model_import.path }} import {{ model_import.names | join(", ") }}
+{% endfor %}
+
+{% for op in operations if op.response_adapter_type %}
+_{{ op.constant_name }}_RESPONSE_ADAPTER = TypeAdapter(
+    {{ op.response_adapter_type }}
+).validate_python
+{% endfor %}
+
 
 class {{ class_name }}:
-    def __init__(self, http: HttpClient):
+    def __init__(self, http: HttpClient) -> None:
         self.http = http
 
-    {% for op in operations %}
+{% for op in operations %}
     async def {{ op.method_name }}(
         self,
-        region: Union[Region, Platform, str],
-        {% for param in op.parameters %}
-        {{ param.name }}: {% if not param.required %}Optional[{{ param.type_annotation }}]{% else %}{{ param.type_annotation }}{% endif %}{% if not param.required %} = None{% endif %},
-        {% endfor %}
-        {% if op.request_body %}
-        body: Optional[{{ op.request_body_type }}] = None,
-        {% endif %}
+        *,
+{% for param in op.parameters %}
+        {{ param.name }}: {{ param.annotation }}{% if param.default_expression is not none %} = {{ param.default_expression }}{% endif %},
+{% endfor %}
+{% if op.request_body %}
+        body: {{ op.request_body.annotation }}{% if not op.request_body.required %} = None{% endif %},
+{% endif %}
+        route: {{ op.route_annotation }} = None,
     ) -> {{ op.response_type }}:
-        """{{ op.clean_docstring }}"""
-        path = "{{ op.path }}"
-        # Replace path params
-        {% for param in op.parameters if param.in_ == "path" %}
-        path = path.replace("{" + "{{ param.name }}" + "}", str({{ param.name }}))
-        {% endfor %}
-
-        # Query params
-        params = {
-            {% for param in op.parameters if param.in_ == "query" %}
-            "{{ param.name }}": {{ param.name }},
-            {% endfor %}
+{% if op.short_docstring %}
+        {{ op.short_docstring | pyrepr }}
+{% endif %}
+        path = {{ op.path | pystring }}
+{% for param in op.parameters if param.in_ == "path" %}
+        path = path.replace(
+            {{ ("{" ~ param.wire_name ~ "}") | pyrepr }},
+            quote(str({{ param.name }}), safe=""),
+        )
+{% endfor %}
+        params: dict[str, Any] = {
+{% for param in op.parameters if param.in_ == "query" %}
+            {{ param.wire_name | pyrepr }}: {{ param.name }},
+{% endfor %}
         }
-        # Filter None
-        params = {k: v for k, v in params.items() if v is not None}
-
-        {% if op.request_body %}
-        kwargs: Dict[str, Any] = {"params": params}
+        request_kwargs: dict[str, Any] = {
+            "params": {key: value for key, value in params.items() if value is not None}
+        }
+{% set header_params = op.parameters | selectattr("in_", "equalto", "header") | list %}
+{% if header_params %}
+        headers = {
+{% for param in header_params %}
+            {{ param.wire_name | pyrepr }}: {{ param.name }},
+{% endfor %}
+        }
+        request_kwargs["headers"] = {
+            key: str(value) for key, value in headers.items() if value is not None
+        }
+{% endif %}
+{% set cookie_params = op.parameters | selectattr("in_", "equalto", "cookie") | list %}
+{% if cookie_params %}
+        cookies = {
+{% for param in cookie_params %}
+            {{ param.wire_name | pyrepr }}: {{ param.name }},
+{% endfor %}
+        }
+        request_kwargs["cookies"] = {
+            key: str(value) for key, value in cookies.items() if value is not None
+        }
+{% endif %}
+{% if op.request_body %}
+{% if op.request_body.required %}
+        request_kwargs["json"] = (
+            body.model_dump(by_alias=True, exclude_none=True)
+            if isinstance(body, BaseModel)
+            else body
+        )
+{% else %}
         if body is not None:
-            if hasattr(body, "model_dump"):
-                kwargs["json"] = body.model_dump(by_alias=True, exclude_none=True)
-            else:
-                kwargs["json"] = body
-        response = await self.http.request(
-            method="{{ op.method }}",
-            url=path,
-            region_or_platform=region.value if hasattr(region, "value") else str(region),
-            **kwargs
+            request_kwargs["json"] = (
+                body.model_dump(by_alias=True, exclude_none=True)
+                if isinstance(body, BaseModel)
+                else body
+            )
+{% endif %}
+{% endif %}
+{% if op.route_kind %}
+        resolved_route = self.http.resolve_route(
+            RouteKind({{ op.route_kind | pyrepr }}),
+            route,
+            allowed_routes={{ op.allowed_routes | pyrepr }},
         )
-        {% else %}
-        response = await self.http.request(
-            method="{{ op.method }}",
-            url=path,
-            region_or_platform=region.value if hasattr(region, "value") else str(region),
-            params=params
+{% else %}
+        resolved_route = route
+{% endif %}
+        return cast(
+            {{ op.response_type }},
+            await self.http.request(
+                method={{ op.method | pyrepr }},
+                url=path,
+                region_or_platform=resolved_route,
+                operation_id={{ op.operation_id | pyrepr }},
+                auth_mode={{ op.auth_mode | pyrepr }},
+                cache_user_scoped={{ op.cache_user_scoped | pyrepr }},
+                successful_statuses={{ op.successful_status_codes | pyrepr }},
+                no_content_statuses={{ op.no_content_status_codes | pyrepr }},
+                response_adapter={% if op.response_adapter_type %}_{{ op.constant_name }}_RESPONSE_ADAPTER{% else %}None{% endif %},
+                **request_kwargs,
+            ),
         )
-        {% endif %}
-        {% if op.response_type and op.response_type != "None" and op.response_type != "Any" %}
-        return TypeAdapter({{ op.response_type }}).validate_python(response.json())
-        {% else %}
-        return response.json()
-        {% endif %}
-    {% endfor %}
+
+{% endfor %}
+
+class {{ sync_class_name }}:
+    def __init__(
+        self,
+        async_api: {{ class_name }},
+        runner: Callable[[Awaitable[Any]], Any],
+    ) -> None:
+        self._async_api = async_api
+        self._run = runner
+
+{% for op in operations %}
+    def {{ op.method_name }}(
+        self,
+        *,
+{% for param in op.parameters %}
+        {{ param.name }}: {{ param.annotation }}{% if param.default_expression is not none %} = {{ param.default_expression }}{% endif %},
+{% endfor %}
+{% if op.request_body %}
+        body: {{ op.request_body.annotation }}{% if not op.request_body.required %} = None{% endif %},
+{% endif %}
+        route: {{ op.route_annotation }} = None,
+    ) -> {{ op.response_type }}:
+        return cast(
+            {{ op.response_type }},
+            self._run(
+                self._async_api.{{ op.method_name }}(
+{% for param in op.parameters %}
+                    {{ param.name }}={{ param.name }},
+{% endfor %}
+{% if op.request_body %}
+                    body=body,
+{% endif %}
+                    route=route,
+                )
+            ),
+        )
+
+{% endfor %}

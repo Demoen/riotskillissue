@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import math
 import time
+import uuid
 from abc import ABC, abstractmethod
-from typing import Optional, List, Tuple
+from dataclasses import dataclass
+from typing import List, Optional, Tuple, Union
 
 try:
     import redis.asyncio as redis
@@ -13,172 +16,196 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+
+@dataclass(frozen=True)
 class RateLimitBucket:
-    """Represents a single rate limit bucket (e.g., 20 requests per 1 second)."""
-    def __init__(self, limit: int, window: int):
-        self.limit = limit
-        self.window = window
+    limit: int
+    window: int
+
+    def __post_init__(self) -> None:
+        if self.limit <= 0 or self.window <= 0:
+            raise ValueError("rate-limit values must be positive")
 
     def __repr__(self) -> str:
         return f"{self.limit}:{self.window}"
 
+
+def _parse_pairs(header_value: str, *, allow_zero: bool) -> List[Tuple[int, int]]:
+    pairs: List[Tuple[int, int]] = []
+    for part in header_value.split(","):
+        fields = part.strip().split(":")
+        if len(fields) != 2:
+            continue
+        try:
+            first, window = (int(field.strip()) for field in fields)
+        except ValueError:
+            continue
+        if window <= 0 or first < 0 or (first == 0 and not allow_zero):
+            continue
+        pairs.append((first, window))
+    return pairs
+
+
 def parse_rate_limits(header_value: str) -> List[RateLimitBucket]:
-    """Parses Riot limit headers like '20:1,100:120'."""
     if not header_value:
         return []
-    buckets = []
-    for part in header_value.split(','):
-        try:
-            limit, window = map(int, part.split(':'))
-            buckets.append(RateLimitBucket(limit, window))
-        except ValueError:
-            pass
-    return buckets
+    return [
+        RateLimitBucket(limit, window)
+        for limit, window in _parse_pairs(header_value, allow_zero=False)
+    ]
+
+
+def parse_rate_limit_counts(header_value: str) -> List[Tuple[int, int]]:
+    if not header_value:
+        return []
+    return _parse_pairs(header_value, allow_zero=True)
+
 
 class AbstractRateLimiter(ABC):
     @abstractmethod
     async def acquire(self, key: str, limits: List[RateLimitBucket]) -> None:
-        """Wait until a request can be made."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
-    async def update(self, key: str, counts: str, limits: Optional[str] = None) -> None:
-        """Update state based on response headers."""
-        pass
+    async def update(
+        self, key: str, counts: str, limits: Optional[str] = None
+    ) -> None:
+        raise NotImplementedError
+
 
 class MemoryRateLimiter(AbstractRateLimiter):
     def __init__(self) -> None:
-        # key -> [(completion_time, window_size)]
         self._buckets: dict[str, dict[int, list[float]]] = {}
         self._lock = asyncio.Lock()
 
-    def _compute_wait(self, key: str, limits: List[RateLimitBucket]) -> float:
-        """Compute wait time needed before a request can proceed. Must hold _lock."""
-        now = time.time()
+    def _compute_wait(
+        self, key: str, limits: List[RateLimitBucket], now: float
+    ) -> float:
         max_wait = 0.0
-
         key_buckets = self._buckets.setdefault(key, {})
 
         for bucket in limits:
-            window_requests = key_buckets.setdefault(bucket.window, [])
-
-            # Prune old requests
+            requests = key_buckets.setdefault(bucket.window, [])
             cutoff = now - bucket.window
-            while window_requests and window_requests[0] <= cutoff:
-                window_requests.pop(0)
-
-            if len(window_requests) >= bucket.limit:
-                oldest = window_requests[0]
-                wait_time = (oldest + bucket.window) - now
-                if wait_time > max_wait:
-                    max_wait = wait_time
+            while requests and requests[0] <= cutoff:
+                requests.pop(0)
+            if len(requests) >= bucket.limit:
+                max_wait = max(max_wait, requests[0] + bucket.window - now)
 
         return max_wait
 
-    def _record_request(self, key: str, limits: List[RateLimitBucket]) -> None:
-        """Record a request timestamp in all buckets. Must hold _lock."""
-        now = time.time()
+    def _record_request(
+        self, key: str, limits: List[RateLimitBucket], now: float
+    ) -> None:
+        key_buckets = self._buckets.setdefault(key, {})
         for bucket in limits:
-            self._buckets[key][bucket.window].append(now)
+            key_buckets.setdefault(bucket.window, []).append(now)
 
     async def acquire(self, key: str, limits: List[RateLimitBucket]) -> None:
+        if not limits:
+            return
         while True:
             async with self._lock:
-                wait = self._compute_wait(key, limits)
+                now = time.monotonic()
+                wait = self._compute_wait(key, limits, now)
                 if wait <= 0:
-                    self._record_request(key, limits)
+                    self._record_request(key, limits, now)
                     return
-            # Release the lock before sleeping so other keys are not blocked
-            logger.debug("Rate limit hit for %s, waiting %.2fs", key, wait)
+            logger.debug("Rate limit reached for %s; waiting %.2fs", key, wait)
             await asyncio.sleep(wait)
 
-    async def update(self, key: str, counts: str, limits: Optional[str] = None) -> None:
-        # MemoryRateLimiter tracks state locally; header-based updates are not needed.
-        pass
+    async def update(
+        self, key: str, counts: str, limits: Optional[str] = None
+    ) -> None:
+        parsed_counts = parse_rate_limit_counts(counts)
+        if not parsed_counts:
+            return
+        allowed_windows = (
+            {bucket.window for bucket in parse_rate_limits(limits)}
+            if limits
+            else None
+        )
+        async with self._lock:
+            now = time.monotonic()
+            key_buckets = self._buckets.setdefault(key, {})
+            for count, window in parsed_counts:
+                if allowed_windows is not None and window not in allowed_windows:
+                    continue
+                requests = key_buckets.setdefault(window, [])
+                cutoff = now - window
+                while requests and requests[0] <= cutoff:
+                    requests.pop(0)
+                if count > len(requests):
+                    requests.extend([now] * (count - len(requests)))
+
 
 class RedisRateLimiter(AbstractRateLimiter):
     def __init__(self, redis_url: str) -> None:
         if redis is None:
             raise ImportError("redis package is required for RedisRateLimiter")
         self._redis = redis.from_url(redis_url)
-        
-        # Lua script for atomic sliding window (Result: 0 = allowed, >0 = wait seconds)
-        # ARGV[1] = current_time
-        # ARGV[2] = count of buckets (N)
-        # ARGV[3..3+N-1] = limits
-        # ARGV[3+N..3+2N-1] = windows
-        # KEYS[1..N] = keys for each bucket
-        self._acquire_script = self._redis.register_script("""
+        self._acquire_script = self._redis.register_script(
+            """
             local now = tonumber(ARGV[1])
             local n_buckets = tonumber(ARGV[2])
-            
-            -- Check all buckets first
+            local member = ARGV[3]
+
             for i = 1, n_buckets do
-                local limit = tonumber(ARGV[2 + i])
-                local window = tonumber(ARGV[2 + n_buckets + i])
+                local limit = tonumber(ARGV[3 + i])
+                local window = tonumber(ARGV[3 + n_buckets + i])
                 local key = KEYS[i]
-                
-                -- Cleanup old members
-                local clear_before = now - window
-                redis.call('ZREMRANGEBYSCORE', key, 0, clear_before)
-                
-                -- Count current
+                redis.call('ZREMRANGEBYSCORE', key, 0, now - window)
                 local count = redis.call('ZCARD', key)
-                
                 if count >= limit then
-                    -- Find oldest to determine wait
                     local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
-                    local wait = 1.0 -- default fallback
+                    local wait = 1.0
                     if oldest and oldest[2] then
                         wait = (tonumber(oldest[2]) + window) - now
                     end
                     if wait < 0 then wait = 0 end
-                    return tostring(wait) -- Return wait time (string for safety)
+                    return tostring(wait)
                 end
             end
-            
-            -- Consume
+
             for i = 1, n_buckets do
                 local key = KEYS[i]
-                local window = tonumber(ARGV[2 + n_buckets + i])
-                
-                redis.call('ZADD', key, now, now)
-                redis.call('EXPIRE', key, window + 1)
+                local window = tonumber(ARGV[3 + n_buckets + i])
+                redis.call('ZADD', key, now, member .. ':' .. tostring(i))
+                redis.call('EXPIRE', key, math.ceil(window) + 1)
             end
-            
+
             return "0"
-        """)
+            """
+        )
 
     async def acquire(self, key: str, limits: List[RateLimitBucket]) -> None:
         if not limits:
             return
+        keys = [f"riot:rl:{key}:{bucket.window}" for bucket in limits]
+        limit_args = [bucket.limit for bucket in limits]
+        window_args = [bucket.window for bucket in limits]
 
-        now = time.time()
-        
-        # Prepare keys and args
-        # Use a unique key per bucket to avoid collisions when windows overlap
-        # format: riot:rl:<key>:<window>
-        keys = [f"riot:rl:{key}:{b.window}" for b in limits]
-        limit_args = [b.limit for b in limits]
-        window_args = [b.window for b in limits]
-        
-        args = [now, len(limits)] + limit_args + window_args
-        
-        # Run script
-        res = await self._acquire_script(keys=keys, args=args)
-        wait_time = float(res)
-        
-        if wait_time > 0:
-            logger.debug(f"Rate limit hit for {key}, waiting {wait_time:.2f}s (Redis)")
-            await asyncio.sleep(wait_time)
-            # Retry
-            await self.acquire(key, limits)
+        while True:
+            now = time.time()
+            member = uuid.uuid4().hex
+            args: List[Union[str, int, float]] = [
+                now,
+                len(limits),
+                member,
+                *limit_args,
+                *window_args,
+            ]
+            result = await self._acquire_script(keys=keys, args=args)
+            try:
+                wait = float(result)
+            except (TypeError, ValueError):
+                wait = 0.0
+            if not math.isfinite(wait) or wait <= 0:
+                return
+            logger.debug("Rate limit reached for %s; waiting %.2fs", key, wait)
+            await asyncio.sleep(wait)
 
-    async def update(self, key: str, counts: str, limits: Optional[str] = None) -> None:
-        # Implementing server-side sync is complex because of "distributed" vs "local" view.
-        # If we trust our Lua script, we don't strictly need to sync with headers 
-        # unless we are sharing quota with apps NOT using this limiter.
-        # For this "complete" wrapper, we focus on the client-side enforcement correctness.
-        # Strict syncing with X-App-Rate-Limit-Count would require 'SET'ing the ZSETs 
-        # which is hard because we don't know the distinct timestamps of those remote requests.
-        pass
+    async def update(
+        self, key: str, counts: str, limits: Optional[str] = None
+    ) -> None:
+        return None

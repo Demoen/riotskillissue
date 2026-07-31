@@ -1,8 +1,7 @@
 import pytest
 import respx
 from httpx import Response
-from riotskillissue import RiotClient, RiotClientConfig
-from riotskillissue.core.types import Region, Platform
+from riotskillissue.core.types import PlatformRoute, RegionalRoute
 
 @pytest.mark.asyncio
 async def test_summoner_by_puuid(client):
@@ -23,14 +22,14 @@ async def test_summoner_by_puuid(client):
         )
         
         # Generated method should now be get_by_puuid (snake_case of getByPUUID)
-        summoner = await client.summoner.get_by_puuid(
-            region=Region.NA1,
-            encryptedPUUID="12345"
+        summoner = await client.raw.lol.summoner.get_by_puuid(
+            route=PlatformRoute.NA1,
+            encrypted_puuid="12345",
         )
         
         assert route.called
         # assert summoner.name == "Faker" # 'name' field removed in latest spec
-        assert summoner.summonerLevel == 100
+        assert summoner.summoner_level == 100
 
 @pytest.mark.asyncio
 async def test_match_ids_by_puuid(client):
@@ -42,11 +41,11 @@ async def test_match_ids_by_puuid(client):
         )
         
         # Matches v5 uses platform explicitly in URL
-        matches = await client.match.get_match_ids_by_puuid(
-            region=Platform.AMERICAS, # Correct platform
+        matches = await client.raw.lol.match.get_match_ids_by_puuid(
+            route=RegionalRoute.AMERICAS,
             puuid="12345",
             start=0,
-            count=20
+            count=20,
         )
         
         assert route.called

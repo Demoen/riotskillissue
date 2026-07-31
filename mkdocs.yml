@@ -1,5 +1,5 @@
 site_name: RiotSkillIssue
-site_description: Production-ready, auto-updating Python wrapper for the Riot Games API
+site_description: Typed Python clients and a local MCP server for Riot Games APIs
 site_author: Demoen
 site_url: https://demoen.github.io/riotskillissue/
 
@@ -64,6 +64,10 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Configuration: configuration.md
+  - Routing: routing.md
+  - Riot Sign On: rso.md
+  - MCP Server: mcp.md
+  - 0.3 to 1.0 Migration: migration.md
   - Examples:
       - Overview: examples/index.md
       - League of Legends: examples/league-of-legends.md

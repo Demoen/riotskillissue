@@ -18,7 +18,11 @@ async def paginate(
     Async iterator for paginated endpoints using start/count.
 
     Usage:
-        async for match_id in paginate(client.match.get_ids_by_puuid, puuid="...", count=100):
+        async for match_id in paginate(
+            client.raw.lol.match.get_match_ids_by_puuid,
+            puuid="...",
+            count=100,
+        ):
             print(match_id)
 
     Args:

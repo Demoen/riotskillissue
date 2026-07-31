@@ -1,349 +1,308 @@
-# API Reference
+# API reference
 
-Complete reference for all available API endpoints.
+The committed `OperationRegistry` is the inventory for generated raw clients,
+documentation, validation, and MCP discovery. Each entry records:
 
-## Client Initialization
+- Stable operation ID and Python accessor path
+- Game and Riot service
+- HTTP method and read/write classification
+- Route family and allowed routes
+- Authentication mode and scopes
+- Keyword-only input schema
+- Response adapter, including no-content responses
 
-### Async Client
-
-```python
-from riotskillissue import RiotClient, RiotClientConfig
-
-# Simple initialization (uses RIOT_API_KEY env var)
-async with RiotClient() as client:
-    pass
-
-# With explicit API key
-async with RiotClient(api_key="RGAPI-...") as client:
-    pass
-
-# With full configuration
-config = RiotClientConfig(
-    api_key="RGAPI-...",
-    max_retries=5,
-    redis_url="redis://localhost:6379/0",  # requires: pip install riotskillissue[redis]
-    cache_ttl=120,
-    log_level="DEBUG",
-)
-async with RiotClient(config=config) as client:
-    pass
-```
-
-### Sync Client
+Use discovery in Python:
 
 ```python
-from riotskillissue import SyncRiotClient
+from riotskillissue.api.registry import OPERATION_REGISTRY
 
-# Same API, no async/await needed
-with SyncRiotClient(api_key="RGAPI-...") as client:
-    account = client.account.get_by_riot_id(
-        region="americas", gameName="Faker", tagLine="KR1"
-    )
+operation = OPERATION_REGISTRY["match-v5.getMatch"]
+print(operation.accessor_path)
+print(operation.input_schema)
 ```
 
-`SyncRiotClient` mirrors the entire `RiotClient` API surface. Every async method becomes a synchronous call.
-
----
-
-## Error Hierarchy
-
-All API errors inherit from `RiotAPIError` and carry `status`, `message`, and `response` attributes:
+Or call a known operation through the typed raw hierarchy:
 
 ```python
-from riotskillissue import (
-    RiotAPIError,       # Base — any API error
-    BadRequestError,    # 400
-    UnauthorizedError,  # 401
-    ForbiddenError,     # 403
-    NotFoundError,      # 404
-    RateLimitError,     # 429
-    ServerError,        # 5xx
-)
+match = await riot.raw.lol.match.get_match(match_id="EUW1_...")
 ```
 
-!!! note "429 Handling"
-    HTTP 429 responses are automatically retried after sleeping for the `Retry-After` value.
-    `RateLimitError` is only raised if the server returns 429 without a valid `Retry-After` header after exhausting retries.
+The raw hierarchy is grouped under:
+
+- `riot.raw.common`
+- `riot.raw.lol`
+- `riot.raw.tft`
+- `riot.raw.valorant`
+- `riot.raw.lor`
+- `riot.raw.riftbound`
 
----
+All endpoint parameters are keyword-only snake_case. A `route=` override is
+optional when the configured default route can be mapped unambiguously.
 
-## Region and Platform Types
+## Generated raw operation inventory
 
-```python
-from riotskillissue import Region, Platform
-```
+This inventory is generated from the same community-maintained OpenAPI contract
+as the raw clients and registry.
 
-### Platform (Routing)
+### Common
 
-Used for account lookups and match history APIs.
+#### account
 
-| Value | Description |
-|-------|-------------|
-| `Platform.AMERICAS` | North/South America |
-| `Platform.EUROPE` | Europe |
-| `Platform.ASIA` | Korea, Japan |
-| `Platform.SEA` | Southeast Asia, Oceania |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `account-v1.getByPuuid` | `riot.raw.common.account.get_by_puuid` | GET | regional | api_key | `Account` |
+| `account-v1.getByRiotId` | `riot.raw.common.account.get_by_riot_id` | GET | regional | api_key | `Account` |
+| `account-v1.getByAccessToken` | `riot.raw.common.account.get_by_access_token` | GET | regional | rso | `Account` |
+| `account-v1.getActiveShard` | `riot.raw.common.account.get_active_shard` | GET | regional | api_key | `ActiveShard` |
+| `account-v1.getActiveRegion` | `riot.raw.common.account.get_active_region` | GET | regional | api_key | `AccountRegion` |
 
-### Region (Server)
+### League of Legends
+
+#### challenges
 
-Used for summoner, ranked, and spectator APIs.
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lol-challenges-v1.getAllChallengeConfigs` | `riot.raw.lol.challenges.get_all_challenge_configs` | GET | platform | api_key | `List[ChallengeConfigInfo]` |
+| `lol-challenges-v1.getAllChallengePercentiles` | `riot.raw.lol.challenges.get_all_challenge_percentiles` | GET | platform | api_key | `Dict[str, Dict[str, float]]` |
+| `lol-challenges-v1.getChallengeConfigs` | `riot.raw.lol.challenges.get_challenge_configs` | GET | platform | api_key | `ChallengeConfigInfo` |
+| `lol-challenges-v1.getChallengeLeaderboards` | `riot.raw.lol.challenges.get_challenge_leaderboards` | GET | platform | api_key | `List[ApexPlayerInfo]` |
+| `lol-challenges-v1.getChallengePercentiles` | `riot.raw.lol.challenges.get_challenge_percentiles` | GET | platform | api_key | `Dict[str, float]` |
+| `lol-challenges-v1.getPlayerData` | `riot.raw.lol.challenges.get_player_data` | GET | platform | api_key | `PlayerInfo` |
+
+#### champion
 
-| Value | Server |
-|-------|--------|
-| `Region.NA1` | North America |
-| `Region.EUW1` | Europe West |
-| `Region.EUN1` | Europe Nordic & East |
-| `Region.KR` | Korea |
-| `Region.BR1` | Brazil |
-| `Region.LA1` | Latin America North |
-| `Region.LA2` | Latin America South |
-| `Region.OC1` | Oceania |
-| `Region.JP1` | Japan |
-| `Region.TR1` | Turkey |
-| `Region.RU` | Russia |
-| `Region.PH2` | Philippines |
-| `Region.SG2` | Singapore |
-| `Region.TH2` | Thailand |
-| `Region.TW2` | Taiwan |
-| `Region.VN2` | Vietnam |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `champion-v3.getChampionInfo` | `riot.raw.lol.champion.get_champion_info` | GET | platform | api_key | `ChampionInfo` |
 
----
+#### champion_mastery
+
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `champion-mastery-v4.getAllChampionMasteriesByPUUID` | `riot.raw.lol.champion_mastery.get_all_champion_masteries_by_puuid` | GET | platform | api_key | `List[ChampionMastery]` |
+| `champion-mastery-v4.getChampionMasteryByPUUID` | `riot.raw.lol.champion_mastery.get_champion_mastery_by_puuid` | GET | platform | api_key | `ChampionMastery` |
+| `champion-mastery-v4.getTopChampionMasteriesByPUUID` | `riot.raw.lol.champion_mastery.get_top_champion_masteries_by_puuid` | GET | platform | api_key | `List[ChampionMastery]` |
+| `champion-mastery-v4.getChampionMasteryScoreByPUUID` | `riot.raw.lol.champion_mastery.get_champion_mastery_score_by_puuid` | GET | platform | api_key | `int` |
 
-## League of Legends APIs
+#### clash
+
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `clash-v1.getPlayersByPUUID` | `riot.raw.lol.clash.get_players_by_puuid` | GET | platform | api_key | `List[Player]` |
+| `clash-v1.getTeamById` | `riot.raw.lol.clash.get_team_by_id` | GET | platform | api_key | `Team` |
+| `clash-v1.getTournaments` | `riot.raw.lol.clash.get_tournaments` | GET | platform | api_key | `List[Tournament]` |
+| `clash-v1.getTournamentByTeam` | `riot.raw.lol.clash.get_tournament_by_team` | GET | platform | api_key | `Tournament` |
+| `clash-v1.getTournamentById` | `riot.raw.lol.clash.get_tournament_by_id` | GET | platform | api_key | `Tournament` |
+
+#### league
 
-### Account API
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `league-v4.getChallengerLeague` | `riot.raw.lol.league.get_challenger_league` | GET | platform | api_key | `LeagueList` |
+| `league-v4.getLeagueEntriesByPUUID` | `riot.raw.lol.league.get_league_entries_by_puuid` | GET | platform | api_key | `List[LeagueEntry]` |
+| `league-v4.getLeagueEntries` | `riot.raw.lol.league.get_league_entries` | GET | platform | api_key | `List[LeagueEntry]` |
+| `league-v4.getGrandmasterLeague` | `riot.raw.lol.league.get_grandmaster_league` | GET | platform | api_key | `LeagueList` |
+| `league-v4.getMasterLeague` | `riot.raw.lol.league.get_master_league` | GET | platform | api_key | `LeagueList` |
 
-`client.account`
+#### league_exp
 
-| Method | Description |
-|--------|-------------|
-| `get_by_puuid(region, puuid)` | Get account by PUUID |
-| `get_by_riot_id(region, gameName, tagLine)` | Get account by Riot ID |
-| `get_by_access_token(region)` | Get account using RSO token |
-| `get_active_shard(region, game, puuid)` | Get active shard for player |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `league-exp-v4.getLeagueEntries` | `riot.raw.lol.league_exp.get_league_entries` | GET | platform | api_key | `List[LeagueEntry]` |
 
-### Summoner API
+#### match
 
-`client.summoner`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `match-v5.getMatchIdsByPUUID` | `riot.raw.lol.match.get_match_ids_by_puuid` | GET | regional | api_key | `List[str]` |
+| `match-v5.getReplay` | `riot.raw.lol.match.get_replay` | GET | regional | api_key | `Replay` |
+| `match-v5.getMatch` | `riot.raw.lol.match.get_match` | GET | regional | api_key | `Match` |
+| `match-v5.getTimeline` | `riot.raw.lol.match.get_timeline` | GET | regional | api_key | `Timeline` |
 
-| Method | Description |
-|--------|-------------|
-| `get_by_puuid(region, encryptedPUUID)` | Get summoner by PUUID |
-| `get_by_access_token(region)` | Get summoner using RSO token |
+#### rso_match
 
-### Match API
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lol-rso-match-v1.getMatchIds` | `riot.raw.lol.rso_match.get_match_ids` | GET | regional | rso | `List[str]` |
+| `lol-rso-match-v1.getMatch` | `riot.raw.lol.rso_match.get_match` | GET | regional | rso | `Match` |
+| `lol-rso-match-v1.getTimeline` | `riot.raw.lol.rso_match.get_timeline` | GET | regional | rso | `Timeline` |
 
-`client.match`
+#### spectator
 
-| Method | Description |
-|--------|-------------|
-| `get_match_ids_by_puuid(region, puuid, ...)` | Get list of match IDs |
-| `get_match(region, matchId)` | Get match details |
-| `get_timeline(region, matchId)` | Get match timeline |
-| `get_replay(region, puuid)` | Get player replays |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `spectator-v5.getCurrentGameInfoByPuuid` | `riot.raw.lol.spectator.get_current_game_info_by_puuid` | GET | platform | api_key | `CurrentGameInfo` |
 
-Optional parameters for `get_match_ids_by_puuid`:
+#### status
 
-- `count` - Number of matches (default: 20, max: 100)
-- `start` - Offset for pagination
-- `startTime` / `endTime` - Time filters (epoch seconds)
-- `queue` - Queue ID filter
-- `type` - Game type filter
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lol-status-v4.getPlatformData` | `riot.raw.lol.status.get_platform_data` | GET | platform | api_key | `PlatformData` |
 
-### Champion Mastery API
+#### summoner
 
-`client.champion_mastery`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `summoner-v4.getByPUUID` | `riot.raw.lol.summoner.get_by_puuid` | GET | platform | api_key | `Summoner` |
+| `summoner-v4.getByAccessToken` | `riot.raw.lol.summoner.get_by_access_token` | GET | platform | rso | `Summoner` |
 
-| Method | Description |
-|--------|-------------|
-| `get_all_masteries(region, encryptedPUUID)` | Get all champion masteries |
-| `get_by_champion(region, encryptedPUUID, championId)` | Get mastery for champion |
-| `get_top_masteries(region, encryptedPUUID, count)` | Get top N masteries |
-| `get_mastery_score(region, encryptedPUUID)` | Get total mastery score |
+#### tournament
 
-### League API
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `tournament-v5.createTournamentCode` | `riot.raw.lol.tournament.create_tournament_code` | POST (write) | regional | api_key | `List[str]` |
+| `tournament-v5.getTournamentCode` | `riot.raw.lol.tournament.get_tournament_code` | GET | regional | api_key | `TournamentCodeV5` |
+| `tournament-v5.updateCode` | `riot.raw.lol.tournament.update_code` | PUT (write) | regional | api_key | `None` |
+| `tournament-v5.getGames` | `riot.raw.lol.tournament.get_games` | GET | regional | api_key | `List[TournamentGamesV5]` |
+| `tournament-v5.getLobbyEventsByCode` | `riot.raw.lol.tournament.get_lobby_events_by_code` | GET | regional | api_key | `LobbyEventV5Wrapper` |
+| `tournament-v5.registerProviderData` | `riot.raw.lol.tournament.register_provider_data` | POST (write) | regional | api_key | `int` |
+| `tournament-v5.registerTournament` | `riot.raw.lol.tournament.register_tournament` | POST (write) | regional | api_key | `int` |
 
-`client.league`
+#### tournament_stub
 
-| Method | Description |
-|--------|-------------|
-| `get_entries_by_summoner(region, encryptedSummonerId)` | Get ranked entries |
-| `get_challenger_league(region, queue)` | Get challenger league |
-| `get_grandmaster_league(region, queue)` | Get grandmaster league |
-| `get_master_league(region, queue)` | Get master league |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `tournament-stub-v5.createTournamentCode` | `riot.raw.lol.tournament_stub.create_tournament_code` | POST (write) | regional | api_key | `List[str]` |
+| `tournament-stub-v5.getTournamentCode` | `riot.raw.lol.tournament_stub.get_tournament_code` | GET | regional | api_key | `TournamentCodeV5` |
+| `tournament-stub-v5.getLobbyEventsByCode` | `riot.raw.lol.tournament_stub.get_lobby_events_by_code` | GET | regional | api_key | `LobbyEventV5Wrapper` |
+| `tournament-stub-v5.registerProviderData` | `riot.raw.lol.tournament_stub.register_provider_data` | POST (write) | regional | api_key | `int` |
+| `tournament-stub-v5.registerTournament` | `riot.raw.lol.tournament_stub.register_tournament` | POST (write) | regional | api_key | `int` |
 
-### Spectator API
+### Teamfight Tactics
 
-`client.spectator`
+#### league
 
-| Method | Description |
-|--------|-------------|
-| `get_current_game_info(region, encryptedPUUID)` | Get live game data |
-| `get_featured_games(region)` | Get featured games |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `tft-league-v1.getLeagueEntriesByPUUID` | `riot.raw.tft.league.get_league_entries_by_puuid` | GET | platform | api_key | `List[LeagueEntry]` |
+| `tft-league-v1.getChallengerLeague` | `riot.raw.tft.league.get_challenger_league` | GET | platform | api_key | `LeagueList` |
+| `tft-league-v1.getLeagueEntries` | `riot.raw.tft.league.get_league_entries` | GET | platform | api_key | `List[LeagueEntry]` |
+| `tft-league-v1.getGrandmasterLeague` | `riot.raw.tft.league.get_grandmaster_league` | GET | platform | api_key | `LeagueList` |
+| `tft-league-v1.getMasterLeague` | `riot.raw.tft.league.get_master_league` | GET | platform | api_key | `LeagueList` |
+| `tft-league-v1.getTopRatedLadder` | `riot.raw.tft.league.get_top_rated_ladder` | GET | platform | api_key | `List[TopRatedLadderEntry]` |
 
-### Champion API
+#### match
 
-`client.champion`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `tft-match-v1.getMatchIdsByPUUID` | `riot.raw.tft.match.get_match_ids_by_puuid` | GET | regional | api_key | `List[str]` |
+| `tft-match-v1.getMatch` | `riot.raw.tft.match.get_match` | GET | regional | api_key | `Match` |
 
-| Method | Description |
-|--------|-------------|
-| `get_champion_rotations(region)` | Get free champion rotation |
+#### spectator
 
-### Status API
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `spectator-tft-v5.getCurrentGameInfoByPuuid` | `riot.raw.tft.spectator.get_current_game_info_by_puuid` | GET | platform | api_key | `CurrentGameInfo` |
 
-`client.lol_status`
+#### status
 
-| Method | Description |
-|--------|-------------|
-| `get_platform_data(region)` | Get platform status |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `tft-status-v1.getPlatformData` | `riot.raw.tft.status.get_platform_data` | GET | platform | api_key | `PlatformData` |
 
----
+#### summoner
 
-## TFT APIs
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `tft-summoner-v1.getByPUUID` | `riot.raw.tft.summoner.get_by_puuid` | GET | platform | api_key | `Summoner` |
+| `tft-summoner-v1.getByAccessToken` | `riot.raw.tft.summoner.get_by_access_token` | GET | platform | rso | `Summoner` |
 
-### TFT Summoner API
+### VALORANT
 
-`client.tft_summoner`
+#### console_match
 
-| Method | Description |
-|--------|-------------|
-| `get_by_puuid(region, encryptedPUUID)` | Get TFT summoner by PUUID |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `val-console-match-v1.getMatch` | `riot.raw.valorant.console_match.get_match` | GET | val-platform | api_key | `Match` |
+| `val-console-match-v1.getMatchlist` | `riot.raw.valorant.console_match.get_matchlist` | GET | val-platform | api_key | `Matchlist` |
+| `val-console-match-v1.getRecent` | `riot.raw.valorant.console_match.get_recent` | GET | val-platform | api_key | `RecentMatches` |
 
-### TFT Match API
+#### console_ranked
 
-`client.tft_match`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `val-console-ranked-v1.getLeaderboard` | `riot.raw.valorant.console_ranked.get_leaderboard` | GET | val-platform | api_key | `Leaderboard` |
 
-| Method | Description |
-|--------|-------------|
-| `get_match_ids_by_puuid(region, puuid, count)` | Get TFT match IDs |
-| `get_match(region, matchId)` | Get TFT match details |
+#### content
 
-### TFT League API
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `val-content-v1.getContent` | `riot.raw.valorant.content.get_content` | GET | val-platform | api_key | `Content` |
 
-`client.tft_league`
+#### match
 
-| Method | Description |
-|--------|-------------|
-| `get_challenger_league(region)` | Get TFT challenger league |
-| `get_grandmaster_league(region)` | Get TFT grandmaster league |
-| `get_master_league(region)` | Get TFT master league |
-| `get_entries_by_summoner(region, summonerId)` | Get ranked entries |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `val-match-v1.getMatch` | `riot.raw.valorant.match.get_match` | GET | val-platform | api_key | `Match` |
+| `val-match-v1.getMatchlist` | `riot.raw.valorant.match.get_matchlist` | GET | val-platform | api_key | `Matchlist` |
+| `val-match-v1.getRecent` | `riot.raw.valorant.match.get_recent` | GET | val-platform | api_key | `RecentMatches` |
 
-### TFT Status API
+#### ranked
 
-`client.tft_status`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `val-ranked-v1.getLeaderboard` | `riot.raw.valorant.ranked.get_leaderboard` | GET | val-platform | api_key | `Leaderboard` |
 
-| Method | Description |
-|--------|-------------|
-| `get_platform_data(region)` | Get TFT platform status |
+#### status
 
----
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `val-status-v1.getPlatformData` | `riot.raw.valorant.status.get_platform_data` | GET | val-platform | api_key | `PlatformData` |
 
-## VALORANT APIs
+### Legends of Runeterra
 
-### VALORANT Content API
+#### deck
 
-`client.val_content`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lor-deck-v1.getDecks` | `riot.raw.lor.deck.get_decks` | GET | regional | rso | `List[Deck]` |
+| `lor-deck-v1.createDeck` | `riot.raw.lor.deck.create_deck` | POST (write) | regional | rso | `str` |
 
-| Method | Description |
-|--------|-------------|
-| `get_content(region, locale)` | Get game content (agents, maps, etc.) |
+#### inventory
 
-### VALORANT Ranked API
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lor-inventory-v1.getCards` | `riot.raw.lor.inventory.get_cards` | GET | regional | rso | `List[Card]` |
 
-`client.val_ranked`
+#### match
 
-| Method | Description |
-|--------|-------------|
-| `get_leaderboard(region, actId, ...)` | Get ranked leaderboard |
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lor-match-v1.getMatchIdsByPUUID` | `riot.raw.lor.match.get_match_ids_by_puuid` | GET | regional | api_key | `List[str]` |
+| `lor-match-v1.getMatch` | `riot.raw.lor.match.get_match` | GET | regional | api_key | `Match` |
 
-### VALORANT Status API
+#### ranked
 
-`client.val_status`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lor-ranked-v1.getLeaderboards` | `riot.raw.lor.ranked.get_leaderboards` | GET | regional | api_key | `Leaderboard` |
 
-| Method | Description |
-|--------|-------------|
-| `get_platform_data(region)` | Get VALORANT platform status |
+#### status
 
----
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `lor-status-v1.getPlatformData` | `riot.raw.lor.status.get_platform_data` | GET | regional | api_key | `PlatformData` |
 
-## Legends of Runeterra APIs
+### Riftbound
 
-### LoR Match API
+#### content
 
-`client.lor_match`
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+| `riftbound-content-v1.getContent` | `riot.raw.riftbound.content.get_content` | GET | regional | api_key | `RiftboundContent` |
 
-| Method | Description |
-|--------|-------------|
-| `get_match_ids_by_puuid(region, puuid)` | Get LoR match IDs |
-| `get_match(region, matchId)` | Get LoR match details |
+### Data Dragon
 
-### LoR Ranked API
-
-`client.lor_ranked`
-
-| Method | Description |
-|--------|-------------|
-| `get_leaderboards(region)` | Get LoR leaderboards |
-
-### LoR Status API
-
-`client.lor_status`
-
-| Method | Description |
-|--------|-------------|
-| `get_platform_data(region)` | Get LoR platform status |
-
----
-
-## Static Data (Data Dragon)
-
-`client.static`
-
-| Method | Description |
-|--------|-------------|
-| `get_latest_version()` | Get latest Data Dragon version |
-| `get_champion(champion_key)` | Get champion data by ID |
-| `get_all_champions()` | Get all champions as a dict |
-| `get_item(item_id)` | Get item data by ID |
-| `get_all_items()` | Get all items as a dict |
-| `get_summoner_spells()` | Get all summoner spells |
-| `get_summoner_spell(spell_key)` | Get a summoner spell by numeric key |
-| `get_runes()` | Get all rune trees and runes |
-| `get_queues()` | Get all queue type definitions |
-| `get_maps()` | Get all map definitions |
-| `get_game_modes()` | Get all game mode definitions |
-
-```python
-# Example: get summoner spells and runes
-async with RiotClient() as client:
-    spells = await client.static.get_summoner_spells()
-    flash = await client.static.get_summoner_spell(4)
-    runes = await client.static.get_runes()
-    queues = await client.static.get_queues()
-```
-
----
-
-## Pagination Helper
-
-```python
-from riotskillissue import paginate
-
-async for match_id in paginate(
-    client.match.get_match_ids_by_puuid,
-    region=Platform.EUROPE,
-    puuid="...",
-    count=100,       # Items per page
-    max_results=500  # Total items to fetch
-):
-    print(match_id)
-```
-
-| Parameter | Description |
-|-----------|-------------|
-| `method` | The API method to paginate |
-| `start` | Initial offset (default: 0) |
-| `count` | Items per page (default: 100) |
-| `max_results` | Maximum items to yield (default: `None`) |
-| `**kwargs` | Arguments passed to the method |
+| Operation ID | Python accessor | Result |
+| --- | --- | --- |
+| `static.get_latest_version` | `riot.static.get_latest_version` | `str` |
+| `static.get_champion` | `riot.static.get_champion` | `Optional[Dict[str, Any]]` |
+| `static.get_all_champions` | `riot.static.get_all_champions` | `Dict[int, Dict[str, Any]]` |
+| `static.get_item` | `riot.static.get_item` | `Optional[Dict[str, Any]]` |
+| `static.get_all_items` | `riot.static.get_all_items` | `Dict[int, Dict[str, Any]]` |
+| `static.get_summoner_spells` | `riot.static.get_summoner_spells` | `Dict[int, Dict[str, Any]]` |
+| `static.get_summoner_spell` | `riot.static.get_summoner_spell` | `Optional[Dict[str, Any]]` |
+| `static.get_runes` | `riot.static.get_runes` | `List[Dict[str, Any]]` |
+| `static.get_queues` | `riot.static.get_queues` | `List[Dict[str, Any]]` |
+| `static.get_maps` | `riot.static.get_maps` | `List[Dict[str, Any]]` |
+| `static.get_game_modes` | `riot.static.get_game_modes` | `List[Dict[str, Any]]` |

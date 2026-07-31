@@ -1,170 +1,72 @@
-# Getting Started
-
-This guide will walk you through installing riotskillissue and making your first API call.
-
-## Prerequisites
-
-- Python 3.10 or higher
-- A Riot Games API key from [developer.riotgames.com](https://developer.riotgames.com/)
+# Getting started
 
 ## Installation
-
-Install the package from PyPI:
 
 ```bash
 pip install riotskillissue
 ```
 
-Optional extras:
+RiotSkillIssue 1.0 requires Python `>=3.14,<3.17`, covering Python 3.14,
+3.15, and 3.16. As of July 2026, CI gates releases on Python 3.14 and the
+current Python 3.15 prerelease. Python 3.16 is still in development, so it is
+covered by a non-blocking nightly compatibility probe until its stable release.
+
+Create a Riot development key and set it in the server or application
+environment:
 
 ```bash
-pip install "riotskillissue[redis]"  # Redis caching & rate limiting
-pip install "riotskillissue[tui]"    # Live game TUI
-pip install "riotskillissue[dev]"    # Development & testing tools
+export RIOT_API_KEY="RGAPI-..."
 ```
 
-## Configuration
+PowerShell:
 
-### Option 1: Environment Variable (Recommended)
-
-Set the `RIOT_API_KEY` environment variable:
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    $env:RIOT_API_KEY = "RGAPI-your-key-here"
-    ```
-
-=== "Windows (CMD)"
-
-    ```batch
-    set RIOT_API_KEY=RGAPI-your-key-here
-    ```
-
-=== "Linux/macOS"
-
-    ```bash
-    export RIOT_API_KEY="RGAPI-your-key-here"
-    ```
-
-### Option 2: Direct Initialization
-
-Pass the API key directly to the client:
-
-```python
-from riotskillissue import RiotClient
-
-async with RiotClient(api_key="RGAPI-your-key-here") as client:
-    # ...
+```powershell
+$env:RIOT_API_KEY = "RGAPI-..."
 ```
 
-## Your First API Call (Async)
-
-Here's a complete example that looks up a player by their Riot ID:
+## Async client
 
 ```python
 import asyncio
-from riotskillissue import RiotClient, Platform, Region
 
-async def main():
-    async with RiotClient() as client:
-        
-        # Step 1: Look up account by Riot ID
-        account = await client.account.get_by_riot_id(
-            region=Platform.EUROPE,
-            gameName="Player",
-            tagLine="EUW"
-        )
-        print(f"Account: {account.gameName}#{account.tagLine}")
-        print(f"PUUID: {account.puuid}")
-        
-        # Step 2: Get summoner data using the PUUID
-        summoner = await client.summoner.get_by_puuid(
-            region=Region.EUW1,
-            encryptedPUUID=account.puuid
-        )
-        print(f"Summoner Level: {summoner.summonerLevel}")
+from riotskillissue import PlatformRoute, RiotClient
 
-if __name__ == "__main__":
-    asyncio.run(main())
+
+async def main() -> None:
+    async with RiotClient(default_route=PlatformRoute.EUW1) as riot:
+        profile = await riot.lol.player_profile("Player#EUW")
+        history = await riot.lol.match_history("Player#EUW", count=5)
+        print(profile)
+        print(history)
+
+
+asyncio.run(main())
 ```
 
-## Your First API Call (Sync)
-
-Don't need async? Use `SyncRiotClient` — it has the same API but works in plain synchronous code:
+## Sync client
 
 ```python
-from riotskillissue import SyncRiotClient, Platform, Region
+from riotskillissue import PlatformRoute, SyncRiotClient
 
-with SyncRiotClient() as client:
-    account = client.account.get_by_riot_id(
-        region=Platform.EUROPE,
-        gameName="Player",
-        tagLine="EUW"
-    )
-    print(f"Account: {account.gameName}#{account.tagLine}")
-
-    summoner = client.summoner.get_by_puuid(
-        region=Region.EUW1,
-        encryptedPUUID=account.puuid
-    )
-    print(f"Summoner Level: {summoner.summonerLevel}")
+with SyncRiotClient(default_route=PlatformRoute.EUW1) as riot:
+    profile = riot.lol.player_profile("Player#EUW")
+    print(profile)
 ```
 
-!!! tip "When to use which?"
-    Use `RiotClient` (async) in web servers, bots, and high-throughput applications.
-    Use `SyncRiotClient` for scripts, notebooks, CLI tools, and quick prototyping.
+The synchronous surface is explicit and typed. It uses a background event loop
+internally, so it also works in environments that already have an event loop.
 
-## Error Handling
+## Raw operations
 
-v0.2.0 introduces typed exceptions so you can handle specific error conditions:
-
-```python
-from riotskillissue import RiotClient, NotFoundError, RateLimitError, RiotAPIError
-
-async with RiotClient() as client:
-    try:
-        account = await client.account.get_by_riot_id(
-            region=Platform.EUROPE,
-            gameName="Nonexistent",
-            tagLine="0000"
-        )
-    except NotFoundError:
-        print("Player not found!")
-    except RateLimitError as e:
-        print(f"Rate limited — retry after {e.response.headers.get('Retry-After')}s")
-    except RiotAPIError as e:
-        print(f"API error [{e.status}]: {e.message}")
-```
-
-## Understanding Regions vs Platforms
-
-The Riot API uses two types of routing:
-
-| Type | Values | Used For |
-|------|--------|----------|
-| **Platform** | `AMERICAS`, `EUROPE`, `ASIA`, `SEA` | Account lookups, Match history |
-| **Region** | `NA1`, `EUW1`, `KR`, `BR1`, etc. | Summoner data, Live game, Ranked |
+Workflows intentionally stay focused. Use the generated raw API for complete
+coverage:
 
 ```python
-from riotskillissue import Region, Platform
-
-# Platform for account/match APIs
-account = await client.account.get_by_riot_id(
-    region=Platform.AMERICAS,
-    gameName="Player",
-    tagLine="NA1"
-)
-
-# Region for summoner/ranked APIs  
-summoner = await client.summoner.get_by_puuid(
-    region=Region.NA1,
-    encryptedPUUID=account.puuid
+match = await riot.raw.lol.match.get_match(match_id="EUW1_...")
+status = await riot.raw.valorant.status.get_platform_data(
+    route=ValorantRoute.EU
 )
 ```
 
-## Next Steps
-
-- [Configuration Guide](configuration.md) - Redis caching, rate limiting, timeouts
-- [Examples](examples/index.md) - Working code for common tasks
-- [API Reference](api-reference.md) - Complete endpoint documentation
+Raw parameters are keyword-only and use snake_case. Riot wire names are handled
+internally.

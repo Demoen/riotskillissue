@@ -4,72 +4,86 @@
 
 ![riotskillissue](docs/assets/logo.png)
 
-
-[![PyPI version](https://badge.fury.io/py/riotskillissue.svg)](https://badge.fury.io/py/riotskillissue)
+[![PyPI version](https://badge.fury.io/py/riotskillissue.svg)](https://pypi.org/project/riotskillissue)
 [![Python Versions](https://img.shields.io/pypi/pyversions/riotskillissue.svg)](https://pypi.org/project/riotskillissue/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml/badge.svg)](https://github.com/Demoen/riotskillissue/actions/workflows/test.yml)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/riotskillissue?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/riotskillissue)
 
-**Production-ready, auto-updating, and fully typed Python wrapper for the Riot Games API.**
+**Typed async and sync Riot Games APIs, plus an optional local MCP server.**
 
-[Documentation](https://demoen.github.io/riotskillissue/) · [Examples](https://demoen.github.io/riotskillissue/examples/) · [API Reference](https://demoen.github.io/riotskillissue/api-reference/)
+[Documentation](https://demoen.github.io/riotskillissue/) · [Migration guide](https://demoen.github.io/riotskillissue/migration/) · [API reference](https://demoen.github.io/riotskillissue/api-reference/)
 
 </div>
 
----
+## Install
 
-## Features
-
-| Feature | Description |
-|---------|-------------|
-| **Type-Safe** | 100% Pydantic models for all requests and responses |
-| **Auto-Updated** | Generated daily from the Official OpenAPI Spec |
-| **Sync & Async** | First-class async client and a synchronous `SyncRiotClient` for scripts & notebooks |
-| **Resilient** | Automatic `Retry-After` handling, exponential backoff, and a rich error hierarchy |
-| **Distributed** | Pluggable Redis support for shared rate limiting and caching |
-| **Multi-Game** | Full support for LoL, TFT, LoR, and VALORANT APIs |
-
-## Installation
-
-Requires Python 3.10+.
+RiotSkillIssue 1.0 requires Python `>=3.14,<3.17`, covering Python 3.14,
+3.15, and 3.16. As of July 2026, CI gates releases on Python 3.14 and the
+current Python 3.15 prerelease. Python 3.16 is still in development, so it is
+covered by a non-blocking nightly compatibility probe until its stable release.
 
 ```bash
 pip install riotskillissue
 ```
 
-Set your API key via environment variable:
+Set `RIOT_API_KEY` or pass a key directly:
 
-Linux/MacOS
-```bash
-export RIOT_API_KEY="RGAPI-your-key-here"
+```python
+import asyncio
+
+from riotskillissue import PlatformRoute, RiotClient
+
+
+async def main() -> None:
+    async with RiotClient(
+        api_key="RGAPI-...",
+        default_route=PlatformRoute.EUW1,
+    ) as riot:
+        profile = await riot.lol.player_profile("Player#EUW")
+        history = await riot.lol.match_history("Player#EUW", count=5)
+        match = await riot.raw.lol.match.get_match(match_id="EUW1_...")
+        print(profile, history, match)
+
+
+asyncio.run(main())
 ```
-Windows (Powershell)
-```bash
-$env:RIOT_API_KEY = "RGAPI-your-key-here"
+
+The explicit synchronous client provides the same workflows and raw operation
+groups:
+
+```python
+from riotskillissue import PlatformRoute, SyncRiotClient
+
+with SyncRiotClient(default_route=PlatformRoute.EUW1) as riot:
+    print(riot.lol.player_profile("Player#EUW"))
 ```
 
-Windows (CMD)
+## Local MCP server
+
+Install the optional server and run it over stdio:
+
 ```bash
-set RIOT_API_KEY=RGAPI-your-key-here
+pip install "riotskillissue[mcp]"
+riotskillissue-mcp
 ```
 
-![TUI Demo](docs/assets/tui.gif)
+The server reads credentials from its environment. API keys and RSO tokens are
+never tool arguments. Raw write operations are hidden unless
+`RIOT_MCP_ALLOW_WRITES=true`; enabled writes still require human confirmation.
 
+## Coverage and generation
 
-## Documentation
+The generated raw API covers every operation in the bundled community-maintained
+OpenAPI feed. That feed is not an official Riot Games specification. One
+committed operation registry drives raw dispatch, reference documentation, and
+MCP discovery.
 
-Full documentation is available at [demoen.github.io/riotskillissue](https://demoen.github.io/riotskillissue/).
-
-- [Getting Started](https://demoen.github.io/riotskillissue/getting-started/)
-- [Configuration](https://demoen.github.io/riotskillissue/configuration/)
-- [Examples](https://demoen.github.io/riotskillissue/examples/)
-- [API Reference](https://demoen.github.io/riotskillissue/api-reference/)
-- [CLI](https://demoen.github.io/riotskillissue/cli/)
-
-## Legal
-
-RiotSkillIssue is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+RiotSkillIssue is not endorsed by Riot Games and does not reflect the views or
+opinions of Riot Games or anyone officially involved in producing or managing
+Riot Games properties. Riot Games and all associated properties are trademarks
+or registered trademarks of Riot Games, Inc.
 
 ## License
 
-MIT. See the [LICENSE](LICENSE) file for details.
+MIT. See [LICENSE](LICENSE).
