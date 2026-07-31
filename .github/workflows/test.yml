@@ -7,43 +7,80 @@ on:
     branches: [ main ]
 
 jobs:
-  lint:
+  quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,docs,mcp]"
 
-      - name: Lint
-        run: ruff check src/ tests/
+      - name: Ruff
+        run: ruff check src/ tests/ tools/ examples/
 
-      - name: Type check
-        run: mypy src/riotskillissue/
+      - name: Mypy
+        run: mypy src/riotskillissue/ tests/typecheck/
+
+      - name: Generated code parity
+        run: python tools/generator/core.py --check
+
+      - name: Documentation
+        run: mkdocs build --strict
+
+      - name: Package
+        run: hatch build
 
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.14", "3.15"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "${{ matrix.python-version }}"
+          allow-prereleases: true
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,docs,mcp]"
 
-      - name: Run Tests
-        run: pytest tests/
+      - name: Pytest
+        run: pytest
+
+  future-python:
+    name: Python 3.16-dev compatibility probe
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: deadsnakes/action@v3.2.0
+        with:
+          python-version: "3.16-dev"
+
+      - name: Install dependencies
+        id: install
+        continue-on-error: true
+        run: pip install -e ".[dev,docs,mcp]"
+
+      - name: Pytest
+        if: steps.install.outcome == 'success'
+        run: pytest
+
+      - name: Report unavailable dependencies
+        if: steps.install.outcome == 'failure'
+        run: echo "::notice title=Python 3.16 dependency support pending::The project probe could not start because an upstream dependency does not yet build on unreleased CPython 3.16."

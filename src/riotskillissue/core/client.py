@@ -1,87 +1,93 @@
-import logging
-from typing import Optional, Type
-from types import TracebackType
+from __future__ import annotations
 
-from riotskillissue.core.config import RiotClientConfig
-from riotskillissue.core.http import HttpClient
+import logging
+from dataclasses import replace
+from types import TracebackType
+from typing import TYPE_CHECKING, Any
+
 from riotskillissue.api.client_mixin import GeneratedClientMixin
 from riotskillissue.core.cache import AbstractCache
+from riotskillissue.core.config import RiotClientConfig
+from riotskillissue.core.http import HttpClient, MissingCredentialError
+from riotskillissue.core.types import Route
+from riotskillissue.services import (
+    LolService,
+    LorService,
+    RiftboundService,
+    TftService,
+    ValorantService,
+)
+from riotskillissue.static import DataDragonClient
 
-logger = logging.getLogger(__name__)
+if TYPE_CHECKING:
+    from riotskillissue.auth import RsoTokenProvider
 
 
 class RiotClient(GeneratedClientMixin):
-    """Main entry point for the Riot Games API.
-
-    Usage::
-
-        async with RiotClient(api_key="RGAPI-...") as client:
-            summoner = await client.summoner.get_by_puuid(
-                region="na1", encrypted_puuid="..."
-            )
-    """
-
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        config: Optional[RiotClientConfig] = None,
-        cache: Optional[AbstractCache] = None,
-        hooks: Optional[dict] = None,
-    ):
-        if config is None:
-            if api_key:
-                config = RiotClientConfig(api_key=api_key)
-            else:
-                config = RiotClientConfig.from_env()
+        api_key: str | None = None,
+        config: RiotClientConfig | None = None,
+        cache: AbstractCache | None = None,
+        hooks: dict[str, Any] | None = None,
+        *,
+        default_route: Route | str | None = None,
+        rso_token_provider: RsoTokenProvider | None = None,
+    ) -> None:
+        if api_key is not None and not api_key.strip():
+            raise MissingCredentialError("api_key")
 
-        self.config = config
-        self._cache = cache
-        self.http = HttpClient(config, cache=cache, hooks=hooks)
+        resolved = config or RiotClientConfig.from_env()
+        overrides: dict[str, Any] = {}
+        if api_key is not None:
+            overrides["api_key"] = api_key
+        if default_route is not None:
+            overrides["default_route"] = default_route
+        if rso_token_provider is not None:
+            overrides["rso_token_provider"] = rso_token_provider
+        if overrides:
+            resolved = replace(resolved, **overrides)
 
-        # Configure library-wide logging level
-        logging.getLogger("riotskillissue").setLevel(
-            getattr(logging, config.log_level.upper(), logging.WARNING)
-        )
-
-        # Lazy-initialised static data client (created on first access)
-        self._static: Optional["DataDragonClient"] = None
-
-        # Initialize generated APIs
+        self.config = resolved
+        self.http = HttpClient(resolved, cache=cache, hooks=hooks)
+        self._static = DataDragonClient(cache=cache)
         super().__init__(self.http)
 
-    # -- Lazy Data Dragon access ---------------------------------------------
+        self.lol = LolService(self.raw, self._static)
+        self.tft = TftService(self.raw)
+        self.valorant = ValorantService(self.raw)
+        self.lor = LorService(self.raw)
+        self.riftbound = RiftboundService(self.raw)
+
+        logging.getLogger("riotskillissue").setLevel(
+            getattr(logging, resolved.log_level.upper(), logging.WARNING)
+        )
 
     @property
-    def static(self) -> "DataDragonClient":
-        """Data Dragon client (created lazily on first access)."""
-        if self._static is None:
-            from riotskillissue.static import DataDragonClient
-
-            self._static = DataDragonClient(cache=self._cache)
+    def static(self) -> DataDragonClient:
         return self._static
 
-    # -- Lifecycle -----------------------------------------------------------
+    async def call_operation(
+        self,
+        operation: str,
+        arguments: dict[str, Any],
+    ) -> Any:
+        return await self.raw.call_operation(operation, arguments)
 
     async def close(self) -> None:
-        """Close underlying HTTP connections.
-
-        Prefer using the client as an async context manager instead.
-        """
         await self.http.close()
-        if self._static is not None:
-            await self._static.close()
+        await self._static.close()
 
-    async def __aenter__(self) -> "RiotClient":
+    async def __aenter__(self) -> RiotClient:
         return self
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         await self.close()
 
     def __repr__(self) -> str:
-        masked = self.config.api_key[:8] + "..." if len(self.config.api_key) > 8 else "***"
-        return f"<RiotClient key={masked}>"
+        return f"<RiotClient default_route={self.config.default_route!r}>"

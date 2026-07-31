@@ -1,0 +1,170 @@
+from __future__ import annotations
+
+from collections.abc import Iterator, Mapping
+from dataclasses import dataclass
+from json import loads as _load_metadata
+from typing import Any, Optional
+
+
+@dataclass(frozen=True)
+class ParameterSpec:
+    name: str
+    wire_name: str
+    location: str
+    required: bool
+    annotation: str
+    description: Optional[str]
+    has_default: bool
+    default: Any
+    constraints: Mapping[str, Any]
+    examples: tuple[Any, ...]
+    schema: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
+class RequestBodySpec:
+    required: bool
+    annotation: str
+    description: Optional[str]
+    media_type: str
+    examples: tuple[Any, ...]
+    schema: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
+class OperationSpec:
+    operation_id: str
+    accessor_path: str
+    source: str
+    game: str
+    service: str
+    summary: Optional[str]
+    method: str
+    path: Optional[str]
+    route_kind: Optional[str]
+    allowed_routes: tuple[str, ...]
+    auth_mode: str
+    auth_schemes: tuple[str, ...]
+    auth_scopes: tuple[str, ...]
+    parameters: tuple[ParameterSpec, ...]
+    request_body: Optional[RequestBodySpec]
+    response_type: str
+    response_adapter: Optional[str]
+    successful_statuses: tuple[int | str, ...]
+    no_content_statuses: tuple[int | str, ...]
+    is_write: bool
+    mutation_metadata: Mapping[str, Any]
+    cache_user_scoped: bool
+    mcp_visible: bool
+    input_schema: Mapping[str, Any]
+
+    @property
+    def is_read(self) -> bool:
+        return not self.is_write
+
+
+class OperationRegistry(Mapping[str, OperationSpec]):
+    def __init__(self, operations: tuple[OperationSpec, ...]) -> None:
+        by_id = {operation.operation_id: operation for operation in operations}
+        if len(by_id) != len(operations):
+            raise ValueError("Operation IDs must be unique")
+        self._operations = operations
+        self._by_id = by_id
+
+    def __getitem__(self, operation_id: str) -> OperationSpec:
+        return self._by_id[operation_id]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._by_id)
+
+    def __len__(self) -> int:
+        return len(self._by_id)
+
+    def find(
+        self,
+        query: str = "",
+        *,
+        game: Optional[str] = None,
+        include_writes: bool = True,
+        include_rso: bool = True,
+        limit: Optional[int] = None,
+    ) -> tuple[OperationSpec, ...]:
+        needle = query.casefold().strip()
+        matches: list[OperationSpec] = []
+        for operation in self._operations:
+            if game and operation.game != game:
+                continue
+            if not include_writes and operation.is_write:
+                continue
+            if not include_rso and operation.auth_mode == "rso":
+                continue
+            haystack = " ".join(
+                (
+                    operation.operation_id,
+                    operation.accessor_path,
+                    operation.summary or "",
+                )
+            ).casefold()
+            if needle and needle not in haystack:
+                continue
+            matches.append(operation)
+            if limit is not None and len(matches) >= limit:
+                break
+        return tuple(matches)
+
+
+_OPERATIONS = (
+{% for record in records %}
+    OperationSpec(
+        operation_id={{ record.operation_id | pystring }},
+        accessor_path={{ record.accessor_path | pystring }},
+        source={{ record.source | pystring }},
+        game={{ record.game | pystring }},
+        service={{ record.service | pystring }},
+        summary={{ record.summary | pystring }},
+        method={{ record.method | pystring }},
+        path={{ record.path | pystring }},
+        route_kind={{ record.route_kind | pystring }},
+        allowed_routes={{ record.allowed_routes | pyrepr }},
+        auth_mode={{ record.auth_mode | pystring }},
+        auth_schemes={{ record.auth_schemes | pyrepr }},
+        auth_scopes={{ record.auth_scopes | pyrepr }},
+        parameters=(
+{% for parameter in record.parameters %}
+            ParameterSpec(
+                name={{ parameter.name | pystring }},
+                wire_name={{ parameter.wire_name | pystring }},
+                location={{ parameter.location | pystring }},
+                required={{ parameter.required | pyrepr }},
+                annotation={{ parameter.annotation | pystring }},
+                description={{ parameter.description | pystring }},
+                has_default={{ parameter.has_default | pyrepr }},
+                default=_load_metadata({{ parameter.default | jsonstring }}),
+                constraints=_load_metadata({{ parameter.constraints | jsonstring }}),
+                examples=tuple(_load_metadata({{ parameter.examples | jsonstring }})),
+                schema=_load_metadata({{ parameter.schema | jsonstring }}),
+            ),
+{% endfor %}
+        ),
+        request_body={% if record.request_body %}RequestBodySpec(
+            required={{ record.request_body.required | pyrepr }},
+            annotation={{ record.request_body.annotation | pystring }},
+            description={{ record.request_body.description | pystring }},
+            media_type={{ record.request_body.media_type | pystring }},
+            examples=tuple(_load_metadata({{ record.request_body.examples | jsonstring }})),
+            schema=_load_metadata({{ record.request_body.schema | jsonstring }}),
+        ){% else %}None{% endif %},
+        response_type={{ record.response_type | pystring }},
+        response_adapter={{ record.response_adapter | pystring }},
+        successful_statuses={{ record.successful_statuses | pyrepr }},
+        no_content_statuses={{ record.no_content_statuses | pyrepr }},
+        is_write={{ record.is_write | pyrepr }},
+        mutation_metadata=_load_metadata({{ record.mutation_metadata | jsonstring }}),
+        cache_user_scoped={{ record.cache_user_scoped | pyrepr }},
+        mcp_visible={{ record.mcp_visible | pyrepr }},
+        input_schema=_load_metadata({{ record.input_schema | jsonstring }}),
+    ),
+{% endfor %}
+)
+
+OPERATION_REGISTRY = OperationRegistry(_OPERATIONS)

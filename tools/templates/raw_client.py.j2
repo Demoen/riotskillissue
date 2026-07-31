@@ -1,0 +1,78 @@
+from __future__ import annotations
+
+from typing import Any, Awaitable, Callable, Mapping
+
+from riotskillissue.api.registry import OPERATION_REGISTRY
+from riotskillissue.core.http import HttpClient
+{% for api in apis %}
+from riotskillissue.api.raw.{{ api.game }}.{{ api.module }} import (
+    {{ api.class_name }},
+    {{ api.sync_class_name }},
+)
+{% endfor %}
+
+{% for game in games %}
+
+class {{ game.class_name }}:
+    def __init__(self, http: HttpClient) -> None:
+{% for api in game.apis %}
+        self.{{ api.service }} = {{ api.class_name }}(http)
+{% endfor %}
+
+
+class {{ game.sync_class_name }}:
+    def __init__(
+        self,
+        async_api: {{ game.class_name }},
+        runner: Callable[[Awaitable[Any]], Any],
+    ) -> None:
+{% for api in game.apis %}
+        self.{{ api.service }} = {{ api.sync_class_name }}(
+            async_api.{{ api.service }},
+            runner,
+        )
+{% endfor %}
+{% endfor %}
+
+
+class GeneratedRawClient:
+    def __init__(self, http: HttpClient) -> None:
+{% for game in games %}
+        self.{{ game.name }} = {{ game.class_name }}(http)
+{% endfor %}
+
+    async def call_operation(
+        self,
+        operation: str,
+        arguments: Mapping[str, Any],
+    ) -> Any:
+        spec = OPERATION_REGISTRY[operation]
+        if spec.source != "riot_api":
+            raise ValueError(f"{operation!r} is not a raw Riot API operation")
+        target: Any = self
+        for segment in spec.accessor_path.split("."):
+            target = getattr(target, segment)
+        return await target(**dict(arguments))
+
+
+class SyncGeneratedRawClient:
+    def __init__(
+        self,
+        async_raw: GeneratedRawClient,
+        runner: Callable[[Awaitable[Any]], Any],
+    ) -> None:
+        self._async_raw = async_raw
+        self._run = runner
+{% for game in games %}
+        self.{{ game.name }} = {{ game.sync_class_name }}(
+            async_raw.{{ game.name }},
+            runner,
+        )
+{% endfor %}
+
+    def call_operation(
+        self,
+        operation: str,
+        arguments: Mapping[str, Any],
+    ) -> Any:
+        return self._run(self._async_raw.call_operation(operation, arguments))

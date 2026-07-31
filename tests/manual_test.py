@@ -1,30 +1,17 @@
 import asyncio
-import logging
-from riotskillissue import RiotClient, RiotClientConfig
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+from riotskillissue import PlatformRoute, RiotClient
 
-async def main():
-    print("Initializing RiotClient...")
-    # Mock config
-    config = RiotClientConfig(api_key="RGAPI-MOCK")
-    
-    async with RiotClient(config=config) as client:
-        print("Client initialized.")
-        
-        # Check if attributes exist
-        if hasattr(client, "summoner"):
-            print("✅ client.summoner exists")
-        else:
-            print("❌ client.summoner MISSING")
-            
-        if hasattr(client, "match"):
-            print("✅ client.match exists")
-        else:
-            print("❌ client.match MISSING")
 
-        print("Verification complete.")
+async def main() -> None:
+    async with RiotClient(
+        api_key="RGAPI-MOCK",
+        default_route=PlatformRoute.EUW1,
+    ) as riot:
+        print(riot.lol)
+        print(riot.raw.lol.match)
+        print(riot.raw.valorant.content)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

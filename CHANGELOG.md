@@ -5,19 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-07-31
+
+### Breaking
+
+- Raised the required Python version to `>=3.14,<3.17`, covering Python 3.14,
+  3.15, and 3.16. Release verification covers Python 3.14 and the current 3.15
+  prerelease, with a non-blocking CPython 3.16 nightly compatibility probe.
+- Replaced the flat endpoint surface with game workflows and the generated
+  `client.raw.<game>.<service>` hierarchy.
+- Replaced `Region` and `Platform` with `PlatformRoute`, `RegionalRoute`, and
+  `ValorantRoute`.
+- Changed generated parameters and model fields to snake_case and moved models
+  into stable service modules.
+- Removed runtime 0.3 compatibility aliases.
+
+### Added
+
+- Focused workflows for League of Legends, TFT, VALORANT, Legends of Runeterra,
+  and Riftbound.
+- An explicit typed `SyncRiotClient` surface.
+- A committed operation registry shared by generated clients, documentation,
+  validation, and MCP discovery.
+- An optional local stdio MCP server with high-level tools, exhaustive eligible
+  read discovery, confirmed opt-in writes, and bounded in-memory result handles.
+- Typed route, credential, network, timeout, malformed-response, validation, and
+  rate-limit failures.
+- Static and automatically refreshing RSO token providers.
+
+### Fixed
+
+- Security-metadata-driven API-key and bearer authentication.
+- Bounded HTTP 429 retries, strict `Retry-After` parsing, independent Riot
+  rate-limit buckets, cancellation propagation, and all 2xx/no-content handling.
+- Credential-partitioned caching and cache-disabled RSO defaults.
+- CLI routing, configuration parsing, generated-code typing, and stale examples.
+
 ## [0.3.3] - 2026-07-22
 
 ### Changed
 
 - Synced latest Riot API spec
 
-
 ## [0.3.2] - 2026-03-12
 
 ### Changed
 
 - Synced latest Riot API spec
-
 
 ## [0.3.1] - 2026-03-11
 

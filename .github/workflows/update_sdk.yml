@@ -13,19 +13,16 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.14"
 
       - name: Install dependencies
-        run: |
-          pip install -e .
-          pip install deepdiff rich # Extra dev tools for manager
-          pip install jinja2
-      
+        run: pip install -e ".[dev,docs,mcp]"
+
       - name: Fetch Spec & Generate Code
         id: generate
         run: |
@@ -41,6 +38,16 @@ jobs:
         id: bump
         if: steps.git-diff.outputs.changes == 'true'
         run: python tools/bump_version.py
+
+      - name: Verify generated release
+        if: steps.git-diff.outputs.changes == 'true'
+        run: |
+          python tools/generator/core.py --check
+          ruff check src/ tests/ tools/ examples/
+          mypy src/riotskillissue/ tests/typecheck/
+          pytest
+          mkdocs build --strict
+          hatch build
 
       - name: Update Changelog
         if: steps.git-diff.outputs.changes == 'true'
@@ -94,8 +101,8 @@ jobs:
           # Read version from file to tag
           VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           
-          git add src/riotskillissue/api/models.py src/riotskillissue/api/endpoints pyproject.toml CHANGELOG.md
-          git add -A # Catch incidental changes
+          git add src/riotskillissue/api src/riotskillissue/models pyproject.toml CHANGELOG.md
+          git add -A
           git commit -m "feat: auto-update riot api spec to v$VERSION"
           git push origin main
           

@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set, Optional
-import json
+from typing import Any, Dict, List
 
 @dataclass
 class SchemaDiff:
@@ -102,8 +101,10 @@ class DiffEngine:
         # New/Removed methods
         added = new_methods - old_methods
         removed = old_methods - new_methods
-        if added: changes.append(f"Added methods: {added}")
-        if removed: changes.append(f"Removed methods: {removed}")
+        if added:
+            changes.append(f"Added methods: {added}")
+        if removed:
+            changes.append(f"Removed methods: {removed}")
         
         # Check params/return types for common methods
         for method in old_methods & new_methods:
@@ -119,8 +120,10 @@ class DiffEngine:
             p_added = set(new_params) - set(old_params)
             p_removed = set(old_params) - set(new_params)
             
-            if p_added: changes.append(f"[{method}] Added params: {p_added}")
-            if p_removed: changes.append(f"[{method}] Removed params: {p_removed}")
+            if p_added:
+                changes.append(f"[{method}] Added params: {p_added}")
+            if p_removed:
+                changes.append(f"[{method}] Removed params: {p_removed}")
             
         if changes:
             diff.modified_endpoints[path] = changes
@@ -135,8 +138,10 @@ class DiffEngine:
         added = new_props - old_props
         removed = old_props - new_props
         
-        if added: changes.append(f"Added fields: {added}")
-        if removed: changes.append(f"Removed fields: {removed}")
+        if added:
+            changes.append(f"Added fields: {added}")
+        if removed:
+            changes.append(f"Removed fields: {removed}")
         
         # Check Enums
         if "enum" in old or "enum" in new:

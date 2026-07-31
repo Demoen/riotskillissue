@@ -51,7 +51,7 @@ riotskillissue-cli summoner "Player#EUW" --api-key "RGAPI-..."
 Look up a summoner by Riot ID.
 
 ```bash
-riotskillissue-cli summoner "GameName#TagLine" --region euw1
+riotskillissue-cli summoner "GameName#TagLine" --route euw1
 ```
 
 **Arguments:**
@@ -59,13 +59,13 @@ riotskillissue-cli summoner "GameName#TagLine" --region euw1
 | Argument | Description |
 |----------|-------------|
 | `name` | Riot ID in format `GameName#TagLine` |
-| `--region` | Regional server (default: `na1`) |
+| `--route` | LoL platform route (default: `euw1`) |
 | `--api-key` | API key (or use `RIOT_API_KEY` env var) |
 
 **Example:**
 
 ```bash
-$ riotskillissue-cli summoner "Agurin#EUW" --region euw1
+$ riotskillissue-cli summoner "Agurin#EUW" --route euw1
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃     Summoner: Agurin#EUW         ┃
@@ -81,7 +81,7 @@ $ riotskillissue-cli summoner "Agurin#EUW" --region euw1
 Get match details by match ID.
 
 ```bash
-riotskillissue-cli match "EUW1_7654321098" --region europe
+riotskillissue-cli match "EUW1_7654321098" --route europe
 ```
 
 **Arguments:**
@@ -89,13 +89,13 @@ riotskillissue-cli match "EUW1_7654321098" --region europe
 | Argument | Description |
 |----------|-------------|
 | `match_id` | Match ID (e.g., `EUW1_7654321098`) |
-| `--region` | Platform routing (default: `americas`) |
+| `--route` | Regional route (default: `europe`) |
 | `--api-key` | API key (or use `RIOT_API_KEY` env var) |
 
 **Example:**
 
 ```bash
-$ riotskillissue-cli match "EUW1_7654321098" --region europe
+$ riotskillissue-cli match "EUW1_7654321098" --route europe
 
 Match EUW1_7654321098 loaded!
 Game Mode: CLASSIC
@@ -107,7 +107,7 @@ Duration: 1847s
 🎮 Launch an interactive Live Game TUI (Terminal User Interface) that shows real-time information about an ongoing League of Legends match.
 
 ```bash
-riotskillissue-cli live "GameName#TagLine" --region euw1
+riotskillissue-cli live "GameName#TagLine" --route euw1
 ```
 
 This is the fastest way to spectate a match from your terminal — **one command, instant dashboard**.
@@ -117,14 +117,14 @@ This is the fastest way to spectate a match from your terminal — **one command
 | Argument | Description |
 |----------|-------------|
 | `name` | Riot ID in format `GameName#TagLine` |
-| `--region` | Regional server (default: `euw1`) |
+| `--route` | LoL platform route (default: `euw1`) |
 | `--api-key` | API key (or use `RIOT_API_KEY` env var) |
 | `--refresh` | Auto-refresh interval in seconds (default: `30`) |
 
 **Example:**
 
 ```bash
-$ riotskillissue-cli live "Agurin#EUW" --region euw1
+$ riotskillissue-cli live "Agurin#EUW" --route euw1
 ```
 
 This opens a full-screen terminal dashboard showing:
@@ -156,7 +156,7 @@ Error: Name must be format GameName#TagLine for Account V1 lookup
 ```
 
 ```bash
-$ riotskillissue-cli summoner "NonExistent#USER" --region euw1
+$ riotskillissue-cli summoner "NonExistent#USER" --route euw1
 
 Error: 404 - Data not found
 ```

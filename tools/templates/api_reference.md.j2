@@ -1,0 +1,67 @@
+# API reference
+
+The committed `OperationRegistry` is the inventory for generated raw clients,
+documentation, validation, and MCP discovery. Each entry records:
+
+- Stable operation ID and Python accessor path
+- Game and Riot service
+- HTTP method and read/write classification
+- Route family and allowed routes
+- Authentication mode and scopes
+- Keyword-only input schema
+- Response adapter, including no-content responses
+
+Use discovery in Python:
+
+```python
+from riotskillissue.api.registry import OPERATION_REGISTRY
+
+operation = OPERATION_REGISTRY["match-v5.getMatch"]
+print(operation.accessor_path)
+print(operation.input_schema)
+```
+
+Or call a known operation through the typed raw hierarchy:
+
+```python
+match = await riot.raw.lol.match.get_match(match_id="EUW1_...")
+```
+
+The raw hierarchy is grouped under:
+
+- `riot.raw.common`
+- `riot.raw.lol`
+- `riot.raw.tft`
+- `riot.raw.valorant`
+- `riot.raw.lor`
+- `riot.raw.riftbound`
+
+All endpoint parameters are keyword-only snake_case. A `route=` override is
+optional when the configured default route can be mapped unambiguously.
+
+## Generated raw operation inventory
+
+This inventory is generated from the same community-maintained OpenAPI contract
+as the raw clients and registry.
+
+{% for game in games %}
+### {{ game.display_name }}
+
+{% for api in game.apis %}
+#### {{ api.service }}
+
+| Operation ID | Python accessor | Method | Route | Auth | Result |
+| --- | --- | --- | --- | --- | --- |
+{% for operation in api.operations %}
+| `{{ operation.operation_id }}` | `riot.raw.{{ operation.accessor_path }}` | {{ operation.method }}{% if operation.is_mutation %} (write){% endif %} | {{ operation.route_kind or "none" }} | {{ operation.auth_mode }} | `{{ operation.response_type }}` |
+{% endfor %}
+
+{% endfor %}
+{% endfor %}
+### Data Dragon
+
+| Operation ID | Python accessor | Result |
+| --- | --- | --- |
+{% for record in static_records %}
+| `{{ record.operation_id }}` | `riot.{{ record.accessor_path }}` | `{{ record.response_type }}` |
+{% endfor %}

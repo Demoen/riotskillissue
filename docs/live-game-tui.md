@@ -5,7 +5,7 @@ RiotSkillIssue includes a built-in **Terminal User Interface** (TUI) for spectat
 ## Quick Start
 
 ```bash
-riotskillissue-cli live "Agurin#EUW" --region euw1
+riotskillissue-cli live "Agurin#EUW" --route euw1
 ```
 
 That's it. This single command opens an interactive, auto-refreshing dashboard.
@@ -59,7 +59,7 @@ riotskillissue-cli live "GameName#TagLine"
 ### With Options
 
 ```bash
-riotskillissue-cli live "Faker#KR1" --region kr --refresh 15
+riotskillissue-cli live "Faker#KR1" --route kr --refresh 15
 ```
 
 ### All Options
@@ -67,7 +67,7 @@ riotskillissue-cli live "Faker#KR1" --region kr --refresh 15
 | Option | Default | Description |
 |--------|---------|-------------|
 | `name` | *(required)* | Riot ID in `GameName#TagLine` format |
-| `--region` | `euw1` | Regional server (`euw1`, `na1`, `kr`, `eun1`, etc.) |
+| `--route` | `euw1` | LoL platform route (`euw1`, `na1`, `kr`, `eun1`, etc.) |
 | `--api-key` | `$RIOT_API_KEY` | Riot API key |
 | `--refresh` | `30` | Auto-refresh interval in seconds |
 
@@ -188,7 +188,7 @@ Champion select does not count — the Spectator API only reports data once the 
 ### "404 - Data not found"
 
 - Double-check the Riot ID spelling and tag line
-- Make sure you're using the correct `--region` for the player's server
+- Make sure you're using the correct `--route` for the player's server
 - Verify your API key is valid and not expired
 
 ### Rate Limiting
