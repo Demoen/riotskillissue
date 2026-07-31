@@ -41,6 +41,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Credential-partitioned caching and cache-disabled RSO defaults.
 - CLI routing, configuration parsing, generated-code typing, and stale examples.
 
+## [0.3.3] - 2026-07-22
+
+### Changed
+
+- Synced latest Riot API spec
+
+## [0.3.2] - 2026-03-12
+
+### Changed
+
+- Synced latest Riot API spec
+
 ## [0.3.1] - 2026-03-11
 
 ### Fixed
