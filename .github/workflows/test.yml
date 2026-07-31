@@ -10,10 +10,10 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.14"
           cache: 'pip'
@@ -44,10 +44,10 @@ jobs:
         python-version: ["3.14", "3.15"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "${{ matrix.python-version }}"
           allow-prereleases: true
@@ -62,12 +62,10 @@ jobs:
   future-python:
     name: Python 3.16-dev compatibility probe
     runs-on: ubuntu-24.04
-    continue-on-error: true
-    env:
-      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
+    timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
         uses: deadsnakes/action@v3.2.0
@@ -75,7 +73,14 @@ jobs:
           python-version: "3.16-dev"
 
       - name: Install dependencies
+        id: install
+        continue-on-error: true
         run: pip install -e ".[dev,docs,mcp]"
 
       - name: Pytest
+        if: steps.install.outcome == 'success'
         run: pytest
+
+      - name: Report unavailable dependencies
+        if: steps.install.outcome == 'failure'
+        run: echo "::notice title=Python 3.16 dependency support pending::The project probe could not start because an upstream dependency does not yet build on unreleased CPython 3.16."
