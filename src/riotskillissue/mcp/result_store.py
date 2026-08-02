@@ -29,6 +29,7 @@ from .errors import (
 from .models import ResultPage, ToolResult
 from .settings import (
     DEFAULT_INLINE_LIMIT,
+    DEFAULT_MAX_RETAINED_BYTES,
     DEFAULT_MAX_RESULTS,
     DEFAULT_MAX_RESULT_SIZE,
     DEFAULT_RESULT_TTL,
@@ -55,18 +56,23 @@ class ResultStore:
         max_results: int = DEFAULT_MAX_RESULTS,
         ttl: float = DEFAULT_RESULT_TTL,
         max_result_size: int = DEFAULT_MAX_RESULT_SIZE,
+        max_retained_bytes: int = DEFAULT_MAX_RETAINED_BYTES,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
-        if inline_limit < 1 or max_results < 1 or ttl <= 0:
+        if inline_limit < 1 or max_results < 1 or not math.isfinite(ttl) or ttl <= 0:
             raise ValueError("Result store limits must be positive.")
         if max_result_size < inline_limit:
             raise ValueError("max_result_size cannot be smaller than inline_limit.")
+        if max_retained_bytes < max_result_size:
+            raise ValueError("max_retained_bytes cannot be smaller than max_result_size.")
         self.inline_limit = inline_limit
         self.max_results = max_results
         self.ttl = ttl
         self.max_result_size = max_result_size
+        self.max_retained_bytes = max_retained_bytes
         self._clock = clock
         self._entries: OrderedDict[str, _StoredResult] = OrderedDict()
+        self._retained_bytes = 0
         self._lock = threading.RLock()
 
     def present(self, value: Any) -> ToolResult:
@@ -74,6 +80,8 @@ class ResultStore:
         normalized = _normalize_json(value)
         encoded = _encode_json(normalized)
         size = len(encoded)
+        if size > self.max_retained_bytes:
+            raise ResultTooLargeError("The Riot result exceeds the MCP retained-byte ceiling.")
         if size > self.max_result_size:
             raise ResultTooLargeError(
                 "The Riot result exceeds the MCP in-memory result size ceiling."
@@ -81,17 +89,24 @@ class ResultStore:
         if size <= self.inline_limit:
             return ToolResult(inline=True, size_bytes=size, data=normalized)
 
-        handle = secrets.token_urlsafe(24)
         with self._lock:
             now = self._clock()
             self._prune_expired(now)
+            handle = secrets.token_urlsafe(24)
+            while handle in self._entries:
+                handle = secrets.token_urlsafe(24)
             self._entries[handle] = _StoredResult(
                 value=normalized,
                 size_bytes=size,
                 expires_at=now + self.ttl,
             )
-            while len(self._entries) > self.max_results:
-                self._entries.popitem(last=False)
+            self._retained_bytes += size
+            while (
+                len(self._entries) > self.max_results
+                or self._retained_bytes > self.max_retained_bytes
+            ):
+                _, evicted = self._entries.popitem(last=False)
+                self._retained_bytes -= evicted.size_bytes
 
         return ToolResult(
             inline=False,
@@ -143,13 +158,11 @@ class ResultStore:
             return len(self._entries)
 
     def _prune_expired(self, now: float) -> None:
-        expired = [
-            handle
-            for handle, entry in self._entries.items()
-            if entry.expires_at <= now
-        ]
+        expired = [handle for handle, entry in self._entries.items() if entry.expires_at <= now]
         for handle in expired:
-            self._entries.pop(handle, None)
+            entry = self._entries.pop(handle, None)
+            if entry is not None:
+                self._retained_bytes -= entry.size_bytes
 
 
 def _normalize_json(value: Any) -> Any:

@@ -66,10 +66,25 @@ REGISTRY = {
         "method": "GET",
         "auth_mode": "rso",
     },
+    "lol.internal.jwt": {
+        "stable_id": "lol.internal.jwt",
+        "accessor_path": "raw.lol.internal.jwt",
+        "game": "lol",
+        "service": "internal",
+        "method": "GET",
+        "auth_mode": "signed_jwt",
+    },
+    "lol.internal.unspecified": {
+        "stable_id": "lol.internal.unspecified",
+        "accessor_path": "raw.lol.internal.unspecified",
+        "game": "lol",
+        "service": "internal",
+        "method": "GET",
+    },
 }
 
 
-def test_discovery_hides_writes_rso_and_credentials() -> None:
+def test_discovery_hides_writes_unsupported_auth_and_credentials() -> None:
     gateway = OperationGateway(Client(), ResultStore(), REGISTRY)
 
     found = gateway.find(query="lol")
@@ -77,7 +92,13 @@ def test_discovery_hides_writes_rso_and_credentials() -> None:
 
     assert "lol.match.get" in operations
     assert "lol.rso.matches" not in operations
+    assert "lol.internal.jwt" not in operations
+    assert "lol.internal.unspecified" not in operations
     assert "lor.deck.create" not in operations
+    with pytest.raises(OperationNotFoundError):
+        gateway.describe("lol.internal.jwt")
+    with pytest.raises(OperationNotFoundError):
+        gateway.describe("lol.internal.unspecified")
     described = gateway.describe("raw.lol.match.get_match")
     assert "api_key" not in described.input_schema["properties"]
     assert "api_key" not in described.input_schema["required"]
@@ -93,12 +114,12 @@ def test_committed_registry_exposes_every_eligible_operation() -> None:
     expected_reads = [
         record
         for record in records
-        if record.mcp_visible and record.is_read
+        if record.mcp_visible and record.is_read and record.auth_mode in {"api_key", "none"}
     ]
     expected_writes = [
         record
         for record in records
-        if record.mcp_visible and record.is_write
+        if record.mcp_visible and record.is_write and record.auth_mode in {"api_key", "none"}
     ]
 
     disabled = OperationGateway(Client(), ResultStore(), OPERATION_REGISTRY)

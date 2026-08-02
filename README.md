@@ -18,7 +18,7 @@
 
 ## Install
 
-RiotSkillIssue 1.0 requires Python `>=3.14,<3.17`, covering Python 3.14,
+RiotSkillIssue 1.x requires Python `>=3.14,<3.17`, covering Python 3.14,
 3.15, and 3.16. As of July 2026, CI gates releases on Python 3.14 and the
 current Python 3.15 prerelease. Python 3.16 is still in development, so it is
 covered by a non-blocking nightly compatibility probe until its stable release.
@@ -71,6 +71,18 @@ riotskillissue-mcp
 The server reads credentials from its environment. API keys and RSO tokens are
 never tool arguments. Raw write operations are hidden unless
 `RIOT_MCP_ALLOW_WRITES=true`; enabled writes still require human confirmation.
+
+League-aware tools assemble Match V5, timeline, player, ranked, mastery, and
+patch-matched Data Dragon evidence for natural-language questions. For example,
+`riot_lol_match_context` can resolve a match directly or from a player's recent
+history and assess Void Grub captures, trades, and later turret conversion while
+clearly separating observed telemetry from causal inference. Patch-banded
+fundamentals cover minion-wave gold and XP, sharing, passive income, structures,
+objectives, role modifiers, and wave-management opportunity costs.
+`riot_lol_item_economy` derives patch-matched raw-stat efficiency from Data
+Dragon component prices while leaving passives and unrepresented stats unpriced. See the
+[MCP guide](https://demoen.github.io/riotskillissue/mcp/) for tools, production
+limits, and data-coverage boundaries.
 
 ## Coverage and generation
 

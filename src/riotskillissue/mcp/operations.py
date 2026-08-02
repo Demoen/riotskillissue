@@ -30,7 +30,7 @@ from .models import (
 from .result_store import ResultStore
 
 _READ_METHODS = {"GET", "HEAD", "OPTIONS"}
-_BLOCKED_AUTH_MARKERS = {"rso", "oauth", "bearer"}
+_ALLOWED_AUTH_MODES = {"api_key", "none"}
 _STATIC_OPERATIONS: tuple[
     tuple[str, str, dict[str, dict[str, Any]], str],
     ...,
@@ -107,10 +107,7 @@ class OperationRecord:
 
     @property
     def mcp_eligible(self) -> bool:
-        auth = self.auth_mode.lower()
-        return self.registry_visible and not any(
-            marker in auth for marker in _BLOCKED_AUTH_MARKERS
-        )
+        return self.registry_visible and self.auth_mode.lower() in _ALLOWED_AUTH_MODES
 
     def summary(self) -> OperationSummary:
         return OperationSummary(
@@ -150,9 +147,7 @@ class OperationGateway:
         records = list(_registry_records(registry))
         existing_ids = {record.operation_id for record in records}
         records.extend(
-            record
-            for record in _static_records()
-            if record.operation_id not in existing_ids
+            record for record in _static_records() if record.operation_id not in existing_ids
         )
         self._records = tuple(record for record in records if record.mcp_eligible)
         self._aliases = _build_aliases(self._records)
@@ -272,7 +267,7 @@ def load_operation_registry() -> object:
     try:
         try:
             operations = importlib.import_module("riotskillissue.api.operations")
-        except (ImportError, ModuleNotFoundError):
+        except ImportError, ModuleNotFoundError:
             operations = importlib.import_module("riotskillissue.api.registry")
     except (ImportError, ModuleNotFoundError) as exc:
         raise IntegrationContractError(
@@ -349,9 +344,7 @@ def _coerce_record(raw: object, fallback_id: str | None) -> OperationRecord:
     if not operation_id:
         raise IntegrationContractError("An operation registry entry has no stable ID.")
 
-    accessor_path = _text(
-        _field(raw, "accessor_path", "path", "client_path", default=operation_id)
-    )
+    accessor_path = _text(_field(raw, "accessor_path", "path", "client_path", default=operation_id))
     method = _text(_field(raw, "http_method", "method", "verb", default="")).upper()
     read_only_value = _field(raw, "read_only", default=None)
     write_value = _field(raw, "is_write", "write", "mutation", default=None)
@@ -360,26 +353,18 @@ def _coerce_record(raw: object, fallback_id: str | None) -> OperationRecord:
     elif isinstance(write_value, bool):
         read_only = not write_value
     else:
-        classification = _text(
-            _field(raw, "classification", "operation_type", default="")
-        ).lower()
+        classification = _text(_field(raw, "classification", "operation_type", default="")).lower()
         if classification:
             read_only = classification in {"read", "query", "read_only"}
         else:
             read_only = method in _READ_METHODS
 
-    auth_mode = _text(
-        _field(raw, "auth_mode", "authentication", "security", default="api_key")
-    ).lower()
+    auth_mode = _text(_field(raw, "auth_mode", "authentication", "security", default="")).lower()
     schema = _schema(_field(raw, "input_schema", "arguments_schema", default={}))
-    routes = _string_tuple(
-        _field(raw, "allowed_routes", "routes", default=())
-    )
+    routes = _string_tuple(_field(raw, "allowed_routes", "routes", default=()))
     description_value = _field(raw, "description", "summary", default=None)
     description = (
-        redact_text(str(description_value))[:500]
-        if description_value is not None
-        else None
+        redact_text(str(description_value))[:500] if description_value is not None else None
     )
     source = _text(_field(raw, "source", default="")).lower()
     static_method = (
@@ -394,7 +379,7 @@ def _coerce_record(raw: object, fallback_id: str | None) -> OperationRecord:
         service=_text(_field(raw, "service", "group", default="unknown")).lower(),
         method=method or ("GET" if read_only else "POST"),
         read_only=read_only,
-        auth_mode=auth_mode or "none",
+        auth_mode=auth_mode or "unknown",
         route_type=_optional_text(_field(raw, "route_type", "route_kind", default=None)),
         allowed_routes=routes,
         input_schema=schema,
@@ -475,31 +460,21 @@ def _validate_schema_arguments(
     if not isinstance(properties, Mapping):
         return
     required_raw = schema.get("required", [])
-    required = {
-        str(name)
-        for name in required_raw
-        if isinstance(name, str)
-    }
+    required = {str(name) for name in required_raw if isinstance(name, str)}
     missing = required.difference(arguments)
     if missing:
-        raise InvalidArgumentsError(
-            f"Missing required operation argument: {sorted(missing)[0]}."
-        )
+        raise InvalidArgumentsError(f"Missing required operation argument: {sorted(missing)[0]}.")
     if schema.get("additionalProperties") is False:
         unknown = set(arguments).difference(str(name) for name in properties)
         if unknown:
-            raise InvalidArgumentsError(
-                f"Unknown operation argument: {sorted(unknown)[0]}."
-            )
+            raise InvalidArgumentsError(f"Unknown operation argument: {sorted(unknown)[0]}.")
     for name, value in arguments.items():
         property_schema = properties.get(name)
         if not isinstance(property_schema, Mapping):
             continue
         if value is None:
             if name in required:
-                raise InvalidArgumentsError(
-                    f"Operation argument {name} cannot be null."
-                )
+                raise InvalidArgumentsError(f"Operation argument {name} cannot be null.")
             continue
         _validate_schema_value(name, value, property_schema)
 
@@ -511,9 +486,7 @@ def _validate_schema_value(
 ) -> None:
     enum_values = schema.get("enum")
     if isinstance(enum_values, list) and value not in enum_values:
-        raise InvalidArgumentsError(
-            f"Operation argument {name} is not an allowed value."
-        )
+        raise InvalidArgumentsError(f"Operation argument {name} is not an allowed value.")
 
     expected = schema.get("type")
     valid = True
@@ -530,9 +503,7 @@ def _validate_schema_value(
     elif expected == "object":
         valid = isinstance(value, Mapping)
     if not valid:
-        raise InvalidArgumentsError(
-            f"Operation argument {name} has the wrong JSON type."
-        )
+        raise InvalidArgumentsError(f"Operation argument {name} has the wrong JSON type.")
 
     if isinstance(value, str):
         minimum_length = schema.get("minLength")
@@ -552,13 +523,9 @@ def _validate_schema_value(
         minimum_items = schema.get("minItems")
         maximum_items = schema.get("maxItems")
         if isinstance(minimum_items, int) and len(value) < minimum_items:
-            raise InvalidArgumentsError(
-                f"Operation argument {name} has too few items."
-            )
+            raise InvalidArgumentsError(f"Operation argument {name} has too few items.")
         if isinstance(maximum_items, int) and len(value) > maximum_items:
-            raise InvalidArgumentsError(
-                f"Operation argument {name} has too many items."
-            )
+            raise InvalidArgumentsError(f"Operation argument {name} has too many items.")
 
 
 def _reject_secrets(value: Any) -> None:
@@ -643,9 +610,7 @@ def _clean_schema(value: Any) -> Any:
                 output[str(key)] = properties
                 continue
             if key == "required" and isinstance(item, list):
-                output[str(key)] = [
-                    entry for entry in item if not is_sensitive_key(entry)
-                ]
+                output[str(key)] = [entry for entry in item if not is_sensitive_key(entry)]
                 continue
             output[str(key)] = _clean_schema(item)
         return output

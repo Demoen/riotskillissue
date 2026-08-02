@@ -6,7 +6,7 @@
 pip install riotskillissue
 ```
 
-RiotSkillIssue 1.0 requires Python `>=3.14,<3.17`, covering Python 3.14,
+RiotSkillIssue 1.x requires Python `>=3.14,<3.17`, covering Python 3.14,
 3.15, and 3.16. As of July 2026, CI gates releases on Python 3.14 and the
 current Python 3.15 prerelease. Python 3.16 is still in development, so it is
 covered by a non-blocking nightly compatibility probe until its stable release.

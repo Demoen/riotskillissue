@@ -1,7 +1,11 @@
-# RiotSkillIssue 1.0
+# RiotSkillIssue 1.1
 
 RiotSkillIssue provides typed asynchronous and synchronous Python clients for
-Riot Games APIs and an optional local MCP server.
+Riot Games APIs and an optional local MCP server. The MCP surface can assemble
+League match timelines, objective conversion, player history, and patch-aware
+game knowledge into evidence bundles for natural-language analysis. Its League
+fundamentals include minion-wave gold and XP, shared experience, passive income,
+structures, objective allocations, and patch-matched item raw-stat efficiency.
 
 The public client has two layers:
 

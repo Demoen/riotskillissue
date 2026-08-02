@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "riotskillissue"
-version = "1.0.0"
+version = "1.1.0"
 description = "Typed Python client and local MCP server for Riot Games APIs."
 readme = "README.md"
 license = "MIT"
@@ -136,6 +136,7 @@ ignore = [
 "src/riotskillissue/core/types.py" = ["UP042", "UP047"]
 "src/riotskillissue/core/utils.py" = ["UP047"]
 "src/riotskillissue/mcp/server.py" = ["UP047"]
+"src/riotskillissue/mcp/lol.py" = ["E501"]
 "src/riotskillissue/models/lol/challenges_v1.py" = ["UP040"]
 "src/riotskillissue/services/base.py" = ["UP017"]
 "src/riotskillissue/static.py" = ["SIM108"]

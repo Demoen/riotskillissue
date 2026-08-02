@@ -5,6 +5,69 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.1.0] - 2026-08-02
+
+This is a major League intelligence upgrade for the MCP server. It now turns
+Riot match, timeline, player, and patch data into evidence-backed context for
+natural-language game analysis instead of returning disconnected API payloads.
+
+### Added
+
+- League-first `riot_lol_match_context`, `riot_lol_player_context`,
+  `riot_lol_knowledge`, and `riot_lol_item_economy` tools.
+- Match V5 timeline analysis covering participants, lane comparisons, gold/XP/CS
+  checkpoints, item timings, likely fights, objectives, nearby trades, and later
+  structure conversion.
+- Evidence-qualified Void Grub impact analysis with capture timing, direct
+  rewards, bounded conversion signals, long-horizon context, and explicit causal
+  limits.
+- Combined player context for Riot identity, summoner profile, ranked entries,
+  mastery, challenges, recent matches, and bounded performance aggregation.
+- Patch-banded standard Summoner's Rift fundamentals for minion-wave gold and
+  XP, shared experience, wave schedules, passive income, role modifiers,
+  structures, neutral objectives, and strategic opportunity cost.
+- Patch-matched item raw-stat efficiency derived from Data Dragon component
+  prices, including per-stat formulas, coverage, map applicability, and explicit
+  reporting for effects that cannot be priced safely.
+- Strict patch and locale selection for League game content, public-to-internal
+  patch normalization, full champion ability payloads, and automatically
+  refreshing Data Dragon version discovery.
+- Configurable per-result and aggregate MCP memory ceilings with bounded,
+  in-memory paginated result handles.
+
+### Changed
+
+- MCP instructions now route League questions through the relevant match,
+  player, mechanics, economy, and static-content evidence sources.
+- Optional upstream failures are surfaced through warnings, unavailable
+  sections, telemetry completeness, and source provenance instead of silently
+  changing the analysis scope.
+- Compact player output omits PUUIDs and distinguishes requested, loaded,
+  analyzed, and returned recent-match counts.
+- Objective conversion uses actual timeline timestamps and bounded post-capture
+  windows; whole-match outcomes are retained as unscored context.
+
+### Fixed
+
+- Historical match enrichment now rejects cross-patch Data Dragon fallback
+  instead of attaching current item, rune, or spell data to an older match.
+- Corrected SEA Account V1 routing while preserving Match V5 regional routing.
+- Tightened required match payload validation, partial timeline handling,
+  deterministic UTC timestamps, public/internal patch normalization, and
+  Swiftplay-specific Void Grub applicability.
+- Prevented missing objective telemetry from being reported as a proven zero and
+  prevented unsupported item effects from being reported as zero value.
+
+### Security
+
+- MCP operation authentication now fails closed for unknown modes and exposes
+  only API-key or unauthenticated operations.
+- Credentials remain environment-only, RSO operations remain hidden from the
+  public MCP gateway, and writes remain disabled unless explicitly enabled and
+  confirmed.
+
 ## [1.0.0] - 2026-07-31
 
 ### Breaking
@@ -187,3 +250,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Auth**: Riot Sign-On (RSO) OAuth2 helper.
 - **Pagination**: Async iterator `paginate()` for paginated endpoints.
 - **Static**: `DataDragonClient` for fetching versions and assets.
+
+[Unreleased]: https://github.com/Demoen/riotskillissue/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Demoen/riotskillissue/compare/v1.0.0...v1.1.0

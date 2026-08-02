@@ -85,6 +85,45 @@ def test_expiry_and_lru_eviction() -> None:
         store.read(first.handle)
 
 
+def test_retained_byte_budget_uses_lru_eviction() -> None:
+    store = ResultStore(
+        inline_limit=1,
+        max_results=10,
+        max_result_size=40,
+        max_retained_bytes=70,
+    )
+    first = store.present({"id": 1, "value": "x" * 15})
+    second = store.present({"id": 2, "value": "x" * 15})
+    assert first.handle is not None
+    assert second.handle is not None
+
+    store.read(first.handle)
+    third = store.present({"id": 3, "value": "x" * 15})
+    assert third.handle is not None
+
+    with pytest.raises(ResultNotFoundError):
+        store.read(second.handle)
+    assert store.read(first.handle).data["id"] == 1
+    assert store.read(third.handle).data["id"] == 3
+
+
+def test_retained_byte_ceiling_rejects_single_value_and_invalid_budget() -> None:
+    with pytest.raises(ValueError, match="max_retained_bytes"):
+        ResultStore(
+            inline_limit=1,
+            max_result_size=65,
+            max_retained_bytes=64,
+        )
+
+    store = ResultStore(
+        inline_limit=1,
+        max_result_size=64,
+        max_retained_bytes=64,
+    )
+    with pytest.raises(ResultTooLargeError, match="retained-byte"):
+        store.present({"value": "x" * 100})
+
+
 def test_invalid_json_pointer_and_size_ceiling_fail_safely() -> None:
     store = ResultStore(inline_limit=1, max_result_size=64)
     result = store.present({"a/b": [1, 2]})

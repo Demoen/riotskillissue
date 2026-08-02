@@ -28,6 +28,10 @@ from .models import (
     GameContentRequest,
     LeaderboardRequest,
     LiveGameRequest,
+    LolItemEconomyRequest,
+    LolKnowledgeRequest,
+    LolMatchContextRequest,
+    LolPlayerContextRequest,
     MatchHistoryRequest,
     OperationDescription,
     PlayerProfileRequest,
@@ -80,6 +84,7 @@ def create_server(
                 max_results=resolved_settings.max_results,
                 ttl=resolved_settings.result_ttl,
                 max_result_size=resolved_settings.max_result_size,
+                max_retained_bytes=resolved_settings.max_retained_bytes,
             )
             operation_source = registry if registry is not None else load_operation_registry()
             operations = OperationGateway(
@@ -100,11 +105,19 @@ def create_server(
 
     server = MCPServer[McpAppContext](
         "RiotSkillIssue",
-        version="1.0.0",
+        version="1.1.0",
         instructions=(
-            "Use high-level Riot tools for common questions. Use operation discovery "
-            "for complete read-only API coverage. Large results return an in-memory "
-            "handle for paginated reads."
+            "For League match questions, use riot_lol_match_context with either a match "
+            "ID or Riot ID. Use riot_lol_player_context for combined profile, ranked, "
+            "mastery, and recent-match evidence, and riot_lol_knowledge for mechanics "
+            "and patch-banded economy guidance. For item gold efficiency, use "
+            "riot_lol_item_economy with an exact item name or ID and the match or patch. "
+            "Combine economy, minion, experience, structure, and wave-management knowledge "
+            "with match checkpoints for strategic questions. Use riot_game_content with the "
+            "same patch for abilities, items, runes, and spells. Treat inferred impact "
+            "separately from observed Riot data. Use the other high-level tools for common "
+            "lookups and operation discovery for complete read-only API coverage. Large "
+            "results return an in-memory handle for paginated reads."
         ),
         lifespan=lifespan,
         log_level="WARNING",
@@ -119,6 +132,54 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
     read_annotations = ToolAnnotations(read_only_hint=True, open_world_hint=True)
 
     @server.tool(
+        name="riot_lol_match_context",
+        title="Analyze League match context",
+        annotations=read_annotations,
+    )
+    async def riot_lol_match_context(
+        request: LolMatchContextRequest,
+        ctx: Context[McpAppContext, Any],
+    ) -> ToolResult:
+        """Get evidence-rich League match and timeline context for a question."""
+        return await _run_tool(lambda: _app(ctx).workflows.call("lol_match_context", request))
+
+    @server.tool(
+        name="riot_lol_player_context",
+        title="Analyze League player context",
+        annotations=read_annotations,
+    )
+    async def riot_lol_player_context(
+        request: LolPlayerContextRequest,
+        ctx: Context[McpAppContext, Any],
+    ) -> ToolResult:
+        """Get bounded League profile, ranked, mastery, and recent-match context."""
+        return await _run_tool(lambda: _app(ctx).workflows.call("lol_player_context", request))
+
+    @server.tool(
+        name="riot_lol_knowledge",
+        title="Get League mechanics knowledge",
+        annotations=read_annotations,
+    )
+    async def riot_lol_knowledge(
+        request: LolKnowledgeRequest,
+        ctx: Context[McpAppContext, Any],
+    ) -> ToolResult:
+        """Get League fundamentals, metric definitions, and analysis limitations."""
+        return await _run_tool(lambda: _app(ctx).workflows.call("lol_knowledge", request))
+
+    @server.tool(
+        name="riot_lol_item_economy",
+        title="Calculate League item raw-stat efficiency",
+        annotations=read_annotations,
+    )
+    async def riot_lol_item_economy(
+        request: LolItemEconomyRequest,
+        ctx: Context[McpAppContext, Any],
+    ) -> ToolResult:
+        """Calculate patch-matched component-baseline raw-stat efficiency."""
+        return await _run_tool(lambda: _app(ctx).workflows.call("lol_item_economy", request))
+
+    @server.tool(
         name="riot_player_profile",
         title="Get Riot player profile",
         annotations=read_annotations,
@@ -128,9 +189,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get account identity and the available game-specific profile."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("player_profile", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("player_profile", request))
 
     @server.tool(
         name="riot_match_history",
@@ -142,9 +201,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get a bounded player-centric match history."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("match_history", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("match_history", request))
 
     @server.tool(
         name="riot_ranked_entries",
@@ -156,9 +213,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get ranked entries for a League or TFT player."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("ranked_entries", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("ranked_entries", request))
 
     @server.tool(
         name="riot_leaderboard",
@@ -170,9 +225,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get a VALORANT or Legends of Runeterra leaderboard."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("leaderboard", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("leaderboard", request))
 
     @server.tool(
         name="riot_live_game",
@@ -196,9 +249,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get League champion mastery for a player."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("champion_mastery", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("champion_mastery", request))
 
     @server.tool(
         name="riot_challenges",
@@ -210,9 +261,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get League challenge progress for a player."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("challenges", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("challenges", request))
 
     @server.tool(
         name="riot_service_status",
@@ -224,9 +273,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get status incidents and maintenance for a game."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("service_status", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("service_status", request))
 
     @server.tool(
         name="riot_game_content",
@@ -238,9 +285,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Get League static, VALORANT, or Riftbound content."""
-        return await _run_tool(
-            lambda: _app(ctx).workflows.call("game_content", request)
-        )
+        return await _run_tool(lambda: _app(ctx).workflows.call("game_content", request))
 
     @server.tool(
         name="riot_find_operations",
@@ -287,9 +332,7 @@ def _register_read_tools(server: MCPServer[McpAppContext]) -> None:
         ctx: Context[McpAppContext, Any],
     ) -> ToolResult:
         """Call an MCP-eligible read operation discovered from the registry."""
-        return await _run_tool(
-            lambda: _app(ctx).operations.call_read(operation, arguments)
-        )
+        return await _run_tool(lambda: _app(ctx).operations.call_read(operation, arguments))
 
     @server.tool(
         name="riot_read_result",
