@@ -1827,7 +1827,7 @@
           "12AssistStreakCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "HealFromMapSources": {
             "format": "double",
@@ -1837,37 +1837,37 @@
           "InfernalScalePickup": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_DefeatAatrox": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_DefeatBriar": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_DefeatMiniBosses": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_EvolveWeapon": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_Have3Passives": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_KillEnemy": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_PickupGold": {
             "format": "float",
@@ -1877,27 +1877,27 @@
           "SWARM_ReachLevel50": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_Survive15Min": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "SWARM_WinWith5EvolvedWeapons": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "abilityUses": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "acesBefore15Minutes": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "alliedJungleMonsterKills": {
             "format": "float",
@@ -1907,17 +1907,17 @@
           "baronBuffGoldAdvantageOverThreshold": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "baronTakedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "blastConeOppositeOpponentCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "bountyGold": {
             "format": "double",
@@ -1927,12 +1927,12 @@
           "buffsStolen": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "completeSupportQuestInTime": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "controlWardTimeCoverageInRiverOrEnemyHalf": {
             "format": "float",
@@ -1942,7 +1942,7 @@
           "controlWardsPlaced": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "damagePerMinute": {
             "format": "float",
@@ -1957,27 +1957,27 @@
           "dancedWithRiftHerald": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "deathsByEnemyChamps": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "dodgeSkillShotsSmallWindow": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "doubleAces": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "dragonTakedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "earliestBaron": {
             "format": "double",
@@ -2007,17 +2007,17 @@
           "elderDragonKillsWithOpposingSoul": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "elderDragonMultikills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "enemyChampionImmobilizations": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "enemyJungleMonsterKills": {
             "format": "float",
@@ -2027,22 +2027,22 @@
           "epicMonsterKillsNearEnemyJungler": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "epicMonsterKillsWithin30SecondsOfSpawn": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "epicMonsterSteals": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "epicMonsterStolenWithoutSmite": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "fasterSupportQuestCompletion": {
             "enum": [
@@ -2051,7 +2051,7 @@
             ],
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "fastestLegendary": {
             "format": "double",
@@ -2071,17 +2071,17 @@
           "fistBumpParticipation": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "flawlessAces": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "fullTeamTakedown": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "gameLength": {
             "format": "float",
@@ -2091,7 +2091,7 @@
           "getTakedownsInAllLanesEarlyJungleAsLaner": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "goldPerMinute": {
             "format": "float",
@@ -2105,17 +2105,17 @@
             ],
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "hadOpenNexus": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "highestChampionDamage": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "highestCrowdControlScore": {
             "enum": [
@@ -2124,7 +2124,7 @@
             ],
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "highestWardKills": {
             "enum": [
@@ -2133,22 +2133,22 @@
             ],
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "immobilizeAndKillWithAlly": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "initialBuffCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "initialCrabCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "jungleCsBefore10Minutes": {
             "format": "float",
@@ -2158,17 +2158,17 @@
           "junglerKillsEarlyJungle": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "junglerTakedownsNearDamagedEpicMonster": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "kTurretsDestroyedBeforePlatesFall": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "kda": {
             "format": "float",
@@ -2178,7 +2178,7 @@
           "killAfterHiddenWithAlly": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killParticipation": {
             "format": "float",
@@ -2188,57 +2188,57 @@
           "killedChampTookFullTeamDamageSurvived": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killingSprees": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killsNearEnemyTurret": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killsOnLanersEarlyJungleAsJungler": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killsOnOtherLanesEarlyJungleAsLaner": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killsOnRecentlyHealedByAramPack": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killsUnderOwnTurret": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "killsWithHelpFromEpicMonster": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "knockEnemyIntoTeamAndKill": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "landSkillShotsEarlyGame": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "laneMinionsFirst10Minutes": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "laningPhaseGoldExpAdvantage": {
             "enum": [
@@ -2247,12 +2247,12 @@
             ],
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "legendaryCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "legendaryItemUsed": {
             "items": {
@@ -2266,7 +2266,7 @@
           "lostAnInhibitor": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "maxCsAdvantageOnLaneOpponent": {
             "format": "float",
@@ -2276,17 +2276,17 @@
           "maxKillDeficit": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "maxLevelLeadLaneOpponent": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "mejaisFullStackInTime": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "moreEnemyJungleThanOpponent": {
             "format": "float",
@@ -2296,63 +2296,63 @@
           "mostWardsDestroyedOneSweeper": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "multiKillOneSpell": {
             "description": "This is an offshoot of the OneStone challenge. The code checks if a spell with the same instance ID does the final point of damage to at least 2 Champions. It doesn't matter if they're enemies, but you cannot hurt your friends.",
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "multiTurretRiftHeraldCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "multikills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "multikillsAfterAggressiveFlash": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "mythicItemUsed": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "outerTurretExecutesBefore10Minutes": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "outnumberedKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "outnumberedNexusKill": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "perfectDragonSoulsTaken": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "perfectGame": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "pickKillWithAlly": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "playedChampSelectPosition": {
             "enum": [
@@ -2361,42 +2361,42 @@
             ],
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "poroExplosions": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "quickCleanse": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "quickFirstTurret": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "quickSoloKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "riftHeraldTakedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "saveAllyFromDeath": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "scuttleCrabKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "shortestTimeToAceFromFirstTakedown": {
             "format": "float",
@@ -2406,92 +2406,92 @@
           "skillshotsDodged": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "skillshotsHit": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "snowballsHit": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "soloBaronKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "soloKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "soloTurretsLategame": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "stealthWardsPlaced": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "survivedSingleDigitHpCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "survivedThreeImmobilizesInFight": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownOnFirstTurret": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownsAfterGainingLevelAdvantage": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownsBeforeJungleMinionSpawn": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownsFirst25Minutes": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownsFirstXMinutes": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownsInAlcove": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "takedownsInEnemyFountain": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "teamBaronKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "teamDamagePercentage": {
             "format": "float",
@@ -2501,17 +2501,17 @@
           "teamElderDragonKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "teamRiftHeraldKills": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "teleportTakedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "thirdInhibitorDestroyedTime": {
             "format": "double",
@@ -2521,43 +2521,43 @@
           "threeWardsOneSweeperCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "tookLargeDamageSurvived": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "turretPlatesTaken": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "turretTakedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "turretsTakenWithRiftHerald": {
             "description": "Any player who damages a tower that is destroyed within 30 seconds of a Rift Herald charge will receive credit. A player who does not damage the tower will not receive credit.",
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "twentyMinionsIn3SecondsCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "twoWardsOneSweeperCount": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "unseenRecalls": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "visionScoreAdvantageLaneOpponent": {
             "format": "float",
@@ -2572,22 +2572,22 @@
           "voidMonsterKill": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "wardTakedowns": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "wardTakedownsBefore20M": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           },
           "wardsGuarded": {
             "format": "int32",
             "type": "integer",
-            "x-type": "int"
+            "x-type": "integer"
           }
         },
         "title": "ChallengesDto",
@@ -9635,9 +9635,9 @@
     "description": "\nOpenAPI/Swagger version of the [Riot API](https://developer.riotgames.com/). Automatically generated daily.\n## OpenAPI Spec File\nThe following versions of the Riot API spec file are available:\n- `openapi-3.0.0.json` ([view file](../openapi-3.0.0.json), [ui select](?url=../openapi-3.0.0.json))\n- `openapi-3.0.0.min.json` ([view file](../openapi-3.0.0.min.json), [ui select](?url=../openapi-3.0.0.min.json))\n- `openapi-3.0.0.yml` ([view file](../openapi-3.0.0.yml), [ui select](?url=../openapi-3.0.0.yml))\n- `openapi-3.0.0.min.yml` ([view file](../openapi-3.0.0.min.yml), [ui select](?url=../openapi-3.0.0.min.yml))\n- `swaggerspec-2.0.json` ([view file](../swaggerspec-2.0.json), [ui select](?url=../swaggerspec-2.0.json))\n- `swaggerspec-2.0.min.json` ([view file](../swaggerspec-2.0.min.json), [ui select](?url=../swaggerspec-2.0.min.json))\n- `swaggerspec-2.0.yml` ([view file](../swaggerspec-2.0.yml), [ui select](?url=../swaggerspec-2.0.yml))\n- `swaggerspec-2.0.min.yml` ([view file](../swaggerspec-2.0.min.yml), [ui select](?url=../swaggerspec-2.0.min.yml))\n## Other Files\n- Missing DTOs: [`missing.json`](../missing.json)\n- Routes Table: [`routesTable.json`](../routesTable.json)\n- [Enum Files](../enums/)\n## Source Code\nSource code on [GitHub](https://github.com/MingweiSamuel/riotapi-schema). Pull requests welcome!\n## Automatically Generated\nRebuilt on [Travis CI](https://travis-ci.com/MingweiSamuel/riotapi-schema/builds) daily.\n***\n",
     "termsOfService": "https://developer.riotgames.com/terms",
     "title": "Riot API",
-    "version": "7631e2cfd5e18411c6d6ebc26212ffbf6cc8b2ef",
+    "version": "651fd42a1af69dc0c8a3458d7013aab1271dadb6",
     "x-enumsHash": "a2591954004b70b6d1909828f157d9a4acf6cff8",
-    "x-hash": "7631e2cfd5e18411c6d6ebc26212ffbf6cc8b2efa2591954004b70b6d1909828f157d9a4acf6cff8"
+    "x-hash": "651fd42a1af69dc0c8a3458d7013aab1271dadb6a2591954004b70b6d1909828f157d9a4acf6cff8"
   },
   "openapi": "3.0.0",
   "paths": {
