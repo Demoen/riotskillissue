@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
+_HTTP_METHODS = frozenset({"delete", "get", "head", "options", "patch", "post", "put", "trace"})
+
 @dataclass
 class SchemaDiff:
     added_endpoints: List[str] = field(default_factory=list)
@@ -93,8 +95,8 @@ class DiffEngine:
 
     def _compare_path_items(self, path: str, old: Dict, new: Dict, diff: SchemaDiff) -> None:
         # Check methods (get, post)
-        old_methods = set(k for k in old if k not in ["parameters", "summary", "description"])
-        new_methods = set(k for k in new if k not in ["parameters", "summary", "description"])
+        old_methods = set(old) & _HTTP_METHODS
+        new_methods = set(new) & _HTTP_METHODS
         
         changes = []
         
