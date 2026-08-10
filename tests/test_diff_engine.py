@@ -1,4 +1,13 @@
-from tools.diff_engine import DiffEngine
+import sys
+from importlib import import_module
+from pathlib import Path
+
+_REPO_ROOT = str(Path(__file__).resolve().parents[1])
+sys.path.insert(0, _REPO_ROOT)
+try:
+    DiffEngine = import_module("tools.diff_engine").DiffEngine
+finally:
+    sys.path.remove(_REPO_ROOT)
 
 
 def test_compare_ignores_non_operation_path_item_fields() -> None:
