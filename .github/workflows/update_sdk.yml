@@ -9,6 +9,7 @@ jobs:
   update-sdk:
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
       pull-requests: write
 
@@ -110,20 +111,9 @@ jobs:
           git tag "v$VERSION"
           git push origin "v$VERSION"
 
-      - name: Create GitHub Release
+      - name: Dispatch Publish Workflow
         if: steps.git-diff.outputs.changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           NEW_VERSION: ${{ steps.bump.outputs.new_version }}
-          DIFF_REPORT_PATH: ${{ steps.generate.outputs.diff_report_path }}
-        run: |
-          if [ -f "$DIFF_REPORT_PATH" ]; then
-            NOTES=$(cat "$DIFF_REPORT_PATH")
-          else
-            NOTES="Synced latest Riot API spec."
-          fi
-
-          gh release create "v${NEW_VERSION}" \
-            --title "v${NEW_VERSION}" \
-            --notes "${NOTES}" \
-            --latest
+        run: gh workflow run publish.yml --repo "$GITHUB_REPOSITORY" --ref "v${NEW_VERSION}"

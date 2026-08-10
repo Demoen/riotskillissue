@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -11,6 +12,7 @@ concurrency:
 
 jobs:
   verify:
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

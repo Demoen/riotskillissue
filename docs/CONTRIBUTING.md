@@ -51,6 +51,6 @@ Generated files:
 
 1. Update `CHANGELOG.md` with the new version.
 2. Bump version in `pyproject.toml`.
-3. **Tag**: Create a new GitHub release with a tag (e.g., `v1.0.0`).
-4. **Publish**: The GitHub Action `.github/workflows/publish.yml` will automatically build and push to PyPI using Trusted Publishing.
+3. **Tag**: Push a version tag (e.g., `v1.0.0`).
+4. **Publish**: `.github/workflows/publish.yml` verifies the tag, creates the GitHub release, publishes to PyPI using Trusted Publishing, and deploys the documentation.
 5. **Verify**: Check [PyPI project page](https://pypi.org/p/riotskillissue).
