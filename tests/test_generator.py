@@ -2,7 +2,11 @@ import inspect
 import json
 import sys
 from pathlib import Path
+from types import ModuleType
 from typing import Any, cast
+
+import pytest
+from pydantic import ValidationError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -247,3 +251,81 @@ def test_generated_model_alias_round_trip() -> None:
 
     assert summoner.model_dump()["summoner_level"] == 42
     assert summoner.model_dump(by_alias=True)["summonerLevel"] == 42
+
+
+@pytest.mark.parametrize(
+    "schema",
+    [
+        {"type": "object"},
+        {"type": "object", "description": "UNKNOWN TYPE.", "properties": {}},
+        {"type": "object", "properties": {}, "additionalProperties": True},
+    ],
+)
+def test_generated_unknown_models_preserve_payloads(
+    monkeypatch: pytest.MonkeyPatch,
+    schema: dict[str, Any],
+) -> None:
+    spec = _spec()
+    spec["components"]["schemas"]["val-widget-v1.WidgetDto"] = schema
+    parser = OpenApiParser(spec)
+    parser.parse()
+    assert parser.models["val-widget-v1.WidgetDto"].preserve_unknown_fields
+
+    files = render_generated_files(spec, format_code=False)
+    model_path = Path("src/riotskillissue/models/valorant/widget_v1.py")
+    module = ModuleType("generated_unknown_model")
+    monkeypatch.setitem(sys.modules, module.__name__, module)
+    exec(compile(files[model_path], str(model_path), "exec"), module.__dict__)
+    payload = {"matchId": "EUW1_123", "participants": [{"score": 7}], "metadata": None}
+
+    result = module.Widget.model_validate(payload)
+
+    assert result.model_dump(by_alias=True) == payload
+    assert json.loads(result.model_dump_json()) == payload
+
+
+def test_generated_known_models_keep_validation_and_extra_field_behavior(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    spec = _spec()
+    spec["components"]["schemas"]["val-widget-v1.EmptyDto"] = {
+        "type": "object",
+        "additionalProperties": False,
+    }
+    parser = OpenApiParser(spec)
+    parser.parse()
+    assert not parser.models["val-widget-v1.WidgetDto"].preserve_unknown_fields
+    assert not parser.models["val-widget-v1.EmptyDto"].preserve_unknown_fields
+
+    files = render_generated_files(spec, format_code=False)
+    model_path = Path("src/riotskillissue/models/valorant/widget_v1.py")
+    module = ModuleType("generated_known_models")
+    monkeypatch.setitem(sys.modules, module.__name__, module)
+    exec(compile(files[model_path], str(model_path), "exec"), module.__dict__)
+
+    assert module.Empty.model_validate({"unknown": 42}).model_dump() == {}
+    result = module.Widget.model_validate({"widgetId": "widget", "queue_id": 1, "unknown": 42})
+    assert "unknown" not in result.model_dump()
+    with pytest.raises(ValidationError):
+        module.Widget.model_validate({"widgetId": "widget", "queue_id": "invalid"})
+
+
+def test_committed_placeholder_models_preserve_nested_response_data() -> None:
+    from riotskillissue.models.lol.rso_match_v1 import Match, Timeline
+    from riotskillissue.models.valorant.console_ranked_v1 import Leaderboard
+
+    payload = {"metadata": {"matchId": "EUW1_123"}, "info": {"participants": [{"id": 1}]}}
+    for model in (Match, Timeline):
+        assert model.model_validate(payload).model_dump() == payload
+
+    tiers = [{"tier": 1, "rankedRatingThreshold": 100}]
+    leaderboard = Leaderboard.model_validate(
+        {
+            "actId": "act",
+            "players": [],
+            "shard": "eu",
+            "totalPlayers": 0,
+            "tierDetails": tiers,
+        }
+    )
+    assert leaderboard.model_dump(by_alias=True)["tierDetails"] == tiers

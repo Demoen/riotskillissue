@@ -84,24 +84,33 @@ try:
     import base64 as _base64
 
     class RedisCache(AbstractCache):
+        _prefix = "riot:cache:"
+
         def __init__(self, redis_url: str):
             self.redis = Redis.from_url(redis_url)
 
         async def get(self, key: str) -> Optional[Any]:
-            val = await self.redis.get(key)
+            val = await self.redis.get(f"{self._prefix}{key}")
             if val:
                 return _deserialize(_json.loads(val))
             return None
 
         async def set(self, key: str, value: Any, ttl: int) -> None:
             val = _json.dumps(_serialize(value))
-            await self.redis.set(key, val, ex=ttl)
+            await self.redis.set(f"{self._prefix}{key}", val, ex=ttl)
 
         async def delete(self, key: str) -> None:
-            await self.redis.delete(key)
+            await self.redis.delete(f"{self._prefix}{key}")
 
         async def clear(self) -> None:
-            await self.redis.flushdb()
+            keys = []
+            async for key in self.redis.scan_iter(match=f"{self._prefix}*", count=100):
+                keys.append(key)
+                if len(keys) >= 100:
+                    await self.redis.delete(*keys)
+                    keys.clear()
+            if keys:
+                await self.redis.delete(*keys)
 
     def _serialize(obj: Any) -> Any:
         """Convert an object to a JSON-safe representation."""
@@ -112,12 +121,14 @@ try:
         if isinstance(obj, list):
             return [_serialize(item) for item in obj]
         if isinstance(obj, dict):
-            return {k: _serialize(v) for k, v in obj.items()}
+            return {"__dict__": [[_serialize(k), _serialize(v)] for k, v in obj.items()]}
         return obj
 
     def _deserialize(obj: Any) -> Any:
         """Restore an object from its JSON-safe representation."""
         if isinstance(obj, dict):
+            if "__dict__" in obj:
+                return {_deserialize(k): _deserialize(v) for k, v in obj["__dict__"]}
             if "__bytes__" in obj:
                 return _base64.b64decode(obj["__bytes__"])
             if "__tuple__" in obj:

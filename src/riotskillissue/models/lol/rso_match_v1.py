@@ -7,13 +7,13 @@ from pydantic import BaseModel, ConfigDict
 class Match(BaseModel):
     "UNKNOWN TYPE."
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
 
 class Timeline(BaseModel):
     "UNKNOWN TYPE."
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
 
 _MODEL_TYPES = (

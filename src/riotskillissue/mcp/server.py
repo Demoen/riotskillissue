@@ -15,6 +15,8 @@ from mcp.server.mcpserver import Context, Elicit, Resolve
 from mcp.shared.exceptions import MCPError
 from mcp_types import INTERNAL_ERROR, INVALID_PARAMS, ToolAnnotations
 
+from riotskillissue import __version__
+
 from .errors import (
     IntegrationContractError,
     McpConfigurationError,
@@ -105,7 +107,7 @@ def create_server(
 
     server = MCPServer[McpAppContext](
         "RiotSkillIssue",
-        version="1.1.0",
+        version=__version__,
         instructions=(
             "For League match questions, use riot_lol_match_context with either a match "
             "ID or Riot ID. Use riot_lol_player_context for combined profile, ranked, "

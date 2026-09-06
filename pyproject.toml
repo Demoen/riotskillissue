@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "riotskillissue"
-version = "1.1.1"
+version = "1.1.2"
 description = "Typed Python client and local MCP server for Riot Games APIs."
 readme = "README.md"
 license = "MIT"
@@ -43,7 +43,7 @@ Issues = "https://github.com/Demoen/riotskillissue/issues"
 Changelog = "https://github.com/Demoen/riotskillissue/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
-redis = ["redis>=5.0.0"]
+redis = ["redis>=5.0.1"]
 tui = ["textual>=0.85.0"]
 mcp = ["mcp>=2,<3"]
 dev = [
@@ -61,8 +61,7 @@ dev = [
     "mcp[cli]>=2,<3",
 ]
 docs = [
-    "mkdocs>=1.5.0",
-    "mkdocs-material>=9.5.0",
+    "zensical>=0.0.59,<0.1.0",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -10,4 +10,5 @@ build/
 coverage.xml
 .coverage
 /site/
+/.cache/
 /.tmp_tests/

@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 _UNSET = object()
 _SENSITIVE_HEADERS = {"authorization", "x-riot-token"}
+_IDEMPOTENT_METHODS = {"GET", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"}
 
 
 class RiotSkillIssueError(Exception):
@@ -217,6 +218,7 @@ class HttpClient:
             proxy=config.proxy,
         )
 
+        self._owns_limiter = rate_limiter is None
         if rate_limiter is not None:
             self.limiter = rate_limiter
         elif config.redis_url:
@@ -229,7 +231,11 @@ class HttpClient:
         self._method_limits: dict[str, list[Any]] = {}
 
     async def close(self) -> None:
-        await self._client.aclose()
+        try:
+            await self._client.aclose()
+        finally:
+            if self._owns_limiter:
+                await self.limiter.close()
 
     def resolve_route(
         self,
@@ -538,6 +544,7 @@ class HttpClient:
         rate_auth_scope = "rso" if auth_scope.startswith("rso:") else auth_scope
         app_key = f"app:{route}:{rate_auth_scope}"
         method_key = f"method:{route}:{rate_auth_scope}:{operation_scope}"
+        can_replay = method.upper() in _IDEMPOTENT_METHODS
         transient_retries = 0
         rate_limit_retries = 0
         expected_statuses = (
@@ -556,19 +563,23 @@ class HttpClient:
             try:
                 response = await self._client.request(method, full_url, **kwargs)
             except httpx.TimeoutException as exc:
-                if transient_retries >= self.config.max_retries:
+                safe_to_retry = can_replay or isinstance(
+                    exc, (httpx.ConnectTimeout, httpx.PoolTimeout)
+                )
+                if not safe_to_retry or transient_retries >= self.config.max_retries:
                     raise RiotTimeoutError("Riot API request timed out") from exc
                 transient_retries += 1
                 await asyncio.sleep(self._retry_delay(transient_retries))
                 continue
             except (httpx.NetworkError, httpx.RemoteProtocolError) as exc:
-                if transient_retries >= self.config.max_retries:
+                safe_to_retry = can_replay or isinstance(exc, httpx.ConnectError)
+                if not safe_to_retry or transient_retries >= self.config.max_retries:
                     raise RiotNetworkError("Riot API network request failed") from exc
                 transient_retries += 1
                 await asyncio.sleep(self._retry_delay(transient_retries))
                 continue
             except httpx.RequestError as exc:
-                if transient_retries >= self.config.max_retries:
+                if not can_replay or transient_retries >= self.config.max_retries:
                     raise RiotNetworkError("Riot API request failed") from exc
                 transient_retries += 1
                 await asyncio.sleep(self._retry_delay(transient_retries))
@@ -594,7 +605,7 @@ class HttpClient:
                 continue
 
             if response.status_code >= 500:
-                if transient_retries >= self.config.max_retries:
+                if not can_replay or transient_retries >= self.config.max_retries:
                     raise ServerError(response)
                 transient_retries += 1
                 await asyncio.sleep(self._retry_delay(transient_retries))

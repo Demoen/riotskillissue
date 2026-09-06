@@ -34,6 +34,16 @@ The primary environment variables are:
 Empty API keys are rejected. RSO credentials use a token provider and are not
 accepted as endpoint arguments.
 
+Network and server retries apply to idempotent HTTP methods, including `GET`,
+`PUT`, and `DELETE`. `POST` and `PATCH` retry connection failures that occur before
+the request is sent, but do not retry read/write failures or server errors that
+could have occurred after a mutation was applied. HTTP 429 responses use the
+separate rate-limit retry budget for every method.
+
+Closing a client also closes the Redis rate limiter created from `redis_url`.
+If you pass a shared rate limiter directly to `HttpClient`, close that limiter
+yourself after all clients using it have closed.
+
 ## Caching
 
 Pass an `AbstractCache` implementation to either client. RSO operations are not
@@ -45,3 +55,9 @@ from riotskillissue import MemoryCache, RiotClient
 
 riot = RiotClient(cache=MemoryCache(max_size=1024))
 ```
+
+The optional `RedisCache` stores its entries under `riot:cache:`. Its `clear()`
+method removes only entries in that namespace, preserving rate-limit counters
+and unrelated application data in the same database. Existing entries from
+versions using unprefixed cache keys expire according to their original TTL;
+the first request after upgrading repopulates the cache.

@@ -70,7 +70,7 @@ class Player(BaseModel):
 class Tier(BaseModel):
     "UNKNOWN TYPE."
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
 
 _MODEL_TYPES = (

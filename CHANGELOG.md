@@ -5,14 +5,63 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-09-06
+
+### Added
+
+- A read-only schema health command: `python tools/manager.py --check --check-upstream`.
+  Reports the source hash, API coverage, and latest successful upstream generation;
+  detects schema drift and generators with no successful run in 72 hours.
+- Live-game TUI diagnostics for unavailable champion/rank data and failed refreshes,
+  retaining the last successful snapshot with a visible stale-data indicator.
+- Windows CI coverage alongside Linux, with Redis and TUI extras installed.
+
+### Changed
+
+- Scheduled SDK checks run after upstream generation and verify tests, typing,
+  lint, generated code, documentation, and packaging even when the schema is unchanged.
+- Schema reports cover nested fields, parameters, responses, request bodies,
+  authentication, routing, and metadata. Downloads are validated before atomic replacement.
+- TUI refreshes run in background workers and reuse one client, retaining
+  connections, static-data cache, and learned rate limits between requests.
+- Documentation builds and publishing use Zensical, preserving the existing
+  theme, navigation, and page URLs.
+
+### Fixed
+
+- Prevented automatic replay of POST/PATCH requests after ambiguous transport
+  failures or server errors, avoiding duplicate mutations. Connection failures
+  before sending and explicit rate-limit rejections remain retryable.
+- Redis cache clearing now removes only namespaced cache entries, preserving
+  rate-limit counters and unrelated application data. Cached maps retain integer keys.
+- Internally created rate-limit connections close with the HTTP client, including
+  when HTTP cleanup fails; injected limiters remain owned by the caller.
+- Required Redis 5.0.1 or newer for its asynchronous connection cleanup API.
+- Kept TUI keyboard controls responsive during requests, prevented overlapping
+  refreshes, updated countdown text, and cancelled pending requests on exit.
+- Preserved players after optional data lookup failures and distinguished an
+  unknown account from a player who is not currently in a game.
+- Preserved undocumented response fields in generated placeholder models,
+  including RSO matches/timelines and console leaderboard tiers.
+- MCP initialization reports the installed package version.
+- Release publishing validates the tag against package metadata and reviewed
+  changelog notes. GitHub releases are created only after successful PyPI publication.
+
+### Upgrade notes
+
+- Existing Redis cache entries are not reused after the namespace change and
+  expire according to their original TTL. Expect a one-time cold cache.
+- Callers of POST/PATCH operations must handle ambiguous failures explicitly;
+  retrying those operations can duplicate a write that Riot already accepted.
+- Programmatic TUI refresh intervals must be at least five seconds, matching the CLI.
+- Python requirements remain `>=3.14,<3.17`. The TUI, MCP, and Redis remain optional extras.
+
 ## [1.1.1] - 2026-08-10
 
 ### Changed
 
-
-
-
-## [Unreleased]
+- Synchronized the bundled community Riot API schema. This version was released
+  on GitHub but was not published to PyPI.
 
 ## [1.1.0] - 2026-08-02
 
@@ -258,5 +307,6 @@ natural-language game analysis instead of returning disconnected API payloads.
 - **Pagination**: Async iterator `paginate()` for paginated endpoints.
 - **Static**: `DataDragonClient` for fetching versions and assets.
 
-[Unreleased]: https://github.com/Demoen/riotskillissue/compare/v1.1.0...HEAD
+[1.1.2]: https://github.com/Demoen/riotskillissue/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/Demoen/riotskillissue/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Demoen/riotskillissue/compare/v1.0.0...v1.1.0

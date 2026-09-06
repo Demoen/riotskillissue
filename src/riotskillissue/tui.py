@@ -2,15 +2,17 @@
 Live Game TUI — Terminal User Interface for spectating League of Legends matches.
 
 Usage:
-    riotskillissue-cli live "GameName#TagLine" --region euw1
+    riotskillissue-cli live "GameName#TagLine" --route euw1
 """
 
 from __future__ import annotations
 
 import asyncio
+from contextlib import AsyncExitStack
 from typing import Any, Dict, List, Optional, Tuple
 
 from textual.app import App, ComposeResult
+from textual import work
 from textual.containers import Container, Horizontal, Vertical, VerticalScroll
 from textual.reactive import reactive
 from textual.timer import Timer
@@ -144,16 +146,21 @@ async def fetch_live_game_data(
     game_name: str,
     tag_line: str,
     region: str,
+    *,
+    client: RiotClient | None = None,
 ) -> Dict[str, Any]:
     riot_id = f"{game_name}#{tag_line}"
     platform_route = PlatformRoute(region.lower())
-    async with RiotClient(
-        api_key=api_key,
-        default_route=platform_route,
-    ) as client:
+    async with AsyncExitStack() as stack:
+        if client is None:
+            client = await stack.enter_async_context(
+                RiotClient(api_key=api_key, default_route=platform_route)
+            )
         try:
-            game = await client.lol.live_game(riot_id)
-        except NotFoundError:
+            game = await client.lol.live_game(riot_id, route=platform_route)
+        except NotFoundError as exc:
+            if exc.response is None or "/lol/spectator/" not in exc.response.request.url.path:
+                raise
             return {"error": "not_in_game", "player": riot_id}
 
         participants = getattr(game, "participants", None) or []
@@ -161,27 +168,36 @@ async def fetch_live_game_data(
         async def resolve_participant(p: Any) -> Dict[str, Any]:
             champion_id = getattr(p, "champion_id", 0)
             puuid = getattr(p, "puuid", "")
-            champ_data = await client.lol.static.get_champion(champion_id)
+            warnings = []
+            try:
+                champ_data = await client.lol.static.get_champion(champion_id)
+            except Exception:
+                champ_data = None
+                warnings.append(f"Champion data unavailable for champion {champion_id}.")
             champ_name = champ_data["name"] if champ_data else f"Champion {champion_id}"
             champ_image = champ_data.get("image", {}).get("full", "") if champ_data else ""
             rank_entry = None
-            try:
-                entries = await client.raw.lol.league.get_league_entries_by_puuid(
-                    encrypted_puuid=puuid
-                )
-                for e in entries:
-                    qt = getattr(e, "queue_type", None)
-                    if qt == "RANKED_SOLO_5x5":
-                        rank_entry = e
-                        break
-                if not rank_entry:
+            rank_available = bool(puuid) and not getattr(p, "bot", False)
+            if rank_available:
+                try:
+                    entries = await client.raw.lol.league.get_league_entries_by_puuid(
+                        encrypted_puuid=puuid, route=platform_route
+                    )
                     for e in entries:
                         qt = getattr(e, "queue_type", None)
-                        if qt == "RANKED_FLEX_SR":
+                        if qt == "RANKED_SOLO_5x5":
                             rank_entry = e
                             break
-            except Exception:
-                pass
+                    if not rank_entry:
+                        for e in entries:
+                            qt = getattr(e, "queue_type", None)
+                            if qt == "RANKED_FLEX_SR":
+                                rank_entry = e
+                                break
+                except Exception:
+                    rank_available = False
+                    player = getattr(p, "riot_id", None) or champ_name
+                    warnings.append(f"Rank unavailable for {player}.")
 
             rank_dict = None
             if rank_entry:
@@ -201,40 +217,27 @@ async def fetch_live_game_data(
                 "spell2": _spell_name(getattr(p, "spell2_id", 0)),
                 "is_bot": getattr(p, "bot", False),
                 "rank": rank_dict,
+                "rank_available": rank_available,
+                "warnings": warnings,
             }
 
         player_data = await asyncio.gather(
             *[resolve_participant(p) for p in participants],
-            return_exceptions=True,
         )
-
-        resolved_players: List[Dict[str, Any]] = []
-        for pd in player_data:
-            if isinstance(pd, Exception):
-                resolved_players.append({
-                    "champion": "Unknown",
-                    "champion_image": "",
-                    "champion_id": 0,
-                    "riot_id": "Error",
-                    "puuid": "",
-                    "team_id": 0,
-                    "spell1": "?",
-                    "spell2": "?",
-                    "is_bot": False,
-                    "rank": None,
-                })
-            else:
-                resolved_players.append(pd)
-
-        blue_team = [p for p in resolved_players if p["team_id"] == 100]
-        red_team = [p for p in resolved_players if p["team_id"] == 200]
+        warnings = [warning for p in player_data for warning in p["warnings"]]
+        blue_team = [p for p in player_data if p["team_id"] == 100]
+        red_team = [p for p in player_data if p["team_id"] == 200]
 
         bans_raw = getattr(game, "banned_champions", []) or []
         bans = []
         for b in bans_raw:
             cid = getattr(b, "champion_id", -1)
             if cid > 0:
-                cd = await client.lol.static.get_champion(cid)
+                try:
+                    cd = await client.lol.static.get_champion(cid)
+                except Exception:
+                    cd = None
+                    warnings.append(f"Ban data unavailable for champion {cid}.")
                 bans.append(cd["name"] if cd else f"#{cid}")
 
         game_length = getattr(game, "game_length", 0) or 0
@@ -253,6 +256,7 @@ async def fetch_live_game_data(
             "bans": bans,
             "game_id": getattr(game, "game_id", "?"),
             "platform_id": getattr(game, "platform_id", region.upper()),
+            "warnings": warnings,
         }
 
 
@@ -304,7 +308,7 @@ class TeamTable(Static):
 
         for p in players:
             rank_text = Text(
-                _rank_string(p.get("rank")),
+                _rank_string(p.get("rank")) if p.get("rank_available", True) else "Unavailable",
                 style=_rank_color(p.get("rank")),
             )
 
@@ -423,6 +427,13 @@ Screen {
     text-align: center;
 }
 
+#warnings-widget {
+    width: 100%;
+    height: auto;
+    color: $warning;
+    margin-bottom: 1;
+}
+
 #status-bar {
     dock: bottom;
     width: 100%;
@@ -460,8 +471,7 @@ Screen {
 class LiveGameApp(App):
     """TUI application for viewing live League of Legends matches."""
 
-    CSS = LIVE_GAME_CSS. \
-        replace("    ", "    ")  # keep as-is
+    CSS = LIVE_GAME_CSS
 
     TITLE = "RiotSkillIssue — Live Game"
     SUB_TITLE = "League of Legends"
@@ -472,7 +482,6 @@ class LiveGameApp(App):
         Binding("r", "refresh", "Refresh", show=True),
     ]
 
-    # Reactive data
     game_data: reactive[Optional[Dict[str, Any]]] = reactive(None)
     is_loading: reactive[bool] = reactive(True)
     last_error: reactive[Optional[str]] = reactive(None)
@@ -487,6 +496,8 @@ class LiveGameApp(App):
         auto_refresh: int = 30,
         **kwargs: Any,
     ):
+        if auto_refresh < 5:
+            raise ValueError("Auto-refresh interval must be at least 5 seconds.")
         super().__init__(**kwargs)
         self.api_key = api_key
         self.game_name = game_name
@@ -494,69 +505,98 @@ class LiveGameApp(App):
         self.region = region
         self.auto_refresh_interval = auto_refresh
         self.refresh_countdown = auto_refresh
-        self._refresh_timer: Optional[Timer] = None
         self._countdown_timer: Optional[Timer] = None
+        self._client: RiotClient | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
         yield VerticalScroll(id="main-container")
+        yield Static(id="status-bar")
         yield Footer()
 
-    async def on_mount(self) -> None:
-        """Called when the app is mounted — start first data fetch."""
-        await self._load_data()
-        # Start auto-refresh
-        self._refresh_timer = self.set_interval(
-            self.auto_refresh_interval, self._auto_refresh
-        )
+    def on_mount(self) -> None:
+        self._load_data()
         self._countdown_timer = self.set_interval(1, self._tick_countdown)
 
-    async def _auto_refresh(self) -> None:
-        """Auto-refresh callback."""
-        self.refresh_countdown = self.auto_refresh_interval
-        await self._load_data()
+    async def on_unmount(self) -> None:
+        workers = self.workers.cancel_group(self, "live-game")
+        await asyncio.gather(*(worker.wait() for worker in workers), return_exceptions=True)
+        if self._client is not None:
+            client, self._client = self._client, None
+            await client.close()
 
     def _tick_countdown(self) -> None:
-        """Count down the refresh timer."""
+        if self.is_loading:
+            return
         if self.refresh_countdown > 0:
             self.refresh_countdown -= 1
+        if self.refresh_countdown == 0:
+            self.action_refresh()
 
-    async def action_refresh(self) -> None:
-        """Manual refresh triggered by 'r' key."""
-        self.refresh_countdown = self.auto_refresh_interval
-        await self._load_data()
-
-    async def _load_data(self) -> None:
-        """Fetch live game data and update the display."""
+    def action_refresh(self) -> None:
+        if self.is_loading:
+            return
         self.is_loading = True
-        self.last_error = None
+        self._load_data()
 
-        container = self.query_one("#main-container")
+    def watch_refresh_countdown(self) -> None:
+        self._update_status()
 
-        # Show loading state
-        await container.remove_children()
-        await container.mount(
-            Vertical(
-                Label("🔄 Fetching live game data...", id="loading-label"),
-                LoadingIndicator(),
-                id="loading-container",
-            )
-        )
+    def _update_status(self) -> None:
+        if not self.is_running:
+            return
+        status = Text()
+        if self.last_error and self.game_data is not None:
+            status.append("Showing previous data  •  ", style="bold yellow")
+        if self.is_loading:
+            status.append("Refreshing game data…", style="dim")
+        else:
+            status.append(f"Next refresh in {self.refresh_countdown}s  •  [R] refresh  [Q] quit")
+        if self.last_error and self.game_data is not None:
+            status.append(f"  •  {self.last_error}", style="yellow")
+        for widget in self.query("#status-bar").results(Static):
+            widget.update(status)
 
+    @work(exclusive=True, group="live-game")
+    async def _load_data(self) -> None:
+        self.is_loading = True
+        self._update_status()
         try:
+            if self.game_data is None:
+                container = self.query_one("#main-container")
+                await container.remove_children()
+                await container.mount(
+                    Vertical(
+                        Label("🔄 Fetching live game data...", id="loading-label"),
+                        LoadingIndicator(),
+                        id="loading-container",
+                    )
+                )
+            if self._client is None:
+                self._client = RiotClient(
+                    api_key=self.api_key,
+                    default_route=PlatformRoute(self.region.lower()),
+                )
             data = await fetch_live_game_data(
                 api_key=self.api_key,
                 game_name=self.game_name,
                 tag_line=self.tag_line,
                 region=self.region,
+                client=self._client,
             )
             self.game_data = data
-            self.is_loading = False
+            self.last_error = None
             await self._render_game(data)
         except Exception as e:
-            self.is_loading = False
             self.last_error = str(e)
-            await self._render_error(str(e))
+            if self.api_key:
+                self.last_error = self.last_error.replace(self.api_key, "[REDACTED]")
+            if self.game_data is None:
+                await self._render_error(self.last_error)
+        finally:
+            self.is_loading = False
+            self.refresh_countdown = self.auto_refresh_interval
+            self._update_status()
 
     async def _render_game(self, data: Dict[str, Any]) -> None:
         """Render the game data into the TUI."""
@@ -584,11 +624,6 @@ class LiveGameApp(App):
                                 style="dim",
                                 justify="center",
                             ),
-                            Text(
-                                f"Next refresh in {self.refresh_countdown}s  •  Press [R] to refresh now",
-                                style="dim italic",
-                                justify="center",
-                            ),
                         )
                     ),
                     title="Live Game",
@@ -608,19 +643,18 @@ class LiveGameApp(App):
             style="bold cyan",
             justify="center",
         )
-        countdown_text = Text(
-            f"Auto-refresh in {self.refresh_countdown}s",
-            style="dim italic",
-            justify="center",
-        )
         header.update(
             Panel(
-                Align.center(Group(game_title, Text(""), header_table, countdown_text)),
+                Align.center(Group(game_title, Text(""), header_table)),
                 border_style="cyan",
                 padding=(0, 2),
             )
         )
         await container.mount(header)
+        if data.get("warnings"):
+            await container.mount(
+                Static(Text("\n".join(data["warnings"])), id="warnings-widget")
+            )
 
         # ── Blue Team ──
         blue_widget = TeamTable(id="team-blue")

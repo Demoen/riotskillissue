@@ -19,7 +19,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -e ".[dev,docs,mcp]"
+        run: pip install -e ".[dev,docs,mcp,redis,tui]"
 
       - name: Ruff
         run: ruff check src/ tests/ tools/ examples/
@@ -31,16 +31,17 @@ jobs:
         run: python tools/generator/core.py --check
 
       - name: Documentation
-        run: mkdocs build --strict
+        run: zensical build --clean --strict
 
       - name: Package
         run: hatch build
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.14", "3.15"]
 
     steps:
@@ -54,7 +55,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -e ".[dev,docs,mcp]"
+        run: pip install -e ".[dev,docs,mcp,redis,tui]"
 
       - name: Pytest
         run: pytest
@@ -75,7 +76,7 @@ jobs:
       - name: Install dependencies
         id: install
         continue-on-error: true
-        run: pip install -e ".[dev,docs,mcp]"
+        run: pip install -e ".[dev,docs,mcp,redis,tui]"
 
       - name: Pytest
         if: steps.install.outcome == 'success'

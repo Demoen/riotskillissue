@@ -42,7 +42,7 @@ class {{ model.name }}(BaseModel):
     pass
 {% endif %}
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True{% if model.preserve_unknown_fields %}, extra="allow"{% endif %})
 {% endif %}
 
 {% endfor %}

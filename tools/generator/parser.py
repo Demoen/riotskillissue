@@ -158,6 +158,7 @@ class Model:
     description: Optional[str] = None
     enum_values: Optional[list[Any]] = None
     referenced_models: set[str] = field(default_factory=set)
+    preserve_unknown_fields: bool = False
 
     @property
     def import_path(self) -> str:
@@ -488,6 +489,12 @@ class OpenApiParser:
                 properties=properties,
                 description=schema.get("description"),
                 referenced_models=referenced_models,
+                preserve_unknown_fields=(
+                    schema.get("type") == "object"
+                    and not raw_properties
+                    and schema.get("additionalProperties", True) is True
+                    and not any(key in schema for key in ("allOf", "anyOf", "oneOf"))
+                ),
             )
 
     @staticmethod

@@ -33,7 +33,13 @@ If the player isn't currently in a match, the TUI shows a waiting screen and kee
 - **Win rate highlighting** — green for >55%, red for <45%
 - **Ban display** — all banned champions listed
 - **Waiting mode** — if the player isn't in a game, the TUI waits and checks periodically
+- **Resilient refreshes** — keep the previous dashboard visible when a refresh fails, with a visible stale-data notice
+- **Partial-data diagnostics** — retain players when champion or ranked lookups fail and show which enrichment is unavailable
 - **Keyboard controls** — refresh manually or quit with a single keypress
+
+The status bar counts down to the next refresh. Refreshes run in the background, so quitting remains responsive during slow requests. Repeated refresh keypresses share the active fetch; the next interval starts after it finishes.
+
+The dashboard keeps one Riot client open for its lifetime, preserving learned rate limits, pooled connections, and cached Data Dragon content between refreshes. Quitting cancels the current fetch before closing that client.
 
 ## Installation
 
@@ -69,7 +75,7 @@ riotskillissue-cli live "Faker#KR1" --route kr --refresh 15
 | `name` | *(required)* | Riot ID in `GameName#TagLine` format |
 | `--route` | `euw1` | LoL platform route (`euw1`, `na1`, `kr`, `eun1`, etc.) |
 | `--api-key` | `$RIOT_API_KEY` | Riot API key |
-| `--refresh` | `30` | Auto-refresh interval in seconds |
+| `--refresh` | `30` | Seconds between completed fetch and the next refresh (minimum 5) |
 
 ### Regions
 
@@ -150,6 +156,8 @@ app = LiveGameApp(
 app.run()
 ```
 
+`fetch_live_game_data` also accepts an optional `client=` argument for repeated programmatic fetches. That caller owns the supplied client's credentials and lifecycle; `region` still selects the lookup route. Without `client=`, each call creates and closes its own client.
+
 ## API Key
 
 The TUI requires a valid Riot API key. You can get one from the [Riot Developer Portal](https://developer.riotgames.com/).
@@ -191,8 +199,14 @@ Champion select does not count — the Spectator API only reports data once the 
 - Make sure you're using the correct `--route` for the player's server
 - Verify your API key is valid and not expired
 
+A missing Riot account produces an error. Only a missing active spectator game enters the waiting screen.
+
+### Partial or previous data
+
+Champion metadata outages leave champion IDs visible and preserve each player's team. Failed ranked lookups display **Unavailable**; a successful lookup with no ranked entries displays **Unranked**. Anonymous players and bots do not trigger ranked requests.
+
+If a refresh fails after a successful fetch, the dashboard retains that snapshot and the status bar displays **Showing previous data** until a refresh succeeds. The displayed game duration then belongs to the retained snapshot.
+
 ### Rate Limiting
 
-The TUI makes multiple API calls per refresh (spectator + ranks for all 10 players). 
-With a development key (20 requests/second, 100 requests/2 minutes), the default 
-30-second refresh interval stays well within limits. Lower the interval with caution.
+The TUI makes multiple API calls per refresh, including account resolution, spectator data, and ranks for eligible players. Request usage also depends on retries and other applications sharing your key. The default refresh interval is 30 seconds; longer intervals reduce API usage.

@@ -7,7 +7,7 @@ import time
 import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Protocol, Tuple, Union, cast
 
 try:
     import redis.asyncio as redis
@@ -71,6 +71,9 @@ class AbstractRateLimiter(ABC):
         self, key: str, counts: str, limits: Optional[str] = None
     ) -> None:
         raise NotImplementedError
+
+    async def close(self) -> None:
+        return None
 
 
 class MemoryRateLimiter(AbstractRateLimiter):
@@ -139,6 +142,10 @@ class MemoryRateLimiter(AbstractRateLimiter):
                     requests.extend([now] * (count - len(requests)))
 
 
+class _AsyncClosable(Protocol):
+    async def aclose(self) -> None: ...
+
+
 class RedisRateLimiter(AbstractRateLimiter):
     def __init__(self, redis_url: str) -> None:
         if redis is None:
@@ -177,6 +184,9 @@ class RedisRateLimiter(AbstractRateLimiter):
             return "0"
             """
         )
+
+    async def close(self) -> None:
+        await cast(_AsyncClosable, self._redis).aclose()
 
     async def acquire(self, key: str, limits: List[RateLimitBucket]) -> None:
         if not limits:

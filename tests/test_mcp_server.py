@@ -23,6 +23,7 @@ if _MCP_MAJOR < 2:
 from mcp import Client, ClientSession, StdioServerParameters, stdio_client
 from mcp_types import ElicitResult
 
+from riotskillissue import __version__
 from riotskillissue.mcp.errors import InvalidArgumentsError
 from riotskillissue.mcp.models import (
     LolContentRequest,
@@ -384,7 +385,8 @@ async def test_stdio_subprocess_has_clean_protocol_output() -> None:
             stdio_client(parameters, errlog=stderr) as streams,
             ClientSession(*streams) as session,
         ):
-            await session.initialize()
+            initialization = await session.initialize()
+            assert initialization.server_info.version == __version__
             tools = await session.list_tools()
         stderr.seek(0)
         diagnostics = stderr.read()
