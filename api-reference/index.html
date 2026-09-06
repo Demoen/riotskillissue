@@ -1,0 +1,3242 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed Python clients and a local MCP server for Riot Games APIs">
+      
+      
+        <meta name="author" content="Demoen">
+      
+      
+        <link rel="canonical" href="https://demoen.github.io/riotskillissue/api-reference/">
+      
+      
+        <link rel="prev" href="../examples/valorant/">
+      
+      
+        <link rel="next" href="../cli/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.59">
+    
+    
+      
+        <title>API Reference - RiotSkillIssue</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/classic/main.38807bfb.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/classic/palette.c7ab7c71.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="RiotSkillIssue" class="md-header__button md-logo" aria-label="RiotSkillIssue" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RiotSkillIssue
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/Demoen/riotskillissue" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Demoen/riotskillissue
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
+        
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../configuration/" class="md-tabs__link">
+        
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../routing/" class="md-tabs__link">
+        
+  
+  Routing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../rso/" class="md-tabs__link">
+        
+  
+  Riot Sign On
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../mcp/" class="md-tabs__link">
+        
+  
+  MCP Server
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../migration/" class="md-tabs__link">
+        
+  
+  0.3 to 1.0 Migration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../examples/" class="md-tabs__link">
+          
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="././" class="md-tabs__link">
+        
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cli/" class="md-tabs__link">
+        
+  
+  CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../live-game-tui/" class="md-tabs__link">
+        
+  
+  Live Game TUI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="RiotSkillIssue" class="md-nav__button md-logo" aria-label="RiotSkillIssue" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RiotSkillIssue
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Demoen/riotskillissue" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Demoen/riotskillissue
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Getting Started
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Configuration
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Routing
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rso/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Riot Sign On
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  MCP Server
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  0.3 to 1.0 Migration
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Examples
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Examples
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/league-of-legends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  League of Legends
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/teamfight-tactics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Teamfight Tactics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/valorant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  VALORANT
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+        <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Reference
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Reference
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generated-raw-operation-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Generated raw operation inventory
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated raw operation inventory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Common
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#account" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        account
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#league-of-legends" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        League of Legends
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="League of Legends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        challenges
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#champion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        champion
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#champion_mastery" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        champion_mastery
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        clash
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#league" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        league
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#league_exp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        league_exp
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rso_match" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        rso_match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spectator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        spectator
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summoner" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        summoner
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tournament" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        tournament
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tournament_stub" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        tournament_stub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teamfight-tactics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Teamfight Tactics
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teamfight Tactics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#league_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        league
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spectator_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        spectator
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summoner_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        summoner
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valorant" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        VALORANT
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VALORANT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#console_match" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        console_match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#console_ranked" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        console_ranked
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        content
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ranked" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ranked
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legends-of-runeterra" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Legends of Runeterra
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Legends of Runeterra">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deck" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        deck
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        inventory
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ranked_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ranked
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riftbound" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Riftbound
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Riftbound">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        content
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-dragon" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Data Dragon
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  CLI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-game-tui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Live Game TUI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Contributing
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generated-raw-operation-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Generated raw operation inventory
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generated raw operation inventory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Common
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#account" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        account
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#league-of-legends" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        League of Legends
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="League of Legends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        challenges
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#champion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        champion
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#champion_mastery" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        champion_mastery
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        clash
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#league" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        league
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#league_exp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        league_exp
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rso_match" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        rso_match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spectator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        spectator
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summoner" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        summoner
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tournament" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        tournament
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tournament_stub" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        tournament_stub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#teamfight-tactics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Teamfight Tactics
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Teamfight Tactics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#league_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        league
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spectator_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        spectator
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summoner_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        summoner
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valorant" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        VALORANT
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VALORANT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#console_match" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        console_match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#console_ranked" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        console_ranked
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        content
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ranked" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ranked
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legends-of-runeterra" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Legends of Runeterra
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Legends of Runeterra">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deck" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        deck
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        inventory
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        match
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ranked_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ranked
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        status
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riftbound" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Riftbound
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Riftbound">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        content
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-dragon" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Data Dragon
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<p>The committed <code>OperationRegistry</code> is the inventory for generated raw clients,
+documentation, validation, and MCP discovery. Each entry records:</p>
+<ul>
+<li>Stable operation ID and Python accessor path</li>
+<li>Game and Riot service</li>
+<li>HTTP method and read/write classification</li>
+<li>Route family and allowed routes</li>
+<li>Authentication mode and scopes</li>
+<li>Keyword-only input schema</li>
+<li>Response adapter, including no-content responses</li>
+</ul>
+<p>Use discovery in Python:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">riotskillissue.api.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">OPERATION_REGISTRY</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">operation</span> <span class="o">=</span> <span class="n">OPERATION_REGISTRY</span><span class="p">[</span><span class="s2">"match-v5.getMatch"</span><span class="p">]</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">accessor_path</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">input_schema</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Or call a known operation through the typed raw hierarchy:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">match</span> <span class="o">=</span> <span class="k">await</span> <span class="n">riot</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">lol</span><span class="o">.</span><span class="n">match</span><span class="o">.</span><span class="n">get_match</span><span class="p">(</span><span class="n">match_id</span><span class="o">=</span><span class="s2">"EUW1_..."</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The raw hierarchy is grouped under:</p>
+<ul>
+<li><code>riot.raw.common</code></li>
+<li><code>riot.raw.lol</code></li>
+<li><code>riot.raw.tft</code></li>
+<li><code>riot.raw.valorant</code></li>
+<li><code>riot.raw.lor</code></li>
+<li><code>riot.raw.riftbound</code></li>
+</ul>
+<p>All endpoint parameters are keyword-only snake_case. A <code>route=</code> override is
+optional when the configured default route can be mapped unambiguously.</p>
+<h2 id="generated-raw-operation-inventory">Generated raw operation inventory<a class="headerlink" href="#generated-raw-operation-inventory" title="Permanent link">&para;</a></h2>
+<p>This inventory is generated from the same community-maintained OpenAPI contract
+as the raw clients and registry.</p>
+<h3 id="common">Common<a class="headerlink" href="#common" title="Permanent link">&para;</a></h3>
+<h4 id="account">account<a class="headerlink" href="#account" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account-v1.getByPuuid</code></td>
+<td><code>riot.raw.common.account.get_by_puuid</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Account</code></td>
+</tr>
+<tr>
+<td><code>account-v1.getByRiotId</code></td>
+<td><code>riot.raw.common.account.get_by_riot_id</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Account</code></td>
+</tr>
+<tr>
+<td><code>account-v1.getByAccessToken</code></td>
+<td><code>riot.raw.common.account.get_by_access_token</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>Account</code></td>
+</tr>
+<tr>
+<td><code>account-v1.getActiveShard</code></td>
+<td><code>riot.raw.common.account.get_active_shard</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>ActiveShard</code></td>
+</tr>
+<tr>
+<td><code>account-v1.getActiveRegion</code></td>
+<td><code>riot.raw.common.account.get_active_region</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>AccountRegion</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="league-of-legends">League of Legends<a class="headerlink" href="#league-of-legends" title="Permanent link">&para;</a></h3>
+<h4 id="challenges">challenges<a class="headerlink" href="#challenges" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lol-challenges-v1.getAllChallengeConfigs</code></td>
+<td><code>riot.raw.lol.challenges.get_all_challenge_configs</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[ChallengeConfigInfo]</code></td>
+</tr>
+<tr>
+<td><code>lol-challenges-v1.getAllChallengePercentiles</code></td>
+<td><code>riot.raw.lol.challenges.get_all_challenge_percentiles</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Dict[str, Dict[str, float]]</code></td>
+</tr>
+<tr>
+<td><code>lol-challenges-v1.getChallengeConfigs</code></td>
+<td><code>riot.raw.lol.challenges.get_challenge_configs</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>ChallengeConfigInfo</code></td>
+</tr>
+<tr>
+<td><code>lol-challenges-v1.getChallengeLeaderboards</code></td>
+<td><code>riot.raw.lol.challenges.get_challenge_leaderboards</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[ApexPlayerInfo]</code></td>
+</tr>
+<tr>
+<td><code>lol-challenges-v1.getChallengePercentiles</code></td>
+<td><code>riot.raw.lol.challenges.get_challenge_percentiles</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Dict[str, float]</code></td>
+</tr>
+<tr>
+<td><code>lol-challenges-v1.getPlayerData</code></td>
+<td><code>riot.raw.lol.challenges.get_player_data</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>PlayerInfo</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="champion">champion<a class="headerlink" href="#champion" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>champion-v3.getChampionInfo</code></td>
+<td><code>riot.raw.lol.champion.get_champion_info</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>ChampionInfo</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="champion_mastery">champion_mastery<a class="headerlink" href="#champion_mastery" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>champion-mastery-v4.getAllChampionMasteriesByPUUID</code></td>
+<td><code>riot.raw.lol.champion_mastery.get_all_champion_masteries_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[ChampionMastery]</code></td>
+</tr>
+<tr>
+<td><code>champion-mastery-v4.getChampionMasteryByPUUID</code></td>
+<td><code>riot.raw.lol.champion_mastery.get_champion_mastery_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>ChampionMastery</code></td>
+</tr>
+<tr>
+<td><code>champion-mastery-v4.getTopChampionMasteriesByPUUID</code></td>
+<td><code>riot.raw.lol.champion_mastery.get_top_champion_masteries_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[ChampionMastery]</code></td>
+</tr>
+<tr>
+<td><code>champion-mastery-v4.getChampionMasteryScoreByPUUID</code></td>
+<td><code>riot.raw.lol.champion_mastery.get_champion_mastery_score_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>int</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="clash">clash<a class="headerlink" href="#clash" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clash-v1.getPlayersByPUUID</code></td>
+<td><code>riot.raw.lol.clash.get_players_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[Player]</code></td>
+</tr>
+<tr>
+<td><code>clash-v1.getTeamById</code></td>
+<td><code>riot.raw.lol.clash.get_team_by_id</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Team</code></td>
+</tr>
+<tr>
+<td><code>clash-v1.getTournaments</code></td>
+<td><code>riot.raw.lol.clash.get_tournaments</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[Tournament]</code></td>
+</tr>
+<tr>
+<td><code>clash-v1.getTournamentByTeam</code></td>
+<td><code>riot.raw.lol.clash.get_tournament_by_team</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Tournament</code></td>
+</tr>
+<tr>
+<td><code>clash-v1.getTournamentById</code></td>
+<td><code>riot.raw.lol.clash.get_tournament_by_id</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Tournament</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="league">league<a class="headerlink" href="#league" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>league-v4.getChallengerLeague</code></td>
+<td><code>riot.raw.lol.league.get_challenger_league</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>LeagueList</code></td>
+</tr>
+<tr>
+<td><code>league-v4.getLeagueEntriesByPUUID</code></td>
+<td><code>riot.raw.lol.league.get_league_entries_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[LeagueEntry]</code></td>
+</tr>
+<tr>
+<td><code>league-v4.getLeagueEntries</code></td>
+<td><code>riot.raw.lol.league.get_league_entries</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[LeagueEntry]</code></td>
+</tr>
+<tr>
+<td><code>league-v4.getGrandmasterLeague</code></td>
+<td><code>riot.raw.lol.league.get_grandmaster_league</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>LeagueList</code></td>
+</tr>
+<tr>
+<td><code>league-v4.getMasterLeague</code></td>
+<td><code>riot.raw.lol.league.get_master_league</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>LeagueList</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="league_exp">league_exp<a class="headerlink" href="#league_exp" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>league-exp-v4.getLeagueEntries</code></td>
+<td><code>riot.raw.lol.league_exp.get_league_entries</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[LeagueEntry]</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="match">match<a class="headerlink" href="#match" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>match-v5.getMatchIdsByPUUID</code></td>
+<td><code>riot.raw.lol.match.get_match_ids_by_puuid</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>List[str]</code></td>
+</tr>
+<tr>
+<td><code>match-v5.getReplay</code></td>
+<td><code>riot.raw.lol.match.get_replay</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Replay</code></td>
+</tr>
+<tr>
+<td><code>match-v5.getMatch</code></td>
+<td><code>riot.raw.lol.match.get_match</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Match</code></td>
+</tr>
+<tr>
+<td><code>match-v5.getTimeline</code></td>
+<td><code>riot.raw.lol.match.get_timeline</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Timeline</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="rso_match">rso_match<a class="headerlink" href="#rso_match" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lol-rso-match-v1.getMatchIds</code></td>
+<td><code>riot.raw.lol.rso_match.get_match_ids</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>List[str]</code></td>
+</tr>
+<tr>
+<td><code>lol-rso-match-v1.getMatch</code></td>
+<td><code>riot.raw.lol.rso_match.get_match</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>Match</code></td>
+</tr>
+<tr>
+<td><code>lol-rso-match-v1.getTimeline</code></td>
+<td><code>riot.raw.lol.rso_match.get_timeline</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>Timeline</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="spectator">spectator<a class="headerlink" href="#spectator" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spectator-v5.getCurrentGameInfoByPuuid</code></td>
+<td><code>riot.raw.lol.spectator.get_current_game_info_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>CurrentGameInfo</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="status">status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lol-status-v4.getPlatformData</code></td>
+<td><code>riot.raw.lol.status.get_platform_data</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>PlatformData</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="summoner">summoner<a class="headerlink" href="#summoner" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>summoner-v4.getByPUUID</code></td>
+<td><code>riot.raw.lol.summoner.get_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Summoner</code></td>
+</tr>
+<tr>
+<td><code>summoner-v4.getByAccessToken</code></td>
+<td><code>riot.raw.lol.summoner.get_by_access_token</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>rso</td>
+<td><code>Summoner</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="tournament">tournament<a class="headerlink" href="#tournament" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tournament-v5.createTournamentCode</code></td>
+<td><code>riot.raw.lol.tournament.create_tournament_code</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>List[str]</code></td>
+</tr>
+<tr>
+<td><code>tournament-v5.getTournamentCode</code></td>
+<td><code>riot.raw.lol.tournament.get_tournament_code</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>TournamentCodeV5</code></td>
+</tr>
+<tr>
+<td><code>tournament-v5.updateCode</code></td>
+<td><code>riot.raw.lol.tournament.update_code</code></td>
+<td>PUT (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>tournament-v5.getGames</code></td>
+<td><code>riot.raw.lol.tournament.get_games</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>List[TournamentGamesV5]</code></td>
+</tr>
+<tr>
+<td><code>tournament-v5.getLobbyEventsByCode</code></td>
+<td><code>riot.raw.lol.tournament.get_lobby_events_by_code</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>LobbyEventV5Wrapper</code></td>
+</tr>
+<tr>
+<td><code>tournament-v5.registerProviderData</code></td>
+<td><code>riot.raw.lol.tournament.register_provider_data</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>int</code></td>
+</tr>
+<tr>
+<td><code>tournament-v5.registerTournament</code></td>
+<td><code>riot.raw.lol.tournament.register_tournament</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>int</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="tournament_stub">tournament_stub<a class="headerlink" href="#tournament_stub" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tournament-stub-v5.createTournamentCode</code></td>
+<td><code>riot.raw.lol.tournament_stub.create_tournament_code</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>List[str]</code></td>
+</tr>
+<tr>
+<td><code>tournament-stub-v5.getTournamentCode</code></td>
+<td><code>riot.raw.lol.tournament_stub.get_tournament_code</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>TournamentCodeV5</code></td>
+</tr>
+<tr>
+<td><code>tournament-stub-v5.getLobbyEventsByCode</code></td>
+<td><code>riot.raw.lol.tournament_stub.get_lobby_events_by_code</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>LobbyEventV5Wrapper</code></td>
+</tr>
+<tr>
+<td><code>tournament-stub-v5.registerProviderData</code></td>
+<td><code>riot.raw.lol.tournament_stub.register_provider_data</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>int</code></td>
+</tr>
+<tr>
+<td><code>tournament-stub-v5.registerTournament</code></td>
+<td><code>riot.raw.lol.tournament_stub.register_tournament</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>int</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="teamfight-tactics">Teamfight Tactics<a class="headerlink" href="#teamfight-tactics" title="Permanent link">&para;</a></h3>
+<h4 id="league_1">league<a class="headerlink" href="#league_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tft-league-v1.getLeagueEntriesByPUUID</code></td>
+<td><code>riot.raw.tft.league.get_league_entries_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[LeagueEntry]</code></td>
+</tr>
+<tr>
+<td><code>tft-league-v1.getChallengerLeague</code></td>
+<td><code>riot.raw.tft.league.get_challenger_league</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>LeagueList</code></td>
+</tr>
+<tr>
+<td><code>tft-league-v1.getLeagueEntries</code></td>
+<td><code>riot.raw.tft.league.get_league_entries</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[LeagueEntry]</code></td>
+</tr>
+<tr>
+<td><code>tft-league-v1.getGrandmasterLeague</code></td>
+<td><code>riot.raw.tft.league.get_grandmaster_league</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>LeagueList</code></td>
+</tr>
+<tr>
+<td><code>tft-league-v1.getMasterLeague</code></td>
+<td><code>riot.raw.tft.league.get_master_league</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>LeagueList</code></td>
+</tr>
+<tr>
+<td><code>tft-league-v1.getTopRatedLadder</code></td>
+<td><code>riot.raw.tft.league.get_top_rated_ladder</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>List[TopRatedLadderEntry]</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="match_1">match<a class="headerlink" href="#match_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tft-match-v1.getMatchIdsByPUUID</code></td>
+<td><code>riot.raw.tft.match.get_match_ids_by_puuid</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>List[str]</code></td>
+</tr>
+<tr>
+<td><code>tft-match-v1.getMatch</code></td>
+<td><code>riot.raw.tft.match.get_match</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Match</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="spectator_1">spectator<a class="headerlink" href="#spectator_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spectator-tft-v5.getCurrentGameInfoByPuuid</code></td>
+<td><code>riot.raw.tft.spectator.get_current_game_info_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>CurrentGameInfo</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="status_1">status<a class="headerlink" href="#status_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tft-status-v1.getPlatformData</code></td>
+<td><code>riot.raw.tft.status.get_platform_data</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>PlatformData</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="summoner_1">summoner<a class="headerlink" href="#summoner_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tft-summoner-v1.getByPUUID</code></td>
+<td><code>riot.raw.tft.summoner.get_by_puuid</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>api_key</td>
+<td><code>Summoner</code></td>
+</tr>
+<tr>
+<td><code>tft-summoner-v1.getByAccessToken</code></td>
+<td><code>riot.raw.tft.summoner.get_by_access_token</code></td>
+<td>GET</td>
+<td>platform</td>
+<td>rso</td>
+<td><code>Summoner</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="valorant">VALORANT<a class="headerlink" href="#valorant" title="Permanent link">&para;</a></h3>
+<h4 id="console_match">console_match<a class="headerlink" href="#console_match" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>val-console-match-v1.getMatch</code></td>
+<td><code>riot.raw.valorant.console_match.get_match</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Match</code></td>
+</tr>
+<tr>
+<td><code>val-console-match-v1.getMatchlist</code></td>
+<td><code>riot.raw.valorant.console_match.get_matchlist</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Matchlist</code></td>
+</tr>
+<tr>
+<td><code>val-console-match-v1.getRecent</code></td>
+<td><code>riot.raw.valorant.console_match.get_recent</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>RecentMatches</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="console_ranked">console_ranked<a class="headerlink" href="#console_ranked" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>val-console-ranked-v1.getLeaderboard</code></td>
+<td><code>riot.raw.valorant.console_ranked.get_leaderboard</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Leaderboard</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="content">content<a class="headerlink" href="#content" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>val-content-v1.getContent</code></td>
+<td><code>riot.raw.valorant.content.get_content</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Content</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="match_2">match<a class="headerlink" href="#match_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>val-match-v1.getMatch</code></td>
+<td><code>riot.raw.valorant.match.get_match</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Match</code></td>
+</tr>
+<tr>
+<td><code>val-match-v1.getMatchlist</code></td>
+<td><code>riot.raw.valorant.match.get_matchlist</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Matchlist</code></td>
+</tr>
+<tr>
+<td><code>val-match-v1.getRecent</code></td>
+<td><code>riot.raw.valorant.match.get_recent</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>RecentMatches</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="ranked">ranked<a class="headerlink" href="#ranked" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>val-ranked-v1.getLeaderboard</code></td>
+<td><code>riot.raw.valorant.ranked.get_leaderboard</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>Leaderboard</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="status_2">status<a class="headerlink" href="#status_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>val-status-v1.getPlatformData</code></td>
+<td><code>riot.raw.valorant.status.get_platform_data</code></td>
+<td>GET</td>
+<td>val-platform</td>
+<td>api_key</td>
+<td><code>PlatformData</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="legends-of-runeterra">Legends of Runeterra<a class="headerlink" href="#legends-of-runeterra" title="Permanent link">&para;</a></h3>
+<h4 id="deck">deck<a class="headerlink" href="#deck" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lor-deck-v1.getDecks</code></td>
+<td><code>riot.raw.lor.deck.get_decks</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>List[Deck]</code></td>
+</tr>
+<tr>
+<td><code>lor-deck-v1.createDeck</code></td>
+<td><code>riot.raw.lor.deck.create_deck</code></td>
+<td>POST (write)</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>str</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="inventory">inventory<a class="headerlink" href="#inventory" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lor-inventory-v1.getCards</code></td>
+<td><code>riot.raw.lor.inventory.get_cards</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>rso</td>
+<td><code>List[Card]</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="match_3">match<a class="headerlink" href="#match_3" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lor-match-v1.getMatchIdsByPUUID</code></td>
+<td><code>riot.raw.lor.match.get_match_ids_by_puuid</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>List[str]</code></td>
+</tr>
+<tr>
+<td><code>lor-match-v1.getMatch</code></td>
+<td><code>riot.raw.lor.match.get_match</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Match</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="ranked_1">ranked<a class="headerlink" href="#ranked_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lor-ranked-v1.getLeaderboards</code></td>
+<td><code>riot.raw.lor.ranked.get_leaderboards</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>Leaderboard</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="status_3">status<a class="headerlink" href="#status_3" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lor-status-v1.getPlatformData</code></td>
+<td><code>riot.raw.lor.status.get_platform_data</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>PlatformData</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="riftbound">Riftbound<a class="headerlink" href="#riftbound" title="Permanent link">&para;</a></h3>
+<h4 id="content_1">content<a class="headerlink" href="#content_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Method</th>
+<th>Route</th>
+<th>Auth</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>riftbound-content-v1.getContent</code></td>
+<td><code>riot.raw.riftbound.content.get_content</code></td>
+<td>GET</td>
+<td>regional</td>
+<td>api_key</td>
+<td><code>RiftboundContent</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-dragon">Data Dragon<a class="headerlink" href="#data-dragon" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Operation ID</th>
+<th>Python accessor</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>static.get_latest_version</code></td>
+<td><code>riot.static.get_latest_version</code></td>
+<td><code>str</code></td>
+</tr>
+<tr>
+<td><code>static.get_champion</code></td>
+<td><code>riot.static.get_champion</code></td>
+<td><code>Optional[Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_all_champions</code></td>
+<td><code>riot.static.get_all_champions</code></td>
+<td><code>Dict[int, Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_item</code></td>
+<td><code>riot.static.get_item</code></td>
+<td><code>Optional[Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_all_items</code></td>
+<td><code>riot.static.get_all_items</code></td>
+<td><code>Dict[int, Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_summoner_spells</code></td>
+<td><code>riot.static.get_summoner_spells</code></td>
+<td><code>Dict[int, Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_summoner_spell</code></td>
+<td><code>riot.static.get_summoner_spell</code></td>
+<td><code>Optional[Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_runes</code></td>
+<td><code>riot.static.get_runes</code></td>
+<td><code>List[Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_queues</code></td>
+<td><code>riot.static.get_queues</code></td>
+<td><code>List[Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_maps</code></td>
+<td><code>riot.static.get_maps</code></td>
+<td><code>List[Dict[str, Any]]</code></td>
+</tr>
+<tr>
+<td><code>static.get_game_modes</code></td>
+<td><code>riot.static.get_game_modes</code></td>
+<td><code>List[Dict[str, Any]]</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Demoen/riotskillissue" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/riotskillissue/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.instant","navigation.tracking","navigation.tabs","navigation.sections","navigation.expand","navigation.top","content.code.copy","content.code.annotate"],"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6970bfe9.min.js"></script>
+      
+    
+  </body>
+</html>
