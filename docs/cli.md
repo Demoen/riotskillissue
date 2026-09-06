@@ -1,163 +1,120 @@
 # Command Line Interface
 
-RiotSkillIssue includes a CLI tool for quick lookups and debugging.
+Look up a League player, inspect a match, or open the live-game dashboard from your terminal. The CLI prints a focused summary; use the [Python client](getting-started.md) or [MCP server](mcp.md) for richer results.
 
 ## Installation
 
-The CLI is included with the package:
+=== "CLI"
 
-```bash
-pip install riotskillissue
-```
+    ```bash
+    pip install riotskillissue
+    ```
 
-For the live game TUI, install the optional `tui` extra:
+=== "CLI with live dashboard"
 
-```bash
-pip install "riotskillissue[tui]"
-```
+    ```bash
+    pip install "riotskillissue[tui]"
+    ```
+
+See [getting started](getting-started.md) for supported Python versions.
 
 ## Configuration
 
-Set your API key via environment variable:
+Set `RIOT_API_KEY` in the terminal where you will run the command:
 
-=== "Linux / macOS"
+=== "macOS / Linux"
 
     ```bash
     export RIOT_API_KEY="RGAPI-your-key-here"
     ```
 
-=== "Windows (PowerShell)"
+=== "Windows PowerShell"
 
     ```powershell
     $env:RIOT_API_KEY = "RGAPI-your-key-here"
     ```
 
-=== "Windows (CMD)"
+=== "Windows CMD"
 
     ```cmd
     set RIOT_API_KEY=RGAPI-your-key-here
     ```
 
-Or pass it directly with `--api-key`:
+Every command also accepts `--api-key`. The environment variable keeps the key out of the command itself.
 
-```bash
-riotskillissue-cli summoner "Player#EUW" --api-key "RGAPI-..."
-```
+!!! tip "Choose the right route"
+    `summoner` and `live` use a **platform route**, such as `euw1`. `match` uses a **regional route**, such as `europe`. See [routing](routing.md) for how the families relate.
 
 ## Commands
 
+| Command | Result | Default route |
+| --- | --- | --- |
+| [`summoner`](#summoner) | Player level and PUUID | `euw1` |
+| [`match`](#match) | Game mode and duration | `europe` |
+| [`live`](#live) | Interactive live-game dashboard | `euw1` |
+
+Run `riotskillissue-cli --help` to list commands, or append `--help` to a command to inspect its options.
+
 ### summoner
 
-Look up a summoner by Riot ID.
+Look up a League player by their full Riot ID:
 
 ```bash
 riotskillissue-cli summoner "GameName#TagLine" --route euw1
 ```
 
-**Arguments:**
+The result is a table containing the player's summoner level and PUUID.
 
-| Argument | Description |
-|----------|-------------|
-| `name` | Riot ID in format `GameName#TagLine` |
-| `--route` | LoL platform route (default: `euw1`) |
-| `--api-key` | API key (or use `RIOT_API_KEY` env var) |
-
-**Example:**
-
-```bash
-$ riotskillissue-cli summoner "Agurin#EUW" --route euw1
-
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃     Summoner: Agurin#EUW         ┃
-┣━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Level     │ PUUID                 ┃
-┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
-│ 523       │ abc123...             │
-└───────────┴───────────────────────┘
-```
+| Argument or option | Default | Meaning |
+| --- | --- | --- |
+| `riot_id` | Required | Exact `GameName#TagLine` Riot ID |
+| `--route` | `euw1` | LoL platform route |
+| `--api-key` | `RIOT_API_KEY` | Riot API key |
 
 ### match
 
-Get match details by match ID.
+Load a completed match by its match ID:
 
 ```bash
 riotskillissue-cli match "EUW1_7654321098" --route europe
 ```
 
-**Arguments:**
+The command prints the match ID, game mode, and duration in seconds. Supply the regional cluster that holds the match; the CLI does not infer it from the ID.
 
-| Argument | Description |
-|----------|-------------|
-| `match_id` | Match ID (e.g., `EUW1_7654321098`) |
-| `--route` | Regional route (default: `europe`) |
-| `--api-key` | API key (or use `RIOT_API_KEY` env var) |
-
-**Example:**
-
-```bash
-$ riotskillissue-cli match "EUW1_7654321098" --route europe
-
-Match EUW1_7654321098 loaded!
-Game Mode: CLASSIC
-Duration: 1847s
-```
+| Argument or option | Default | Meaning |
+| --- | --- | --- |
+| `match_id` | Required | Match ID, such as `EUW1_7654321098` |
+| `--route` | `europe` | Regional route |
+| `--api-key` | `RIOT_API_KEY` | Riot API key |
 
 ### live
 
-🎮 Launch an interactive Live Game TUI (Terminal User Interface) that shows real-time information about an ongoing League of Legends match.
+Open the [Live Game TUI](live-game-tui.md) for a player:
 
 ```bash
-riotskillissue-cli live "GameName#TagLine" --route euw1
+riotskillissue-cli live "GameName#TagLine" --route euw1 --refresh 30
 ```
 
-This is the fastest way to spectate a match from your terminal — **one command, instant dashboard**.
+The dashboard shows teams, champions, summoner spells, ranked records, and bans. It waits and checks again when no active game is available.
 
-**Arguments:**
+| Argument or option | Default | Meaning |
+| --- | --- | --- |
+| `riot_id` | Required | Exact `GameName#TagLine` Riot ID |
+| `--route` | `euw1` | LoL platform route |
+| `--api-key` | `RIOT_API_KEY` | Riot API key |
+| `--refresh` | `30` | Seconds after a completed fetch before the next refresh; minimum `5` |
 
-| Argument | Description |
-|----------|-------------|
-| `name` | Riot ID in format `GameName#TagLine` |
-| `--route` | LoL platform route (default: `euw1`) |
-| `--api-key` | API key (or use `RIOT_API_KEY` env var) |
-| `--refresh` | Auto-refresh interval in seconds (default: `30`) |
-
-**Example:**
-
-```bash
-$ riotskillissue-cli live "Agurin#EUW" --route euw1
-```
-
-This opens a full-screen terminal dashboard showing:
-
-- **Game info** — queue type, game duration, platform
-- **Blue Team** — champions, player names, ranks, win rates, summoner spells
-- **Red Team** — champions, player names, ranks, win rates, summoner spells  
-- **Bans** — all banned champions
-
-The TUI auto-refreshes every 30 seconds (configurable with `--refresh`). If the player isn't in a game yet, it will keep checking until one starts.
-
-**Keyboard shortcuts:**
-
-| Key | Action |
-|-----|--------|
-| `R` | Manual refresh |
-| `Q` / `Esc` | Quit |
-
-See the [Live Game TUI](live-game-tui.md) page for more details and screenshots.
+Press `r` to refresh, or `q` / `Esc` to quit. The [`tui` extra](#installation) is required. See the [TUI guide](live-game-tui.md) for previews, controls, and refresh behavior.
 
 ## Error Handling
 
-The CLI displays user-friendly error messages:
+| Symptom | What to check |
+| --- | --- |
+| Command not found | Install the package in the active Python environment, then use that environment's terminal. |
+| Invalid Riot ID | Include both parts and the separator: `"GameName#TagLine"`. |
+| Missing or rejected API key | Set `RIOT_API_KEY` in this terminal and verify the key in the [Riot Developer Portal](https://developer.riotgames.com/). |
+| Player or match not found | Check the identifier and the command's route family. |
+| Live command cannot import Textual | Install `"riotskillissue[tui]"` in the same environment as the CLI. |
+| Live dashboard shows previous or partial data | Read the status bar and the [TUI troubleshooting guide](live-game-tui.md#troubleshooting). |
 
-```bash
-$ riotskillissue-cli summoner "InvalidName"
-
-Error: Name must be format GameName#TagLine for Account V1 lookup
-```
-
-```bash
-$ riotskillissue-cli summoner "NonExistent#USER" --route euw1
-
-Error: 404 - Data not found
-```
-
+To process results in your own application, start with the [Python client](getting-started.md) and [game examples](examples/index.md).

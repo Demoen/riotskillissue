@@ -17,9 +17,11 @@
 ## Documentation
 
 The documentation is built with [Zensical](https://zensical.org/) using
-`mkdocs.yml`. The classic theme preserves the site's custom styling.
-`overrides/404.html` supplies the target for the theme's "Skip to content" link
-on missing pages.
+`mkdocs.yml`. The modern theme uses native section indexes, breadcrumbs, search,
+and linked content tabs, with site-specific styling in `docs/stylesheets/extra.css`.
+The templates in `overrides/` give the homepage its own layout, provide useful
+404 links, distinguish the breadcrumb landmark, and keep the decorative loading
+bar out of the accessibility tree. Review them when upgrading Zensical.
 
 Install the documentation dependencies and start a local preview:
 
@@ -35,6 +37,23 @@ zensical build --clean --strict
 ```
 
 The generated site is written to `site/`.
+
+### Authoring guides
+
+Place integration guides under **Python SDK**, terminal and MCP guides under
+**Tools**, and endpoint discovery under **API reference** in `mkdocs.yml`.
+Each section starts with an index page that helps readers choose their next step.
+Keep existing page paths and heading anchors stable so saved links keep working.
+
+Use Zensical's [cards](https://zensical.org/docs/authoring/grids/) for navigation,
+[content tabs](https://zensical.org/docs/authoring/content-tabs/) for alternatives,
+and collapsible details for optional setup or longer examples. Shell tabs use
+the exact labels `macOS / Linux` and `Windows PowerShell` so the selected platform
+follows the reader between pages. Keep prerequisites and limitations visible.
+
+Check changed pages in both color schemes and at a narrow mobile width. Code
+blocks should scroll within the page, and commands and links should remain
+usable with the keyboard.
 
 ## Code Generation
 

@@ -1,6 +1,8 @@
 # League-aware MCP server
 
-RiotSkillIssue exposes both compact League analysis tools and the complete eligible Riot API surface. An MCP host can answer a natural-language question by requesting one evidence bundle instead of discovering and joining Match V5, timeline, account, ranked, mastery, and Data Dragon calls itself.
+Connect an MCP host to Riot data with a local stdio server. League analysis tools combine match, timeline, account, ranked, mastery, and Data Dragon data into structured evidence; the operation gateway exposes the complete eligible Riot API surface.
+
+## Installation
 
 Install the optional dependency:
 
@@ -8,7 +10,9 @@ Install the optional dependency:
 pip install "riotskillissue[mcp]"
 ```
 
-Configure the MCP client to launch the local stdio server:
+## Connect your host
+
+Add the following server definition to your MCP host's configuration. The surrounding configuration format depends on the host; `command` and `env` describe the local process it needs to launch.
 
 ```json
 {
@@ -20,7 +24,19 @@ Configure the MCP client to launch the local stdio server:
 }
 ```
 
-Protocol messages are written to stdout and diagnostics to stderr. The API key stays in the server environment and is never accepted as a tool argument.
+The `riotskillissue-mcp` command must be available to the host. If you installed it in a virtual environment, use that environment's executable path as `command`.
+
+| Environment variable | Purpose |
+| --- | --- |
+| `RIOT_API_KEY` | Required Riot API key, supplied to the server process |
+| `RIOT_DEFAULT_ROUTE` | Default route; a platform such as `euw1` supports player lookups |
+| `RIOT_MCP_DEFAULT_ROUTE` | Optional MCP-specific default, taking precedence over `RIOT_DEFAULT_ROUTE` |
+| `RIOT_MCP_ALLOW_WRITES` | `false` by default; see [writes](#writes) before enabling |
+
+Protocol messages go to stdout and diagnostics to stderr. The API key stays in the server environment and is never accepted as a tool argument.
+
+!!! tip "First request"
+    Ask your host to analyze the most recent game for an exact Riot ID and platform, such as `GameName#TagLine` on `euw1`. The host can use `riot_lol_match_context` to resolve the player and load the evidence.
 
 ## League question tools
 
@@ -33,9 +49,14 @@ Use these tools first for League questions:
 | `riot_lol_knowledge` | Load patch-banded mechanics, economy, minions, XP, structures, wave management, or telemetry limits |
 | `riot_lol_item_economy` | Calculate patch-matched component-baseline raw-stat efficiency for an item |
 
-The tools return structured evidence. The MCP host remains responsible for explaining that evidence in the language and level of detail requested by the user.
+The tools return structured evidence. Your MCP host explains that evidence in the language and level of detail you request. The JSON examples below are tool arguments, not server configuration.
+
+!!! warning "Mechanics coverage is patch-bounded"
+    The bundled economy registry is verified for standard Summoner's Rift patches **26.1–26.15** (internal **16.1–16.15**). API schema updates do not extend that knowledge range. Responses outside the verified patch or mode scope do not return a numeric wave model.
 
 ### Analyze a known match
+
+Tool: `riot_lol_match_context`.
 
 ```json
 {
@@ -50,6 +71,8 @@ The tools return structured evidence. The MCP host remains responsible for expla
 The server infers the regional route from a standard match-ID prefix. An explicit regional route can be supplied when a match ID cannot be inferred.
 
 ### Resolve “this game” from a player
+
+Tool: `riot_lol_match_context`.
 
 ```json
 {
@@ -66,6 +89,8 @@ The server infers the regional route from a standard match-ID prefix. An explici
 
 ### Analyze a player
 
+Tool: `riot_lol_player_context`.
+
 ```json
 {
   "request": {
@@ -81,6 +106,8 @@ The result distinguishes requested, successfully loaded, and unavailable matches
 
 ### Ask about game mechanics
 
+Tool: `riot_lol_knowledge`.
+
 ```json
 {
   "request": {
@@ -91,11 +118,13 @@ The result distinguishes requested, successfully loaded, and unavailable matches
 }
 ```
 
-Mechanics output includes its applicable patch band and source URLs. Champion abilities, items, runes, and summoner spells are available through `riot_game_content`; `champion_detail` returns the full passive and ability payload for a numeric champion key. Supply `patch` and, optionally, `locale` to load a strict historical Data Dragon release. Queue, map, and game-mode metadata are unversioned and reject those selectors.
+Mechanics output includes its applicable patch band and source URLs. Mechanics lookup accepts public seasonal patch labels such as `26.15` and Match/Data Dragon versions such as `16.15`.
 
-Mechanics lookup accepts both public seasonal patch labels such as `26.15` and Match/Data Dragon versions such as `16.15`.
+For champion abilities, items, runes, or summoner spells, use `riot_game_content`. Its `champion_detail` kind returns the full passive and ability payload for a numeric champion key. Supply `patch` and, optionally, `locale` to load a strict historical Data Dragon release. Queue, map, and game-mode metadata are unversioned and reject those selectors.
 
 ### Load strategic economy fundamentals
+
+Tool: `riot_lol_knowledge`. Supported economy topics are `economy`, `minions`, `experience`, `structures`, `item_efficiency`, and `wave_management`.
 
 ```json
 {
@@ -107,37 +136,55 @@ Mechanics lookup accepts both public seasonal patch labels such as `26.15` and M
 }
 ```
 
-The bundled standard Summoner's Rift economy registry covers public patches 26.1 through 26.15 (internal 16.1 through 16.15). It includes:
+Every quantitative response labels its patch and mode scope, separates sourced rules from derived arithmetic, and includes source URLs. Wave values describe theoretical collection opportunities for standard Map 11 CLASSIC; they do not establish what a player earned. Swiftplay, ARAM, Arena, unknown modes, and patches outside the verified range return no numeric wave model.
 
-- melee, caster, siege, and super-minion gold and XP;
-- wave spawn intervals, cannon cadence, composition changes, and super-minion additions;
-- per-recipient shared-XP multipliers for one through six nearby allies;
-- passive-gold timing and rate, assigned-lane and role-quest modifiers;
-- turret plates, first-turret allocation, structures, and neutral-objective rewards;
-- formulas and derived normal/cannon-wave examples with their assumptions;
-- an opportunity-cost framework for roams, recalls, objectives, and cross-map trades.
+??? info "What the economy registry contains"
 
-For the current registry, a base three-melee/three-caster wave is modelled as 102 last-hit gold and 279 solo XP. An early cannon wave starts at 152 gold and 354 solo XP; cannon gold scaling is reported separately. These are theoretical collection opportunities for standard Map 11 CLASSIC, not proof of what a player earned. Swiftplay, ARAM, Arena, unknown modes, and patches outside the verified range return no numeric wave model.
+    | Topic | Coverage |
+    | --- | --- |
+    | Minions and waves | Melee, caster, siege, and super-minion rewards; spawn intervals; cannon cadence; composition changes |
+    | Experience | Per-recipient shared-XP multipliers for one through six nearby allies |
+    | Income | Passive-gold timing and rate, assigned-lane modifiers, and role-quest modifiers |
+    | Structures and objectives | Plates, first-turret allocation, structures, and neutral-objective rewards |
+    | Decisions | Opportunity costs for roams, recalls, objectives, and cross-map trades |
 
-Use `economy`, `minions`, `experience`, `structures`, `item_efficiency`, or `wave_management` as the topic. Every quantitative response labels its patch and mode scope, separates sourced rules from derived arithmetic, and includes source URLs.
+    In the verified registry, a base three-melee/three-caster wave is modelled as 102 last-hit gold and 279 solo XP. An early cannon wave starts at 152 gold and 354 solo XP; cannon gold scaling is reported separately. Derived examples include their formulas and assumptions.
 
 Official Riot patch notes are the primary rules source. Patch-pinned CommunityDragon client extracts are identified as community-extracted corroboration for fields Riot does not publish in an API; historical analysis never uses a `latest` CommunityDragon URL.
 
 ### Calculate item raw-stat efficiency
 
-```json
-{
-  "request": {
-    "item_name": "Trinity Force",
-    "patch": "26.15",
-    "map_id": 11
-  }
-}
-```
+Tool: `riot_lol_item_economy`. Supply an exact item name or an `item_id`.
 
-Alternatively, supply `item_id`, or replace `patch` with `match_id` so the tool reads the exact match patch, queue, and map before loading static data. Public patch 26.15 is explicitly normalized to Data Dragon 16.15; an unavailable historical release fails closed and is never replaced with another patch.
+=== "From a patch"
 
-The calculation derives per-stat prices from pure component items in the same Data Dragon release. It returns purchase, combine, and sell costs; each priceable structured stat and formula; unpriced stats; coverage; and raw-stat efficiency. Data Dragon omits some structured tooltip stats, and passives, actives, conditional effects, transformations, and mode-specific effects are not priced. The result is therefore not total item value or a build recommendation.
+    ```json
+    {
+      "request": {
+        "item_name": "Trinity Force",
+        "patch": "26.15",
+        "map_id": 11
+      }
+    }
+    ```
+
+=== "From a match"
+
+    ```json
+    {
+      "request": {
+        "item_name": "Trinity Force",
+        "match_id": "EUW1_1234567890"
+      }
+    }
+    ```
+
+With `match_id`, the tool reads the exact match patch, queue, and map before loading static data. Public patch 26.15 is explicitly normalized to Data Dragon 16.15; an unavailable historical release fails closed and is never replaced with another patch.
+
+The calculation derives per-stat prices from pure component items in the same Data Dragon release. It returns purchase, combine, and sell costs; each priceable structured stat and formula; unpriced stats; coverage; and raw-stat efficiency.
+
+!!! note "Raw stats are only part of an item's value"
+    Data Dragon omits some structured tooltip stats. Passives, actives, conditional effects, transformations, and mode-specific effects are not priced, so this result is not total item value or a build recommendation.
 
 ## Match evidence
 
@@ -152,19 +199,27 @@ A match context joins the Match V5 result, its timeline, and patch-matched Data 
 
 Void Grub analysis reports observed captures, killers, timing, nearby trades, later turret/building results, and whether the team converted the objective into map pressure. Match V5 does not expose per-attack Hunger/Touch of the Void bonus damage, so the server labels the result as an association rather than inventing a causal damage number.
 
-`summary` detail minimizes the timeline, `standard` is the default evidence bundle, and `full` retains more checkpoints and events. Use `riot_call_read_operation` for an exact raw field not represented in the compact context.
+| `detail` | Use |
+| --- | --- |
+| `summary` | Minimize timeline detail |
+| `standard` | Default evidence bundle |
+| `full` | Retain more checkpoints and events |
+
+Use `riot_call_read_operation` for an exact raw field not represented in the compact context.
 
 ## Other tools
 
 High-level tools also cover profiles, match history, ranked entries, live games, mastery, challenges, service status, and game content.
 
-The raw gateway provides exhaustive eligible API access through:
+Use the raw gateway when a high-level tool does not cover the request:
 
-- `riot_find_operations`
-- `riot_describe_operation`
-- `riot_call_read_operation`
-- `riot_call_write_operation` when writes are enabled
-- `riot_read_result`
+| Tool | Next step |
+| --- | --- |
+| `riot_find_operations` | Find eligible operations by query or game |
+| `riot_describe_operation` | Inspect an operation's parameters and routing |
+| `riot_call_read_operation` | Call a discovered read operation with its arguments |
+| `riot_read_result` | Read a retained result by handle, JSON Pointer, and page |
+| `riot_call_write_operation` | Execute a confirmed write, when [writes](#writes) are enabled |
 
 Only explicitly supported `api_key` and unauthenticated operations are discoverable. RSO, OAuth, unknown authentication modes, and credential parameters fail closed.
 
@@ -172,31 +227,24 @@ Only explicitly supported `api_key` and unauthenticated operations are discovera
 
 Small results are returned inline. Larger results are retained only in memory and represented by an opaque handle. `riot_read_result` supports RFC 6901 JSON Pointers plus paginated list or mapping slices. Reading a handle refreshes its LRU position but not its expiry.
 
-Default retention limits are:
-
-| Setting | Default |
-| --- | ---: |
-| Inline result | 32 KiB |
-| Individual result | 10 MiB |
-| Aggregate retained data | 64 MiB |
-| Retained result count | 64 |
-| Result lifetime | 600 seconds |
-
 All limits are validated at startup:
 
-| Environment variable | Meaning |
-| --- | --- |
-| `RIOT_MCP_INLINE_LIMIT` | Maximum inline JSON bytes |
-| `RIOT_MCP_MAX_RESULT_SIZE` | Maximum JSON bytes for one result |
-| `RIOT_MCP_MAX_RETAINED_BYTES` | Aggregate retained JSON byte ceiling |
-| `RIOT_MCP_MAX_RESULTS` | Maximum retained result count |
-| `RIOT_MCP_RESULT_TTL` | Retention lifetime in seconds |
+| Environment variable | Default | Meaning |
+| --- | --- | --- |
+| `RIOT_MCP_INLINE_LIMIT` | `32768` (32 KiB) | Maximum inline JSON bytes |
+| `RIOT_MCP_MAX_RESULT_SIZE` | `10485760` (10 MiB) | Maximum JSON bytes for one result |
+| `RIOT_MCP_MAX_RETAINED_BYTES` | `67108864` (64 MiB) | Aggregate retained JSON byte ceiling |
+| `RIOT_MCP_MAX_RESULTS` | `64` | Maximum retained result count |
+| `RIOT_MCP_RESULT_TTL` | `600` | Retention lifetime in seconds |
 
 The aggregate ceiling must be at least the individual result ceiling, which must be at least the inline limit. LRU entries are evicted before either aggregate limit is exceeded.
 
 ## Writes
 
-Writes are hidden by default. Set `RIOT_MCP_ALLOW_WRITES=true` to register the write tool. Every write still requires resolver-driven human confirmation and fails closed if confirmation is declined, cancelled, or unsupported.
+Writes are hidden by default. Set `RIOT_MCP_ALLOW_WRITES=true` in the server environment to register the write tool.
+
+!!! warning "Confirmation is required for each write"
+    Enabling the tool does not authorize individual writes. Every write requires resolver-driven human confirmation and fails closed if confirmation is declined, cancelled, or unsupported by the host.
 
 ## Scope and data limits
 
@@ -213,4 +261,15 @@ Riot recommends PUUID-based endpoints and exact Riot IDs for player-facing appli
 
 ## Troubleshooting
 
-If a player cannot be resolved, verify the full Riot ID and platform route. If a match cannot be loaded, verify that its regional cluster matches the route. A development key can expire or be rate-limited; the server reports credential rejection, rate limits, timeouts, upstream unavailability, and missing timeline/static enrichment separately without exposing credentials.
+| Symptom | What to check |
+| --- | --- |
+| Host cannot start the server | Install the `mcp` extra and use the executable from that Python environment. Read the host's server log for stderr diagnostics. |
+| Missing or rejected credentials | Provide `RIOT_API_KEY` in the server environment and verify it in the Riot Developer Portal. |
+| Player cannot be resolved | Use the full `GameName#TagLine` Riot ID and a platform route, or configure a platform default. |
+| Match cannot be loaded | Check the match ID and its regional cluster. The match-context tool infers standard match-ID prefixes. |
+| Missing timeline, matches, or static content | Read the returned warnings. Optional failures and unavailable historical enrichment are reported separately. |
+| Mechanics response has no numeric wave model | Check the verified patch range and mode scope under [League question tools](#league-question-tools). |
+| Result handle is unavailable | It may have expired, been evicted, or belonged to a restarted server. Repeat the original tool call to obtain a fresh result. |
+| Write tool is absent or a write is declined | Check `RIOT_MCP_ALLOW_WRITES` and the host's human-confirmation support. |
+
+Rate limits, timeouts, credential rejection, and upstream unavailability are reported separately without exposing credentials.

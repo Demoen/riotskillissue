@@ -5,45 +5,55 @@ site_url: https://demoen.github.io/riotskillissue/
 
 repo_name: Demoen/riotskillissue
 repo_url: https://github.com/Demoen/riotskillissue
+edit_uri: edit/main/docs/
 
 theme:
-  variant: classic
+  variant: modern
   custom_dir: overrides
   palette:
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: custom
       accent: custom
       toggle:
-        icon: material/brightness-4
+        icon: lucide/sun
         name: Switch to light mode
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: custom
       accent: custom
       toggle:
-        icon: material/brightness-7
+        icon: lucide/moon
         name: Switch to dark mode
   features:
     - navigation.instant
+    - navigation.instant.progress
     - navigation.tracking
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
+    - navigation.indexes
+    - navigation.path
     - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.highlight
+    - content.tabs.link
     - content.code.copy
+    - content.code.select
     - content.code.annotate
+    - content.action.view
+    - content.tooltips
   icon:
+    logo: lucide/gamepad-2
     repo: fontawesome/brands/github
   font:
     text: Inter
     code: JetBrains Mono
 
-plugins:
-  - search
-
 markdown_extensions:
   - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
+      line_spans: __codelineno
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
@@ -63,20 +73,26 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Getting Started: getting-started.md
-  - Configuration: configuration.md
-  - Routing: routing.md
-  - Riot Sign On: rso.md
-  - MCP Server: mcp.md
-  - 0.3 to 1.0 Migration: migration.md
-  - Examples:
-      - Overview: examples/index.md
-      - League of Legends: examples/league-of-legends.md
-      - Teamfight Tactics: examples/teamfight-tactics.md
-      - VALORANT: examples/valorant.md
-  - API Reference: api-reference.md
-  - CLI: cli.md
-  - Live Game TUI: live-game-tui.md
+  - Python SDK:
+      - sdk/index.md
+      - Getting started: getting-started.md
+      - Configuration: configuration.md
+      - Routing: routing.md
+      - Riot Sign On: rso.md
+      - Examples:
+          - examples/index.md
+          - League of Legends: examples/league-of-legends.md
+          - Teamfight Tactics: examples/teamfight-tactics.md
+          - VALORANT: examples/valorant.md
+      - Migration from 0.3: migration.md
+  - Tools:
+      - tools/index.md
+      - MCP server: mcp.md
+      - Live game TUI: live-game-tui.md
+      - Command line: cli.md
+  - API reference:
+      - reference/index.md
+      - Raw operations: api-reference.md
   - Contributing: CONTRIBUTING.md
 
 extra:

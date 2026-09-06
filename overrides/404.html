@@ -1,4 +1,9 @@
 {% extends "main.html" %}
 {% block content %}
-  <h1 id="__skip">404 - Not found</h1>
+  <h1 id="__skip">Page not found</h1>
+  <p>The link may be out of date. Search for an endpoint or guide, or choose a starting point below.</p>
+  <p>
+    <a class="md-button md-button--primary" href="{{ base_url }}/">Go to the homepage</a>
+    <a class="md-button" href="{{ base_url }}/getting-started/">Get started</a>
+  </p>
 {% endblock %}
