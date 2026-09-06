@@ -4,6 +4,9 @@
         <loc>https://demoen.github.io/riotskillissue/</loc>
       </url>
       <url>
+        <loc>https://demoen.github.io/riotskillissue/sdk/</loc>
+      </url>
+      <url>
         <loc>https://demoen.github.io/riotskillissue/getting-started/</loc>
       </url>
       <url>
@@ -14,12 +17,6 @@
       </url>
       <url>
         <loc>https://demoen.github.io/riotskillissue/rso/</loc>
-      </url>
-      <url>
-        <loc>https://demoen.github.io/riotskillissue/mcp/</loc>
-      </url>
-      <url>
-        <loc>https://demoen.github.io/riotskillissue/migration/</loc>
       </url>
       <url>
         <loc>https://demoen.github.io/riotskillissue/examples/</loc>
@@ -34,13 +31,25 @@
         <loc>https://demoen.github.io/riotskillissue/examples/valorant/</loc>
       </url>
       <url>
-        <loc>https://demoen.github.io/riotskillissue/api-reference/</loc>
+        <loc>https://demoen.github.io/riotskillissue/migration/</loc>
+      </url>
+      <url>
+        <loc>https://demoen.github.io/riotskillissue/tools/</loc>
+      </url>
+      <url>
+        <loc>https://demoen.github.io/riotskillissue/mcp/</loc>
+      </url>
+      <url>
+        <loc>https://demoen.github.io/riotskillissue/live-game-tui/</loc>
       </url>
       <url>
         <loc>https://demoen.github.io/riotskillissue/cli/</loc>
       </url>
       <url>
-        <loc>https://demoen.github.io/riotskillissue/live-game-tui/</loc>
+        <loc>https://demoen.github.io/riotskillissue/reference/</loc>
+      </url>
+      <url>
+        <loc>https://demoen.github.io/riotskillissue/api-reference/</loc>
       </url>
       <url>
         <loc>https://demoen.github.io/riotskillissue/CONTRIBUTING/</loc>
