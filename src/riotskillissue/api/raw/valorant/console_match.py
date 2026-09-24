@@ -106,6 +106,7 @@ class ValorantConsoleMatchApi:
             "console_skirmish2v2",
             "console_skirmishascension1v1",
             "console_skirmishascension2v2",
+            "console_abilitydraftarena",
         ],
         route: ValorantRoute | str | None = None,
     ) -> RecentMatches:
@@ -196,6 +197,7 @@ class SyncValorantConsoleMatchApi:
             "console_skirmish2v2",
             "console_skirmishascension1v1",
             "console_skirmishascension2v2",
+            "console_abilitydraftarena",
         ],
         route: ValorantRoute | str | None = None,
     ) -> RecentMatches:

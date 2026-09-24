@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-09-24
+
+### Changed
+
+## Modified Endpoints
+- **/val/match/console/v1/recent-matches/by-queue/{queue}**
+  - Added get.parameters[0].schema.enum[8]: "console_abilitydraftarena"
+- **/val/match/v1/recent-matches/by-queue/{queue}**
+  - Added get.parameters[0].schema.enum[12]: "test"
+  - Added get.parameters[0].schema.enum[13]: "abilitydraftarena"
+
+## Other Changes
+- info.version: "651fd42a1af69dc0c8a3458d7013aab1271dadb6" -> "5cf711e9291364206a5fbd9c380019fa36a5f6c5"
+- info.x-hash: "651fd42a1af69dc0c8a3458d7013aab1271dadb6a2591954004b70b6d1909828f157d9a4acf6cff8" -> "5cf711e9291364206a5fbd9c380019fa36a5f6c5a2591954004b70b6d1909828f157d9a4acf6cff8"
+
+
 ## [1.1.2] - 2026-09-06
 
 ### Added

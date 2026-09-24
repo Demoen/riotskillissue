@@ -107,6 +107,8 @@ class ValorantMatchApi:
             "skirmish2v2",
             "skirmishascension1v1",
             "skirmishascension2v2",
+            "test",
+            "abilitydraftarena",
         ],
         route: ValorantRoute | str | None = None,
     ) -> RecentMatches:
@@ -199,6 +201,8 @@ class SyncValorantMatchApi:
             "skirmish2v2",
             "skirmishascension1v1",
             "skirmishascension2v2",
+            "test",
+            "abilitydraftarena",
         ],
         route: ValorantRoute | str | None = None,
     ) -> RecentMatches:
