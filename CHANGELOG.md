@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2026-10-06
+
+### Changed
+
+## Modified Models
+- **riftbound-content-v1.CardDTO**
+  - Added properties.effect: {"description": "Optional field", "type": "string", "x-type": "string"}
+  - Removed properties.keywords: {"items": {"type": "string", "x-type": "string"}, "type": "array", "x-type": "List[string]"}
+  - Added properties.subtitle: {"type": "string", "x-type": "string"}
+  - required[9]: "keywords" -> "art"
+  - required[10]: "art" -> "flavorText"
+  - required[11]: "flavorText" -> "tags"
+  - required[12]: "tags" -> "subtitle"
+  - Added required[13]: "effect"
+
+## Other Changes
+- info.version: "5cf711e9291364206a5fbd9c380019fa36a5f6c5" -> "bca08c6737245decb570e82447491f77fee83d38"
+- info.x-hash: "5cf711e9291364206a5fbd9c380019fa36a5f6c5a2591954004b70b6d1909828f157d9a4acf6cff8" -> "bca08c6737245decb570e82447491f77fee83d38a2591954004b70b6d1909828f157d9a4acf6cff8"
+
+
 ## [1.1.3] - 2026-09-24
 
 ### Changed

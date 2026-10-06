@@ -4748,6 +4748,11 @@
             "type": "string",
             "x-type": "string"
           },
+          "effect": {
+            "description": "Optional field",
+            "type": "string",
+            "x-type": "string"
+          },
           "faction": {
             "type": "string",
             "x-type": "string"
@@ -4760,14 +4765,6 @@
             "description": "Card ID",
             "type": "string",
             "x-type": "string"
-          },
-          "keywords": {
-            "items": {
-              "type": "string",
-              "x-type": "string"
-            },
-            "type": "array",
-            "x-type": "List[string]"
           },
           "name": {
             "description": "Card Name",
@@ -4785,6 +4782,10 @@
           "stats": {
             "$ref": "#/components/schemas/riftbound-content-v1.CardStatsDTO",
             "x-type": "CardStatsDTO"
+          },
+          "subtitle": {
+            "type": "string",
+            "x-type": "string"
           },
           "tags": {
             "items": {
@@ -4810,10 +4811,11 @@
           "rarity",
           "faction",
           "stats",
-          "keywords",
           "art",
           "flavorText",
-          "tags"
+          "tags",
+          "subtitle",
+          "effect"
         ],
         "title": "CardDTO",
         "type": "object"
@@ -9635,9 +9637,9 @@
     "description": "\nOpenAPI/Swagger version of the [Riot API](https://developer.riotgames.com/). Automatically generated daily.\n## OpenAPI Spec File\nThe following versions of the Riot API spec file are available:\n- `openapi-3.0.0.json` ([view file](../openapi-3.0.0.json), [ui select](?url=../openapi-3.0.0.json))\n- `openapi-3.0.0.min.json` ([view file](../openapi-3.0.0.min.json), [ui select](?url=../openapi-3.0.0.min.json))\n- `openapi-3.0.0.yml` ([view file](../openapi-3.0.0.yml), [ui select](?url=../openapi-3.0.0.yml))\n- `openapi-3.0.0.min.yml` ([view file](../openapi-3.0.0.min.yml), [ui select](?url=../openapi-3.0.0.min.yml))\n- `swaggerspec-2.0.json` ([view file](../swaggerspec-2.0.json), [ui select](?url=../swaggerspec-2.0.json))\n- `swaggerspec-2.0.min.json` ([view file](../swaggerspec-2.0.min.json), [ui select](?url=../swaggerspec-2.0.min.json))\n- `swaggerspec-2.0.yml` ([view file](../swaggerspec-2.0.yml), [ui select](?url=../swaggerspec-2.0.yml))\n- `swaggerspec-2.0.min.yml` ([view file](../swaggerspec-2.0.min.yml), [ui select](?url=../swaggerspec-2.0.min.yml))\n## Other Files\n- Missing DTOs: [`missing.json`](../missing.json)\n- Routes Table: [`routesTable.json`](../routesTable.json)\n- [Enum Files](../enums/)\n## Source Code\nSource code on [GitHub](https://github.com/MingweiSamuel/riotapi-schema). Pull requests welcome!\n## Automatically Generated\nRebuilt on [Travis CI](https://travis-ci.com/MingweiSamuel/riotapi-schema/builds) daily.\n***\n",
     "termsOfService": "https://developer.riotgames.com/terms",
     "title": "Riot API",
-    "version": "5cf711e9291364206a5fbd9c380019fa36a5f6c5",
+    "version": "bca08c6737245decb570e82447491f77fee83d38",
     "x-enumsHash": "a2591954004b70b6d1909828f157d9a4acf6cff8",
-    "x-hash": "5cf711e9291364206a5fbd9c380019fa36a5f6c5a2591954004b70b6d1909828f157d9a4acf6cff8"
+    "x-hash": "bca08c6737245decb570e82447491f77fee83d38a2591954004b70b6d1909828f157d9a4acf6cff8"
   },
   "openapi": "3.0.0",
   "paths": {

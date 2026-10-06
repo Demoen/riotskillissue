@@ -29,6 +29,10 @@ class Card(BaseModel):
     description: str = Field(
         alias="description",
     )
+    effect: str = Field(
+        alias="effect",
+        description="Optional field",
+    )
     faction: str = Field(
         alias="faction",
     )
@@ -38,9 +42,6 @@ class Card(BaseModel):
     id: str = Field(
         alias="id",
         description="Card ID",
-    )
-    keywords: List[str] = Field(
-        alias="keywords",
     )
     name: str = Field(
         alias="name",
@@ -54,6 +55,9 @@ class Card(BaseModel):
     )
     stats: CardStats = Field(
         alias="stats",
+    )
+    subtitle: str = Field(
+        alias="subtitle",
     )
     tags: List[str] = Field(
         alias="tags",
