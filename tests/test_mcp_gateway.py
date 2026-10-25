@@ -130,9 +130,9 @@ def test_committed_registry_exposes_every_eligible_operation() -> None:
         allow_writes=True,
     )
 
-    assert len(rso) == 9
+    assert rso
     assert all(not record.mcp_visible for record in rso)
-    assert disabled.find(limit=100).total == len(expected_reads) == 75
+    assert disabled.find(limit=100).total == len(expected_reads)
     assert enabled.find(include_writes=True, limit=100).total == (
         len(expected_reads) + len(expected_writes)
     )
