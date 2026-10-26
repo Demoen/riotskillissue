@@ -59,6 +59,29 @@ with SyncRiotClient(default_route=PlatformRoute.EUW1) as riot:
     print(riot.lol.player_profile("Player#EUW"))
 ```
 
+## Replay downloads
+
+With `RIOT_RSO_ACCESS_TOKEN` set to a token from an approved Riot Sign On
+integration, list available replays and choose one to save:
+
+```bash
+riotskillissue-cli replays list --route europe
+riotskillissue-cli replays download --route europe
+```
+
+For a direct selection and an explicit destination:
+
+```bash
+riotskillissue-cli replays download 1 --route europe --output ./replays/my-game.rofl
+```
+
+The endpoint returns replays for the authenticated player. It has no arbitrary
+player-name or match-ID lookup, and a normal Riot API key cannot replace the RSO
+token. The async and sync Python clients also provide `lol.replays()` and
+`lol.download_replay()`. See the
+[replay guide](https://demoen.github.io/riotskillissue/replays/) for RSO setup,
+options, and download behavior.
+
 ## Local MCP server
 
 Install the optional server and run it over stdio:

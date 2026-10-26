@@ -1,6 +1,6 @@
 # Command Line Interface
 
-Look up a League player, inspect a match, or open the live-game dashboard from your terminal. The CLI prints a focused summary; use the [Python client](getting-started.md) or [MCP server](mcp.md) for richer results.
+Look up a League player, inspect a match, download an available replay, or open the live-game dashboard from your terminal. Use the [Python client](getting-started.md) or [MCP server](mcp.md) to process richer results.
 
 ## Installation
 
@@ -20,7 +20,7 @@ See [getting started](getting-started.md) for supported Python versions.
 
 ## Configuration
 
-Set `RIOT_API_KEY` in the terminal where you will run the command:
+For `summoner`, `match`, and `live`, set `RIOT_API_KEY` in the terminal where you will run the command:
 
 === "macOS / Linux"
 
@@ -40,10 +40,12 @@ Set `RIOT_API_KEY` in the terminal where you will run the command:
     set RIOT_API_KEY=RGAPI-your-key-here
     ```
 
-Every command also accepts `--api-key`. The environment variable keeps the key out of the command itself.
+These commands also accept `--api-key`. The environment variable keeps the key out of the command itself.
+
+The `replays` commands use `RIOT_RSO_ACCESS_TOKEN` or `--access-token` instead. They require a player-authorized token from an approved Riot Sign On integration. See [replay authentication](replays.md#authentication); a developer API key is not sufficient.
 
 !!! tip "Choose the right route"
-    `summoner` and `live` use a **platform route**, such as `euw1`. `match` uses a **regional route**, such as `europe`. See [routing](routing.md) for how the families relate.
+    `summoner` and `live` use a **platform route**, such as `euw1`. `match` and `replays` use a **regional route**, such as `europe`. See [routing](routing.md) for how the families relate.
 
 ## Commands
 
@@ -52,6 +54,8 @@ Every command also accepts `--api-key`. The environment variable keeps the key o
 | [`summoner`](#summoner) | Player level and PUUID | `euw1` |
 | [`match`](#match) | Game mode and duration | `europe` |
 | [`live`](#live) | Interactive live-game dashboard | `euw1` |
+| [`replays list`](#replays) | Replays available to the authenticated player | `europe` |
+| [`replays download`](#replays) | A selected replay saved to a local `.rofl` file | `europe` |
 
 Run `riotskillissue-cli --help` to list commands, or append `--help` to a command to inspect its options.
 
@@ -106,6 +110,28 @@ The dashboard shows teams, champions, summoner spells, ranked records, and bans.
 
 Press `r` to refresh, or `q` / `Esc` to quit. The [`tui` extra](#installation) is required. See the [TUI guide](live-game-tui.md) for previews, controls, and refresh behavior.
 
+### replays
+
+List the authenticated player's available replays, then select one to download:
+
+```bash
+riotskillissue-cli replays list --route europe
+riotskillissue-cli replays download --route europe
+```
+
+`download` prompts for a one-based selection from the list it just fetched. To
+select an entry directly and set the destination:
+
+```bash
+riotskillissue-cli replays download 1 --route europe --output ./replays/my-game.rofl
+```
+
+Set `RIOT_RSO_ACCESS_TOKEN` first. The endpoint returns replays for the player
+identified by that token and has no arbitrary player-name or match-ID lookup.
+Files are not overwritten unless you pass `--overwrite`. See the
+[replay guide](replays.md) for authentication, selection behavior, options, and
+Python examples.
+
 ## Error Handling
 
 | Symptom | What to check |
@@ -116,5 +142,6 @@ Press `r` to refresh, or `q` / `Esc` to quit. The [`tui` extra](#installation) i
 | Player or match not found | Check the identifier and the command's route family. |
 | Live command cannot import Textual | Install `"riotskillissue[tui]"` in the same environment as the CLI. |
 | Live dashboard shows previous or partial data | Read the status bar and the [TUI troubleshooting guide](live-game-tui.md#troubleshooting). |
+| Replay token, selection, or download error | Follow the [replay troubleshooting guide](replays.md#troubleshooting). |
 
 To process results in your own application, start with the [Python client](getting-started.md) and [game examples](examples/index.md).

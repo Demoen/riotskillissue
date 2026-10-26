@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from pathlib import Path
 from typing import Any, Literal
 
 from riotskillissue.core.types import (
@@ -23,6 +24,7 @@ from riotskillissue.services.base import (
     valorant_route,
 )
 from riotskillissue.services.models import MatchSummary, PlayerProfile
+from riotskillissue.replays import ReplayFile, download_replay, replay_files
 from riotskillissue.static import DataDragonClient
 
 
@@ -58,6 +60,28 @@ class LolService(WorkflowService):
     def __init__(self, raw: RawOperations, static: DataDragonClient) -> None:
         super().__init__(raw)
         self.static = static
+
+    async def replays(
+        self,
+        *,
+        route: RegionalRoute | str | None = None,
+    ) -> list[ReplayFile]:
+        """List replay files Riot makes available to the authenticated RSO player."""
+        result = await self._call(
+            "match-v5.getReplayByAccessToken",
+            route=regional_route(route),
+        )
+        return replay_files(result.match_file_ur_ls)
+
+    async def download_replay(
+        self,
+        replay: ReplayFile,
+        destination: str | Path,
+        *,
+        overwrite: bool = False,
+    ) -> Path:
+        """Download a replay selected from replays() without forwarding credentials."""
+        return await download_replay(replay, destination, overwrite=overwrite)
 
     async def player_profile(
         self,

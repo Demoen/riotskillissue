@@ -42,6 +42,7 @@ from .core.types import (
 )
 from .core.utils import gather_limited
 from .services import MatchSummary, PlayerProfile
+from .replays import ReplayDownloadError, ReplayFile
 from .static import DataDragonClient, SyncDataDragonClient
 
 try:
@@ -75,6 +76,8 @@ __all__ = [
     "RateLimitError",
     "RefreshingRsoTokenProvider",
     "RegionalRoute",
+    "ReplayDownloadError",
+    "ReplayFile",
     "ResponseValidationError",
     "RiotAPIError",
     "RiotClient",
