@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.0] - 2026-10-26
 
 ### Added
 
@@ -21,6 +21,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   downloads, temporary-file cleanup, and credential-free file requests.
 - Replay documentation covering League Client and RSO setup, CLI and Python
   usage, and download limits.
+
+### Upgrade
+
+```bash
+python -m pip install --upgrade riotskillissue
+riotskillissue-cli replays download --player "GameName#TagLine"
+```
+
+### Compatibility
+
+- Player mode requires a signed-in League Client on the same Windows or macOS
+  machine, with the target match accessible on the client's current region.
+  Riot enforces the current [10-downloads-per-hour limit](https://www.leagueoflegends.com/en-ph/news/game-updates/league-of-legends-patch-26-21-notes/).
+  The [League Client API](https://developer.riotgames.com/docs/lol#league-client-api)
+  is unsupported by Riot and may change between patches.
+- Public API replay requests require an RSO token from an approved integration
+  and return replays for the player identified by that token. They do not
+  provide arbitrary player-name or match-ID lookup.
+- Automated tests cover the client workflow with mocked API responses. A replay
+  download from a live League 26.21 client has not been verified.
 
 ## [1.1.5] - 2026-10-26
 
@@ -375,7 +395,7 @@ natural-language game analysis instead of returning disconnected API payloads.
 - **Pagination**: Async iterator `paginate()` for paginated endpoints.
 - **Static**: `DataDragonClient` for fetching versions and assets.
 
-[Unreleased]: https://github.com/Demoen/riotskillissue/compare/v1.1.5...HEAD
+[1.2.0]: https://github.com/Demoen/riotskillissue/compare/v1.1.5...v1.2.0
 [1.1.2]: https://github.com/Demoen/riotskillissue/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Demoen/riotskillissue/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Demoen/riotskillissue/compare/v1.0.0...v1.1.0

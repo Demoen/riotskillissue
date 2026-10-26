@@ -123,16 +123,16 @@ Generated files:
 1. Bump the version in `pyproject.toml` and move the completed changes from
    `Unreleased` into a dated `CHANGELOG.md` release section. Remove an empty
    `Unreleased` section and update the comparison links at the end of the file.
-2. Run the quality checks from CI and validate the release metadata. For 1.1.2:
+2. Run the quality checks from CI and validate the release metadata. For 1.2.0:
 
    ```bash
-   python tools/release.py --tag v1.1.2
-   hatch build dist/1.1.2
-   python tools/release.py --tag v1.1.2 --notes-output dist/1.1.2/RELEASE_NOTES.md
+   python tools/release.py --tag v1.2.0
+   hatch build dist/1.2.0
+   python tools/release.py --tag v1.2.0 --notes-output dist/1.2.0/RELEASE_NOTES.md
    ```
 
 3. Review and commit the prepared changes, then tag that commit with the exact
-   version (`v1.1.2`). Pushing the tag starts `.github/workflows/publish.yml`.
+   version (`v1.2.0`). Pushing the tag starts `.github/workflows/publish.yml`.
 4. The workflow checks the tag/version match, requires release notes, and verifies
    Python 3.14 and 3.15 before publishing to PyPI using Trusted Publishing. The
    GitHub release uses the reviewed changelog entry and contains the built
