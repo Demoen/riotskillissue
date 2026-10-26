@@ -1,8 +1,13 @@
+from pathlib import Path
+
 from riotskillissue import (
+    ClientReplay,
+    LeagueReplayClient,
     MatchSummary,
     PlatformRoute,
     PlayerProfile,
     RegionalRoute,
+    ReplayFile,
     RiotClient,
     SyncRiotClient,
 )
@@ -39,3 +44,21 @@ def sync_usage(client: SyncRiotClient) -> tuple[PlayerProfile, list[MatchSummary
         route=RegionalRoute.EUROPE,
     )
     return profile, history, match
+
+
+async def async_replay_usage(client: RiotClient) -> tuple[list[ReplayFile], Path]:
+    files = await client.lol.replays(route=RegionalRoute.EUROPE)
+    destination = await client.lol.download_replay(files[0], Path("replays") / files[0].filename)
+    return files, destination
+
+
+def sync_replay_usage(client: SyncRiotClient) -> tuple[list[ReplayFile], Path]:
+    files = client.lol.replays(route=RegionalRoute.EUROPE)
+    destination = client.lol.download_replay(files[0], Path("replays") / files[0].filename)
+    return files, destination
+
+
+async def local_replay_usage(client: LeagueReplayClient) -> tuple[list[ClientReplay], Path]:
+    files = await client.player_replays("Player#EUW")
+    destination = await client.download_replay(files[0])
+    return files, destination

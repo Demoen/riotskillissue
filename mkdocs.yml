@@ -90,6 +90,7 @@ nav:
       - MCP server: mcp.md
       - Live game TUI: live-game-tui.md
       - Command line: cli.md
+      - Replay downloads: replays.md
   - API reference:
       - reference/index.md
       - Raw operations: api-reference.md

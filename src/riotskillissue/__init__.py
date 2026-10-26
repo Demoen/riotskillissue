@@ -42,6 +42,8 @@ from .core.types import (
 )
 from .core.utils import gather_limited
 from .services import MatchSummary, PlayerProfile
+from .replays import ReplayDownloadError, ReplayFile
+from .league_client import ClientReplay, LeagueClientError, LeagueReplayClient
 from .static import DataDragonClient, SyncDataDragonClient
 
 try:
@@ -60,9 +62,12 @@ __all__ = [
     "AbstractRateLimiter",
     "AuthMode",
     "BadRequestError",
+    "ClientReplay",
     "DataDragonClient",
     "ForbiddenError",
     "Game",
+    "LeagueClientError",
+    "LeagueReplayClient",
     "MalformedResponseError",
     "MatchSummary",
     "MemoryCache",
@@ -75,6 +80,8 @@ __all__ = [
     "RateLimitError",
     "RefreshingRsoTokenProvider",
     "RegionalRoute",
+    "ReplayDownloadError",
+    "ReplayFile",
     "ResponseValidationError",
     "RiotAPIError",
     "RiotClient",

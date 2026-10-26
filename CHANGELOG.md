@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Replay listing and downloads through `riotskillissue-cli replays`. Use
+  `--player "GameName#TagLine"` with a running League Client to select another
+  player's replay, or an RSO token for the authenticated player's public API
+  replay list. Supports interactive selection, explicit output paths, and
+  opt-in replacement of existing files.
+- `LeagueReplayClient` for local player lookup, recent matches, and replay
+  downloads. Uses the client's replay folder and follows its download limits
+  without retrying rejected download requests.
+- Async and sync `lol.replays()` and `lol.download_replay()` helpers with streamed
+  downloads, temporary-file cleanup, and credential-free file requests.
+- Replay documentation covering League Client and RSO setup, CLI and Python
+  usage, and download limits.
+
 ## [1.1.5] - 2026-10-26
 
 ### Changed
@@ -358,6 +375,7 @@ natural-language game analysis instead of returning disconnected API payloads.
 - **Pagination**: Async iterator `paginate()` for paginated endpoints.
 - **Static**: `DataDragonClient` for fetching versions and assets.
 
+[Unreleased]: https://github.com/Demoen/riotskillissue/compare/v1.1.5...HEAD
 [1.1.2]: https://github.com/Demoen/riotskillissue/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Demoen/riotskillissue/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Demoen/riotskillissue/compare/v1.0.0...v1.1.0

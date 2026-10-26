@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable
+from pathlib import Path
 from typing import Any, Literal, Protocol, TypeVar
 
 from riotskillissue.core.types import PlatformRoute, RegionalRoute, ValorantRoute
+from riotskillissue.replays import ReplayFile
 from riotskillissue.services.async_services import (
     LolService,
     LorService,
@@ -31,6 +33,24 @@ class SyncLolService:
         self._service = service
         self._run = run
         self.static = static
+
+    def replays(
+        self,
+        *,
+        route: RegionalRoute | str | None = None,
+    ) -> list[ReplayFile]:
+        return self._run(self._service.replays(route=route))
+
+    def download_replay(
+        self,
+        replay: ReplayFile,
+        destination: str | Path,
+        *,
+        overwrite: bool = False,
+    ) -> Path:
+        return self._run(
+            self._service.download_replay(replay, destination, overwrite=overwrite)
+        )
 
     def player_profile(
         self, riot_id: str, *, route: PlatformRoute | str | None = None

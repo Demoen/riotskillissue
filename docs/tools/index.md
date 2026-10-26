@@ -14,7 +14,7 @@ Use RiotSkillIssue from a terminal or an MCP host. Each tool shares the same Rio
 
     ---
 
-    Look up a player's level and PUUID, inspect a match's mode and duration, or launch the live dashboard.
+    Look up a player's level and PUUID, inspect a match, download an available replay, or launch the live dashboard.
 
     Included in the base package.
 
@@ -76,9 +76,11 @@ Use a supported [Python environment](../getting-started.md), then select the too
 
 ## Before your first request
 
-The tools require a Riot API key. Set `RIOT_API_KEY` in your terminal for the CLI and TUI, or in the MCP server's environment. Each guide includes setup instructions.
+Player and match lookups require a Riot API key. Set `RIOT_API_KEY` in your terminal for those CLI commands and the TUI, or in the MCP server's environment. Each guide includes setup instructions.
+
+[Replay downloads](../replays.md) with `--player "GameName#TagLine"` use your running League Client on Windows or macOS. No API key or RSO token is needed for that workflow. Replay commands without `--player` use `RIOT_RSO_ACCESS_TOKEN` from an approved Riot Sign On integration and return that authenticated player's replay list.
 
 For player lookups, use an exact Riot ID such as `GameName#TagLine` and a platform route such as `euw1`. Match lookups use regional routes such as `europe`; the MCP match-context tool can infer that route from a standard match ID. See [routing](../routing.md) for the distinction.
 
 !!! note "Choose the output for your task"
-    The CLI prints short summaries, the TUI presents live spectator data, and MCP returns structured evidence to a host. Use the [Python SDK](../getting-started.md) when you need to process results directly in your application.
+    The CLI prints short summaries and saves selected replay files, the TUI presents live spectator data, and MCP returns structured evidence to a host. Use the [Python SDK](../getting-started.md) when you need to process results directly in your application.
