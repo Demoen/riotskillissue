@@ -61,26 +61,32 @@ with SyncRiotClient(default_route=PlatformRoute.EUW1) as riot:
 
 ## Replay downloads
 
-With `RIOT_RSO_ACCESS_TOKEN` set to a token from an approved Riot Sign On
-integration, list available replays and choose one to save:
+Open the League Client and sign in, then choose a replay from another player's
+recent matches using their full Riot ID:
 
 ```bash
-riotskillissue-cli replays list --route europe
-riotskillissue-cli replays download --route europe
+riotskillissue-cli replays list --player "GameName#TagLine"
+riotskillissue-cli replays download --player "GameName#TagLine"
 ```
 
 For a direct selection and an explicit destination:
 
 ```bash
-riotskillissue-cli replays download 1 --route europe --output ./replays/my-game.rofl
+riotskillissue-cli replays download 1 --player "GameName#TagLine" --output ./replays/my-game.rofl
 ```
 
-The endpoint returns replays for the authenticated player. It has no arbitrary
-player-name or match-ID lookup, and a normal Riot API key cannot replace the RSO
-token. The async and sync Python clients also provide `lol.replays()` and
-`lol.download_replay()`. See the
-[replay guide](https://demoen.github.io/riotskillissue/replays/) for RSO setup,
-options, and download behavior.
+This requires League running on the same Windows or macOS machine, with the
+target match accessible on the client's region. No API key or RSO token is
+needed. Riot's limit of 10 downloads per hour applies through the client. The
+League Client API is not officially supported by Riot and may change between
+patches.
+
+The public API workflow remains available by omitting `--player` and setting
+`RIOT_RSO_ACCESS_TOKEN`. It returns replays for that token's player. Python
+applications can use `LeagueReplayClient` for player lookups or the async/sync
+`lol.replays()` and `lol.download_replay()` RSO helpers. See the
+[replay guide](https://demoen.github.io/riotskillissue/replays/) for client setup,
+RSO authentication, limits, and examples.
 
 ## Local MCP server
 

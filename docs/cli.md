@@ -42,10 +42,10 @@ For `summoner`, `match`, and `live`, set `RIOT_API_KEY` in the terminal where yo
 
 These commands also accept `--api-key`. The environment variable keeps the key out of the command itself.
 
-The `replays` commands use `RIOT_RSO_ACCESS_TOKEN` or `--access-token` instead. They require a player-authorized token from an approved Riot Sign On integration. See [replay authentication](replays.md#authentication); a developer API key is not sufficient.
+With `--player "GameName#TagLine"`, the `replays` commands connect to your running, logged-in League Client on Windows or macOS. No API key or RSO token is needed. Without `--player`, they use `RIOT_RSO_ACCESS_TOKEN` or `--access-token` from an approved Riot Sign On integration. See the [replay guide](replays.md) for both workflows.
 
 !!! tip "Choose the right route"
-    `summoner` and `live` use a **platform route**, such as `euw1`. `match` and `replays` use a **regional route**, such as `europe`. See [routing](routing.md) for how the families relate.
+    `summoner` and `live` use a **platform route**, such as `euw1`. `match` and RSO replay requests use a **regional route**, such as `europe`. Replay requests with `--player` use the League Client's current region. See [routing](routing.md) for how the families relate.
 
 ## Commands
 
@@ -54,8 +54,8 @@ The `replays` commands use `RIOT_RSO_ACCESS_TOKEN` or `--access-token` instead. 
 | [`summoner`](#summoner) | Player level and PUUID | `euw1` |
 | [`match`](#match) | Game mode and duration | `europe` |
 | [`live`](#live) | Interactive live-game dashboard | `euw1` |
-| [`replays list`](#replays) | Replays available to the authenticated player | `europe` |
-| [`replays download`](#replays) | A selected replay saved to a local `.rofl` file | `europe` |
+| [`replays list`](#replays) | A player's recent matches or the RSO replay list | Client region with `--player`; otherwise `europe` |
+| [`replays download`](#replays) | A selected replay saved to a local `.rofl` file | Client region with `--player`; otherwise `europe` |
 
 Run `riotskillissue-cli --help` to list commands, or append `--help` to a command to inspect its options.
 
@@ -112,24 +112,38 @@ Press `r` to refresh, or `q` / `Esc` to quit. The [`tui` extra](#installation) i
 
 ### replays
 
-List the authenticated player's available replays, then select one to download:
+Open League, sign in, and look up another player's recent matches by full Riot
+ID:
 
 ```bash
-riotskillissue-cli replays list --route europe
-riotskillissue-cli replays download --route europe
+riotskillissue-cli replays list --player "GameName#TagLine"
+riotskillissue-cli replays download --player "GameName#TagLine"
 ```
 
 `download` prompts for a one-based selection from the list it just fetched. To
 select an entry directly and set the destination:
 
 ```bash
-riotskillissue-cli replays download 1 --route europe --output ./replays/my-game.rofl
+riotskillissue-cli replays download 1 --player "GameName#TagLine" --output ./replays/my-game.rofl
 ```
 
-Set `RIOT_RSO_ACCESS_TOKEN` first. The endpoint returns replays for the player
-identified by that token and has no arbitrary player-name or match-ID lookup.
-Files are not overwritten unless you pass `--overwrite`. See the
-[replay guide](replays.md) for authentication, selection behavior, options, and
+Player mode needs the League Client running on the same Windows or macOS
+machine. It uses the client's replay folder by default; `--output` copies the
+completed file elsewhere. Riot's download limit applies, including downloads
+started through the client UI. Use `--lockfile` for a custom installation and
+`--count` to show between 1 and 20 recent matches.
+
+For the public API workflow, set `RIOT_RSO_ACCESS_TOKEN` and omit `--player`:
+
+```bash
+riotskillissue-cli replays list --route europe
+riotskillissue-cli replays download --route europe
+```
+
+That endpoint returns replays for the token's player and has no player-name or
+match-ID lookup. Neither workflow needs a Riot API key. Existing `--output`
+files are preserved unless you pass `--overwrite`. See the [replay guide](replays.md)
+for client requirements, RSO authentication, selection behavior, options, and
 Python examples.
 
 ## Error Handling

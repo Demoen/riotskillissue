@@ -23,7 +23,8 @@ from .core.http import (
     RiotAPIError,
     RiotTransportError,
 )
-from .core.types import PlatformRoute, RegionalRoute
+from .core.types import PlatformRoute, RegionalRoute, RiotId
+from .league_client import ClientReplay, LeagueClientError, LeagueReplayClient
 from .replays import ReplayDownloadError, ReplayFile, _retry_after
 
 app = typer.Typer(
@@ -32,7 +33,7 @@ app = typer.Typer(
     pretty_exceptions_show_locals=False,
 )
 replays_app = typer.Typer(
-    help="List and download League replays available to an authorized RSO player.",
+    help="Download your RSO replays or another player's replays through the League client.",
     no_args_is_help=True,
     pretty_exceptions_show_locals=False,
 )
@@ -160,6 +161,45 @@ def _print_replays(replays: list[ReplayFile]) -> None:
     console.print(table)
 
 
+def _player_riot_id(player: str, route: str | None) -> str:
+    if route is not None:
+        raise typer.BadParameter(
+            "The --player mode uses the logged-in League client's region. Omit --route.",
+            param_hint="--route",
+        )
+    try:
+        return str(RiotId.parse(player))
+    except ValueError:
+        raise typer.BadParameter(
+            'Use a full Riot ID such as "GameName#TagLine".', param_hint="--player"
+        ) from None
+
+
+def _print_client_replays(replays: list[ClientReplay]) -> None:
+    table = Table(title="Recent matches")
+    table.add_column("#", justify="right")
+    table.add_column("Match")
+    table.add_column("Queue", justify="right")
+    table.add_column("Patch")
+    for replay in replays:
+        table.add_row(
+            str(replay.index),
+            f"{replay.platform_id}_{replay.game_id}",
+            str(replay.queue_id),
+            replay.game_version,
+        )
+    console.print(table)
+
+
+def _selected_replay(index: int | None, count: int) -> int:
+    selected = typer.prompt("Replay number", type=int) if index is None else index
+    if selected < 1 or selected > count:
+        raise typer.BadParameter(
+            f"Choose a replay number between 1 and {count}.", param_hint="INDEX"
+        )
+    return selected - 1
+
+
 def _rate_limit_hint(error: RateLimitError) -> str:
     header = error.response.headers.get("Retry-After") if error.response else None
     delay = _retry_after(header)
@@ -184,6 +224,8 @@ def _run_replay_command(run: Callable[[], Awaitable[None]]) -> None:
             message = "No replay data was found. Check the regional route and replay availability."
         else:
             message = f"The replay API returned HTTP {error.status}. Try again later."
+    except LeagueClientError as error:
+        message = str(error)
     except ReplayDownloadError as error:
         message = str(error)
     except RiotTransportError:
@@ -202,13 +244,35 @@ def _run_replay_command(run: Callable[[], Awaitable[None]]) -> None:
 
 @replays_app.command("list")
 def list_replays(
-    route: str = typer.Option("europe", help="Regional route: americas, asia, europe, or sea"),
+    route: str | None = typer.Option(None, help="RSO regional route: americas, asia, europe (default), or sea"),
     access_token: str | None = typer.Option(
         None, envvar="RIOT_RSO_ACCESS_TOKEN", help="RSO player access token", show_default=False
     ),
+    player: str | None = typer.Option(None, help='Full Riot ID to look up through the League client, e.g. "Name#TAG"'),
+    lockfile: Annotated[
+        Path | None,
+        typer.Option("--lockfile", envvar="RIOT_LCU_LOCKFILE", help="League client lockfile for --player mode"),
+    ] = None,
+    count: int | None = typer.Option(None, min=1, max=20, help="Recent matches in --player mode (default: 20)"),
 ) -> None:
-    """List replay files returned for the player authorized by your RSO token."""
-    regional_route, config = _replay_options(route, access_token)
+    """List your RSO replays, or another player's recent matches with --player."""
+    if player is not None:
+        riot_id = _player_riot_id(player, route)
+
+        async def run_player() -> None:
+            async with LeagueReplayClient(lockfile=lockfile) as league:
+                replays = await league.player_replays(riot_id, count=count or 20)
+            if not replays:
+                console.print("No recent matches were found for this player on the client's region.")
+                return
+            _print_client_replays(replays)
+            console.print("Use 'replays download --player' with the same Riot ID to choose a match.")
+
+        _run_replay_command(run_player)
+        return
+    if count is not None:
+        raise typer.BadParameter("--count requires --player.", param_hint="--count")
+    regional_route, config = _replay_options(route or "europe", access_token)
 
     async def run() -> None:
         async with RiotClient(config=config) as riot:
@@ -227,18 +291,49 @@ def download_replay(
     index: int | None = typer.Argument(
         None, min=1, help="One-based replay number; omit to choose from the current list"
     ),
-    route: str = typer.Option("europe", help="Regional route: americas, asia, europe, or sea"),
+    route: str | None = typer.Option(None, help="RSO regional route: americas, asia, europe (default), or sea"),
     access_token: str | None = typer.Option(
         None, envvar="RIOT_RSO_ACCESS_TOKEN", help="RSO player access token", show_default=False
     ),
     output: Annotated[
         Path | None,
-        typer.Option("--output", "-o", help="Destination file; defaults to the replay filename"),
+        typer.Option("--output", "-o", help="Destination file; --player defaults to the client's replay folder"),
     ] = None,
     overwrite: bool = typer.Option(False, help="Replace an existing output file after a complete download"),
+    player: str | None = typer.Option(None, help='Download through the League client for a Riot ID, e.g. "Name#TAG"'),
+    lockfile: Annotated[
+        Path | None,
+        typer.Option("--lockfile", envvar="RIOT_LCU_LOCKFILE", help="League client lockfile for --player mode"),
+    ] = None,
+    count: int | None = typer.Option(None, min=1, max=20, help="Recent matches in --player mode (default: 20)"),
+    timeout: float | None = typer.Option(None, min=1, max=600, help="Seconds to wait for a --player download (default: 120)"),
 ) -> None:
-    """Download one authorized replay as a .rofl file."""
-    regional_route, config = _replay_options(route, access_token)
+    """Download one .rofl; --player uses the running League client's replay access."""
+    if timeout is not None and not math.isfinite(timeout):
+        raise typer.BadParameter("Use a finite timeout in seconds.", param_hint="--timeout")
+    if player is not None:
+        riot_id = _player_riot_id(player, route)
+
+        async def run_player() -> None:
+            async with LeagueReplayClient(lockfile=lockfile) as league:
+                replays = await league.player_replays(riot_id, count=count or 20)
+                if not replays:
+                    typer.echo("No recent matches were found for this player on the client's region.", err=True)
+                    raise typer.Exit(code=1)
+                if index is None:
+                    _print_client_replays(replays)
+                replay = replays[_selected_replay(index, len(replays))]
+                console.print(f"Requesting {replay.filename} through the League client...", markup=False)
+                saved = await league.download_replay(
+                    replay, output, overwrite=overwrite, timeout=timeout or 120
+                )
+                typer.echo(f"Saved replay to {saved}")
+
+        _run_replay_command(run_player)
+        return
+    if count is not None or timeout is not None:
+        raise typer.BadParameter("--count and --timeout require --player.")
+    regional_route, config = _replay_options(route or "europe", access_token)
 
     async def run() -> None:
         async with RiotClient(config=config) as riot:
@@ -246,22 +341,15 @@ def download_replay(
             if not replays:
                 typer.echo("No replays are available for this player on this route.", err=True)
                 raise typer.Exit(code=1)
-            selected = index
-            if selected is None:
+            if index is None:
                 _print_replays(replays)
-                selected = typer.prompt("Replay number", type=int)
-            if selected < 1 or selected > len(replays):
-                raise typer.BadParameter(
-                    f"Choose a replay number between 1 and {len(replays)}.",
-                    param_hint="INDEX",
-                )
-            replay = replays[selected - 1]
+            replay = replays[_selected_replay(index, len(replays))]
             destination = (output if output is not None else Path(replay.filename)).expanduser()
             if not overwrite and (destination.exists() or destination.is_symlink()):
                 raise FileExistsError
             console.print(f"Downloading {replay.filename}...", markup=False)
             saved = await riot.lol.download_replay(replay, destination, overwrite=overwrite)
-            console.print(f"Saved replay to {saved}", markup=False)
+            typer.echo(f"Saved replay to {saved}")
 
     _run_replay_command(run)
 

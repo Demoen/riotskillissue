@@ -9,12 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Replay listing and downloads through `riotskillissue-cli replays`, using the
-  authenticated player's RSO replay endpoint. Supports interactive selection,
-  explicit output paths, and opt-in replacement of existing files.
+- Replay listing and downloads through `riotskillissue-cli replays`. Use
+  `--player "GameName#TagLine"` with a running League Client to select another
+  player's replay, or an RSO token for the authenticated player's public API
+  replay list. Supports interactive selection, explicit output paths, and
+  opt-in replacement of existing files.
+- `LeagueReplayClient` for local player lookup, recent matches, and replay
+  downloads. Uses the client's replay folder and follows its download limits
+  without retrying rejected download requests.
 - Async and sync `lol.replays()` and `lol.download_replay()` helpers with streamed
   downloads, temporary-file cleanup, and credential-free file requests.
-- Replay documentation covering RSO setup, CLI and Python usage, and API limits.
+- Replay documentation covering League Client and RSO setup, CLI and Python
+  usage, and download limits.
 
 ## [1.1.5] - 2026-10-26
 

@@ -78,7 +78,7 @@ Use a supported [Python environment](../getting-started.md), then select the too
 
 Player and match lookups require a Riot API key. Set `RIOT_API_KEY` in your terminal for those CLI commands and the TUI, or in the MCP server's environment. Each guide includes setup instructions.
 
-[Replay downloads](../replays.md) require `RIOT_RSO_ACCESS_TOKEN` from an approved Riot Sign On integration. They operate on the replays returned for the authenticated player and do not require an API key.
+[Replay downloads](../replays.md) with `--player "GameName#TagLine"` use your running League Client on Windows or macOS. No API key or RSO token is needed for that workflow. Replay commands without `--player` use `RIOT_RSO_ACCESS_TOKEN` from an approved Riot Sign On integration and return that authenticated player's replay list.
 
 For player lookups, use an exact Riot ID such as `GameName#TagLine` and a platform route such as `euw1`. Match lookups use regional routes such as `europe`; the MCP match-context tool can infer that route from a standard match ID. See [routing](../routing.md) for the distinction.
 
