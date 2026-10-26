@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 import respx
+from rich.text import Text
 from typer.testing import CliRunner
 
 from riotskillissue import cli
@@ -128,7 +129,7 @@ def test_player_mode_rejects_regional_route(local_client) -> None:
         "replays", "list", "--player", "Player#TAG", "--route", "europe",
     ])
     assert result.exit_code == 2
-    assert "Omit --route" in result.output
+    assert "Omit --route" in Text.from_ansi(result.output).plain
     assert not local_client.instances
 
 
@@ -145,7 +146,7 @@ def test_player_invalid_limits_do_not_connect(local_client, arguments: list[str]
 def test_local_options_require_player(local_client, option: str) -> None:
     result = runner.invoke(cli.app, ["replays", "download", "1", option, "5"])
     assert result.exit_code == 2
-    assert "require --player" in result.output
+    assert "require --player" in Text.from_ansi(result.output).plain
     assert not local_client.instances
 
 
