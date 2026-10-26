@@ -115,7 +115,7 @@ as the raw clients and registry.
 | Operation ID | Python accessor | Method | Route | Auth | Result |
 | --- | --- | --- | --- | --- | --- |
 | `match-v5.getMatchIdsByPUUID` | `riot.raw.lol.match.get_match_ids_by_puuid` | GET | regional | api_key | `List[str]` |
-| `match-v5.getReplay` | `riot.raw.lol.match.get_replay` | GET | regional | api_key | `Replay` |
+| `match-v5.getReplayByAccessToken` | `riot.raw.lol.match.get_replay_by_access_token` | GET | regional | rso | `Replay` |
 | `match-v5.getMatch` | `riot.raw.lol.match.get_match` | GET | regional | api_key | `Match` |
 | `match-v5.getTimeline` | `riot.raw.lol.match.get_timeline` | GET | regional | api_key | `Timeline` |
 

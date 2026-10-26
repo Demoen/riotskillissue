@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2026-10-26
+
+### Changed
+
+## Added Endpoints
+- /lol/match/v5/matches/replays
+
+## Removed Endpoints
+- /lol/match/v5/matches/by-puuid/{puuid}/replays
+
+## Other Changes
+- info.version: "bca08c6737245decb570e82447491f77fee83d38" -> "f11a6ec7a4e117eac0a1997e9bda89bd6a5d52bf"
+- info.x-hash: "bca08c6737245decb570e82447491f77fee83d38a2591954004b70b6d1909828f157d9a4acf6cff8" -> "f11a6ec7a4e117eac0a1997e9bda89bd6a5d52bfa2591954004b70b6d1909828f157d9a4acf6cff8"
+
+
 ## [1.1.4] - 2026-10-06
 
 ### Changed

@@ -9,7 +9,7 @@ from riotskillissue.core.types import RegionalRoute, RouteKind
 from riotskillissue.models.lol.match_v5 import Match, Replay, Timeline
 
 _GET_MATCH_IDS_BY_PUUID_RESPONSE_ADAPTER = TypeAdapter(List[str]).validate_python
-_GET_REPLAY_RESPONSE_ADAPTER = TypeAdapter(Replay).validate_python
+_GET_REPLAY_BY_ACCESS_TOKEN_RESPONSE_ADAPTER = TypeAdapter(Replay).validate_python
 _GET_MATCH_RESPONSE_ADAPTER = TypeAdapter(Match).validate_python
 _GET_TIMELINE_RESPONSE_ADAPTER = TypeAdapter(Timeline).validate_python
 
@@ -68,18 +68,13 @@ class LolMatchApi:
             ),
         )
 
-    async def get_replay(
+    async def get_replay_by_access_token(
         self,
         *,
-        puuid: str,
         route: RegionalRoute | str | None = None,
     ) -> Replay:
-        "Get player replays"
-        path = "/lol/match/v5/matches/by-puuid/{puuid}/replays"
-        path = path.replace(
-            "{puuid}",
-            quote(str(puuid), safe=""),
-        )
+        "Get player replays by access token"
+        path = "/lol/match/v5/matches/replays"
         params: dict[str, Any] = {}
         request_kwargs: dict[str, Any] = {
             "params": {key: value for key, value in params.items() if value is not None}
@@ -95,12 +90,12 @@ class LolMatchApi:
                 method="GET",
                 url=path,
                 region_or_platform=resolved_route,
-                operation_id="match-v5.getReplay",
-                auth_mode="api_key",
-                cache_user_scoped=False,
+                operation_id="match-v5.getReplayByAccessToken",
+                auth_mode="rso",
+                cache_user_scoped=True,
                 successful_statuses=(200,),
                 no_content_statuses=(),
-                response_adapter=_GET_REPLAY_RESPONSE_ADAPTER,
+                response_adapter=_GET_REPLAY_BY_ACCESS_TOKEN_RESPONSE_ADAPTER,
                 **request_kwargs,
             ),
         )
@@ -217,17 +212,15 @@ class SyncLolMatchApi:
             ),
         )
 
-    def get_replay(
+    def get_replay_by_access_token(
         self,
         *,
-        puuid: str,
         route: RegionalRoute | str | None = None,
     ) -> Replay:
         return cast(
             Replay,
             self._run(
-                self._async_api.get_replay(
-                    puuid=puuid,
+                self._async_api.get_replay_by_access_token(
                     route=route,
                 )
             ),
