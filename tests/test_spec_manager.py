@@ -40,6 +40,17 @@ def workspace(monkeypatch, tmp_path, spec):
     return tmp_path
 
 
+@pytest.fixture(params=["missing", "stale"])
+def unhealthy_upstream(respx_mock, request):
+    runs = []
+    if request.param == "stale":
+        runs.append({
+            "created_at": (datetime.now(UTC) - timedelta(hours=73)).isoformat(),
+            "html_url": "https://github.com/run",
+        })
+    return respx_mock.get(manager.UPSTREAM_RUNS_URL).respond(200, json={"workflow_runs": runs})
+
+
 def test_unchanged_check_emits_health_summary_without_rewriting_spec(
     workspace, spec, respx_mock,
 ):
@@ -123,7 +134,7 @@ def test_upstream_health_uses_successful_run_age(respx_mock, age_hours):
         "workflow_runs": [{"created_at": observed.isoformat(), "html_url": "https://github.com/run"}],
     })
     if age_hours > 72:
-        with pytest.raises(ValueError, match="not succeeded in 72 hours"):
+        with pytest.raises(manager.UpstreamHealthError, match="not succeeded in 72 hours"):
             manager.check_upstream()
     else:
         assert "https://github.com/run" in manager.check_upstream()
@@ -131,16 +142,155 @@ def test_upstream_health_uses_successful_run_age(respx_mock, age_hours):
     assert route.calls[0].request.url.params["event"] == "schedule"
 
 
-def test_stopped_upstream_prevents_sync(workspace, respx_mock):
-    before = manager.SPEC_FILE.read_bytes()
-    respx_mock.get(manager.UPSTREAM_RUNS_URL).respond(200, json={"workflow_runs": []})
-    feed = respx_mock.get(manager.SPEC_URL).respond(200, json={})
+def test_upstream_health_remains_strict(unhealthy_upstream):
+    with pytest.raises(manager.UpstreamHealthError):
+        manager.check_upstream()
 
-    with pytest.raises(ValueError, match="no successful scheduled run"):
+
+@pytest.mark.parametrize("check", [False, True])
+def test_unhealthy_upstream_allows_unchanged_schema_verification(
+    workspace, spec, respx_mock, unhealthy_upstream, monkeypatch, capsys, caplog, check,
+):
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    before = manager.SPEC_FILE.read_bytes()
+    modified_at = manager.SPEC_FILE.stat().st_mtime_ns
+    feed = respx_mock.get(manager.SPEC_URL).respond(200, json=spec)
+
+    assert manager.sync_spec(check=check, verify_upstream=True) == 0
+
+    assert manager.SPEC_FILE.read_bytes() == before
+    assert manager.SPEC_FILE.stat().st_mtime_ns == modified_at
+    assert feed.called
+    assert unhealthy_upstream.called
+    assert not manager.REPORT_DIR.exists()
+    assert "spec_changed=false" in (workspace / "output").read_text()
+    summary = (workspace / "summary").read_text()
+    assert "warning" in summary.lower()
+    assert "matches feed" in summary
+    assert "::warning" in capsys.readouterr().out
+    assert "Upstream schema generator" in caplog.text
+
+
+@pytest.mark.parametrize("check", [False, True])
+@pytest.mark.parametrize("missing", [False, True])
+def test_unhealthy_upstream_prevents_schema_changes(
+    workspace, spec, respx_mock, unhealthy_upstream, check, missing,
+):
+    if missing:
+        manager.SPEC_FILE.unlink()
+    before = manager.SPEC_FILE.read_bytes() if not missing else None
+    spec["paths"]["/items"]["get"]["deprecated"] = True
+    feed = respx_mock.get(manager.SPEC_URL).respond(200, json=spec)
+
+    with pytest.raises(manager.UpstreamHealthError):
+        manager.sync_spec(check=check, verify_upstream=True)
+
+    if missing:
+        assert not manager.SPEC_FILE.exists()
+    else:
+        assert manager.SPEC_FILE.read_bytes() == before
+    assert feed.called
+    assert unhealthy_upstream.called
+    assert not manager.REPORT_DIR.exists()
+    assert not (workspace / "output").exists()
+    assert not (workspace / "summary").exists()
+
+
+def test_unhealthy_upstream_cannot_allow_invalid_feed(workspace, respx_mock, unhealthy_upstream):
+    before = manager.SPEC_FILE.read_bytes()
+    respx_mock.get(manager.SPEC_URL).respond(200, json={})
+
+    with pytest.raises(ValueError, match="Expected an OpenAPI"):
         manager.sync_spec(verify_upstream=True)
 
     assert manager.SPEC_FILE.read_bytes() == before
-    assert not feed.called
+    assert not unhealthy_upstream.called
+    assert not manager.REPORT_DIR.exists()
+    assert not (workspace / "output").exists()
+    assert not (workspace / "summary").exists()
+
+
+def test_healthy_upstream_allows_schema_update(workspace, spec, respx_mock):
+    spec["paths"]["/items"]["get"]["deprecated"] = True
+    respx_mock.get(manager.SPEC_URL).respond(200, json=spec)
+    respx_mock.get(manager.UPSTREAM_RUNS_URL).respond(200, json={
+        "workflow_runs": [{
+            "created_at": (datetime.now(UTC) - timedelta(hours=1)).isoformat(),
+            "html_url": "https://github.com/run",
+        }],
+    })
+
+    assert manager.sync_spec(verify_upstream=True) == 0
+
+    assert json.loads(manager.SPEC_FILE.read_text()) == spec
+    assert len(list(manager.REPORT_DIR.glob("*.md"))) == 1
+    assert "spec_changed=true" in (workspace / "output").read_text()
+    summary = (workspace / "summary").read_text()
+    assert "Successful upstream generation" in summary
+    assert "warning" not in summary.lower()
+
+
+@pytest.mark.parametrize("status", [403, 503])
+def test_upstream_http_failure_is_fatal_for_unchanged_schema(workspace, spec, respx_mock, status):
+    before = manager.SPEC_FILE.read_bytes()
+    respx_mock.get(manager.SPEC_URL).respond(200, json=spec)
+    respx_mock.get(manager.UPSTREAM_RUNS_URL).respond(status)
+
+    with pytest.raises(httpx.HTTPStatusError):
+        manager.sync_spec(verify_upstream=True)
+
+    assert manager.SPEC_FILE.read_bytes() == before
+    assert not manager.REPORT_DIR.exists()
+    assert not (workspace / "output").exists()
+    assert not (workspace / "summary").exists()
+
+
+def test_upstream_network_failure_is_fatal_for_unchanged_schema(workspace, spec, respx_mock):
+    before = manager.SPEC_FILE.read_bytes()
+    respx_mock.get(manager.SPEC_URL).respond(200, json=spec)
+    respx_mock.get(manager.UPSTREAM_RUNS_URL).mock(side_effect=httpx.ConnectError("connection failed"))
+
+    with pytest.raises(httpx.ConnectError):
+        manager.sync_spec(verify_upstream=True)
+
+    assert manager.SPEC_FILE.read_bytes() == before
+    assert not manager.REPORT_DIR.exists()
+    assert not (workspace / "output").exists()
+    assert not (workspace / "summary").exists()
+
+
+@pytest.mark.parametrize("malformed", [
+    "json",
+    "timestamp",
+    pytest.param({}, id="missing-runs"),
+    pytest.param({"workflow_runs": None}, id="null-runs"),
+    pytest.param({"workflow_runs": {}}, id="object-runs"),
+    pytest.param({"workflow_runs": ""}, id="string-runs"),
+    pytest.param({"workflow_runs": False}, id="boolean-runs"),
+])
+def test_malformed_upstream_response_is_fatal_for_unchanged_schema(
+    workspace, spec, respx_mock, malformed,
+):
+    before = manager.SPEC_FILE.read_bytes()
+    respx_mock.get(manager.SPEC_URL).respond(200, json=spec)
+    route = respx_mock.get(manager.UPSTREAM_RUNS_URL)
+    if malformed == "json":
+        route.respond(200, text="{")
+    elif malformed == "timestamp":
+        route.respond(200, json={
+            "workflow_runs": [{"created_at": "invalid", "html_url": "https://github.com/run"}],
+        })
+    else:
+        route.respond(200, json=malformed)
+
+    with pytest.raises(ValueError) as error:
+        manager.sync_spec(verify_upstream=True)
+
+    assert not isinstance(error.value, manager.UpstreamHealthError)
+    assert manager.SPEC_FILE.read_bytes() == before
+    assert not manager.REPORT_DIR.exists()
+    assert not (workspace / "output").exists()
+    assert not (workspace / "summary").exists()
 
 
 def test_failed_atomic_replace_preserves_snapshot(workspace, spec, monkeypatch):

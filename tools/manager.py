@@ -24,6 +24,10 @@ HTTP_METHODS = {"delete", "get", "head", "options", "patch", "post", "put", "tra
 logger = logging.getLogger("spec-manager")
 
 
+class UpstreamHealthError(ValueError):
+    pass
+
+
 def validate_spec(data: Any) -> dict[str, Any]:
     if not isinstance(data, dict) or not str(data.get("openapi", "")).startswith("3.0."):
         raise ValueError("Expected an OpenAPI 3.0 document from the schema feed")
@@ -76,14 +80,16 @@ def check_upstream() -> str:
         timeout=30,
     )
     response.raise_for_status()
-    runs = response.json().get("workflow_runs", [])
+    runs = response.json().get("workflow_runs")
+    if not isinstance(runs, list):
+        raise ValueError("Upstream workflow response must contain a workflow_runs list")
     if not runs:
-        raise ValueError("Upstream schema generator has no successful scheduled run")
+        raise UpstreamHealthError("Upstream schema generator has no successful scheduled run")
     run = runs[0]
     observed_at = datetime.fromisoformat(run["created_at"].replace("Z", "+00:00"))
     age = datetime.now(UTC) - observed_at
     if age > timedelta(hours=72):
-        raise ValueError(
+        raise UpstreamHealthError(
             f"Upstream schema generator has not succeeded in 72 hours: {run['html_url']}"
         )
     return f"[Successful upstream generation]({run['html_url']}) ({observed_at.isoformat()})"
@@ -100,11 +106,21 @@ def save_spec(data: dict[str, Any], path: Path) -> None:
 
 
 def sync_spec(*, check: bool = False, verify_upstream: bool = False) -> int:
-    upstream = check_upstream() if verify_upstream else "Upstream workflow not checked."
     new_spec = fetch_spec()
     old_spec = json.loads(SPEC_FILE.read_text(encoding="utf-8")) if SPEC_FILE.exists() else None
     canonical = json.dumps(new_spec, sort_keys=True)
     changed = json.dumps(old_spec, sort_keys=True) != canonical
+    try:
+        upstream = check_upstream() if verify_upstream else "Upstream workflow not checked."
+    except UpstreamHealthError as error:
+        if changed:
+            raise
+        upstream = (
+            f"WARNING: {error}. Published schema matches the bundled spec; continuing checks."
+        )
+        logger.warning("%s", upstream)
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            print(f"::warning title=Upstream schema freshness::{upstream}")
     digest = hashlib.sha256(canonical.encode()).hexdigest()
     operation_count = sum(len(item.keys() & HTTP_METHODS) for item in new_spec["paths"].values())
     summary = (
@@ -147,7 +163,7 @@ def main() -> int:
     parser.add_argument(
         "--check-upstream",
         action="store_true",
-        help="Require successful upstream CI within 72 hours",
+        help="Require successful upstream CI within 72 hours for schema changes; warn if unchanged",
     )
     arguments = parser.parse_args()
     logging.basicConfig(level=logging.INFO)

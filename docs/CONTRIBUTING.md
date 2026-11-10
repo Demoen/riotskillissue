@@ -71,8 +71,12 @@ python tools/manager.py --check --check-upstream
 
 The command reports the source URL, check time, content hash, operation/model
 counts, and latest successful upstream scheduled run. It exits with status 1
-when the bundled schema differs or the upstream generator has not succeeded
-within 72 hours. `--check` alone compares the feed without querying GitHub.
+when the bundled schema differs. With `--check-upstream`, importing a changed
+schema also requires a successful upstream scheduled run within 72 hours.
+If the validated feed matches the bundled schema, stale or missing successful
+upstream runs produce a warning in the logs and CI summary, and SDK checks
+continue. Feed validation and HTTP errors still fail the command.
+`--check` alone compares the feed without querying GitHub.
 An old schema commit date is normal when Riot has not changed its reference;
 upstream workflow activity determines generator health.
 
